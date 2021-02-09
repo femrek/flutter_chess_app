@@ -124,9 +124,12 @@ class SquareOnTheBoard extends StatelessWidget {
     Key key}):super(key: key);
 
   String get name => '${String.fromCharCode(97+positionX)}${positionY+1}';
+  bool get isDark => (positionX + positionY) % 2 == 0;
+
 
   bool movable = false;
   bool movableToThis = false;
+  bool attackableToThis = false;
   bool moveFrom = false;
 
   @override
@@ -136,9 +139,22 @@ class SquareOnTheBoard extends StatelessWidget {
       movable = (context.read<BoardBloc>().state as BoardLoadedState).movablePiecesCoors.contains(name);
     } else if (context.read<BoardBloc>().state is BoardFocusedState) {
       movableToThis = (context.read<BoardBloc>().state as BoardFocusedState).movableCoors.contains(name);
+      if (piece != null && movableToThis) {
+        attackableToThis = true;
+        movableToThis = false;
+      }
       if ((context.read<BoardBloc>().state as BoardFocusedState).focusedCoor == name) {
         moveFrom = true;
       }
+    }
+
+    Color darkBg = _darkBgColor;
+    Color lightBg = _lightBgColor;
+
+
+    if (attackableToThis) {
+      darkBg = Colors.red;
+      lightBg = Colors.red;
     }
 
     return GestureDetector(
@@ -148,7 +164,7 @@ class SquareOnTheBoard extends StatelessWidget {
             context.read<BoardBloc>().add(BoardFocusEvent(focusCoor: name));
           }
         } else if (context.read<BoardBloc>().state is BoardFocusedState) {
-          if (movableToThis || moveFrom) {
+          if (movableToThis || attackableToThis|| moveFrom) {
             context.read<BoardBloc>().add(BoardMoveEvent(to: name));
           } else {
             context.read<BoardBloc>().add(BoardMoveEvent());
@@ -158,20 +174,12 @@ class SquareOnTheBoard extends StatelessWidget {
       child: Container(
         width: size,
         height: size,
-        color: (positionX + positionY) % 2 == 0 ? _darkBgColor : _lightBgColor,
+        color: isDark ? darkBg : lightBg,
         alignment: Alignment.center,
         child: Stack(
           children: [
-            Text(
-              (piece?.type?.name ?? '') + ' ' 
-                + movable.toString()[0] + ' '
-                + (movableToThis ? (piece == null ? 'm' : 'a') : '') + ''
-                + (moveFrom ? 'M' : ''),
-              style: TextStyle(
-                color: Colors.pink,
-                fontSize: 16
-              ),  
-            ),
+            //_infos(),
+            _moveDots(),
             _pieceImage(),
           ],
         ),
@@ -190,6 +198,35 @@ class SquareOnTheBoard extends StatelessWidget {
         fontSize: 16
       ),  
     );
+  }
+
+  Widget _moveDots() {
+    if (movableToThis) {
+      return Container(
+        alignment: Alignment.center,
+        child: Container(
+          height: size*0.4,
+          width: size*0.4,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(9999),
+            color: Colors.green,
+          ),
+        ),
+      );
+    } else if (attackableToThis) {
+      return Container(
+        alignment: Alignment.center,
+        child: Container(
+          height: size*0.8,
+          width: size*0.8,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(9999),
+            color: isDark ? _darkBgColor : _lightBgColor,
+          ),
+        ),
+      );
+    }
+    return Container();
   }
 
   Widget _pieceImage() {
