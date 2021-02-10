@@ -1,12 +1,15 @@
 import 'package:chess/chess.dart' as ch;
 import 'package:bloc/bloc.dart';
+import 'package:mychess/checkmate_cubit.dart';
 
 import 'board_state.dart';
 import 'board_event.dart';
 
 
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
-  BoardBloc() : super(BoardInitialState());
+  BoardBloc(this.checkmateCubit) : super(BoardInitialState());
+
+  CheckmateCubit checkmateCubit;
 
   ch.Chess chess = ch.Chess();
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
@@ -23,7 +26,11 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
+        isWhiteTurn: chess.turn == ch.Color.WHITE,
+        inCheck: chess.in_check,
       );
+
+      if (!chess.in_checkmate) checkmateCubit.reset();
     }
 
     else if (event is BoardFocusEvent) {
@@ -38,6 +45,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         board: pieceBoard,
         focusedCoor: event.focusCoor,
         movableCoors: movableCoors,
+        isWhiteTurn: chess.turn == ch.Color.WHITE,
+        inCheck: chess.in_check,
       );
     }
 
@@ -66,7 +75,11 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
+        isWhiteTurn: chess.turn == ch.Color.WHITE,
+        inCheck: chess.in_check,
       );
+
+      if (chess.in_checkmate) checkmateCubit.checkmate();
     }
 
     else if (event is BoardUndoEvent) {
@@ -78,6 +91,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
+        isWhiteTurn: chess.turn == ch.Color.WHITE,
+        inCheck: chess.in_check,
       );
     }
 

@@ -54,6 +54,9 @@ class ChessTable extends StatelessWidget {
             positionX: x,
             positionY: y,
             piece: state.board[x][y],
+            inCheck: (state.inCheck ?? false) 
+              && (state.board[x][y]?.type?.name?.toLowerCase() ?? '') == 'k'
+              && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
           );
         }
 
@@ -63,6 +66,9 @@ class ChessTable extends StatelessWidget {
             positionX: x,
             positionY: y,
             piece: state.board[x][y],
+            inCheck:  (state.inCheck ?? false) 
+              && (state.board[x][y]?.type?.name?.toLowerCase() ?? '') == 'k'
+              && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
           );
         }
 
@@ -114,13 +120,14 @@ class SquareOnTheBoard extends StatelessWidget {
   final int positionX;
   final int positionY;
   final ch.Piece piece;
+  final bool inCheck;
 
   SquareOnTheBoard({
     this.size,
     this.positionX,
     this.positionY,
     this.piece,
-    this.movableToThis = false,
+    this.inCheck = false,
     Key key}):super(key: key);
 
   String get name => '${String.fromCharCode(97+positionX)}${positionY+1}';
@@ -150,9 +157,10 @@ class SquareOnTheBoard extends StatelessWidget {
 
     Color darkBg = _darkBgColor;
     Color lightBg = _lightBgColor;
-
-
     if (attackableToThis) {
+      darkBg = Colors.red;
+      lightBg = Colors.red;
+    } else if (inCheck) {
       darkBg = Colors.red;
       lightBg = Colors.red;
     }

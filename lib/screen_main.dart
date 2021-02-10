@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'board_bloc.dart';
 import 'board_event.dart';
+import 'checkmate_cubit.dart';
 import 'chess_table.dart';
 
 class ScreenMain extends StatefulWidget {
@@ -26,6 +27,23 @@ class _ScreenMainState extends State<ScreenMain> {
           children: [
             ChessTable(
               size: width,
+            ),
+            Container(
+              color: Colors.pink,
+              child: BlocBuilder<CheckmateCubit, bool>(
+                builder: (_, bool state) {
+                  if (state) {
+                    return Text(
+                      'checkmate',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                      ),
+                    );
+                  }
+                  else return Text('');
+                },
+              ),
             ),
             Visibility(
               visible: false,

@@ -12,10 +12,14 @@ class BoardInitialState extends BoardState {}
 class BoardLoadedState extends BoardState {
   final List<List<ch.Piece>> board;
   final Set<String> movablePiecesCoors;
+  final bool isWhiteTurn;
+  final bool inCheck;
 
   BoardLoadedState({
     this.board,
     this.movablePiecesCoors,
+    this.isWhiteTurn,
+    this.inCheck,
   }):super();
 
   @override
@@ -36,11 +40,15 @@ class BoardFocusedState extends BoardState {
   final List<List<ch.Piece>> board;
   final String focusedCoor;
   final Set<String> movableCoors;
+  final bool isWhiteTurn;
+  final bool inCheck;
 
   BoardFocusedState({
     this.board,
     this.focusedCoor,
     this.movableCoors,
+    this.isWhiteTurn,
+    this.inCheck,
   });
 
 }
