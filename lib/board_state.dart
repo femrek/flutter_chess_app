@@ -36,12 +36,10 @@ class BoardFocusedState extends BoardState {
   final List<List<ch.Piece>> board;
   final String focusedCoor;
   final Set<String> movableCoors;
-  final Set<String> attackCoors;
 
   BoardFocusedState({
     this.board,
     this.focusedCoor,
-    this.attackCoors,
     this.movableCoors,
   });
 

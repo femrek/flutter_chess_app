@@ -28,8 +28,6 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
 
     else if (event is BoardFocusEvent) {
       final Set<String> movableCoors = Set();
-      final Set<String> attackCoors = Set();
-      //for (int i = 0; i<chess.generate_moves().length; i++) {
       for (ch.Move move in chess.generate_moves()) {
         //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
         if (move.fromAlgebraic == event.focusCoor) {
@@ -40,7 +38,6 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         board: pieceBoard,
         focusedCoor: event.focusCoor,
         movableCoors: movableCoors,
-        attackCoors: attackCoors,
       );
     }
 
