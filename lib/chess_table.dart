@@ -208,7 +208,6 @@ class SquareOnTheBoard extends StatelessWidget {
       },
       child: _container(darkBg, lightBg, Stack(
         children: [
-          //_infos(),
           _moveDots(),
           _pieceImage(),
         ],
@@ -223,19 +222,6 @@ class SquareOnTheBoard extends StatelessWidget {
         color: isDark ? darkBg : lightBg,
         alignment: Alignment.center,
         child: child ?? Container(),
-    );
-  }
-
-  Widget _infos() {
-    return Text(
-      (piece?.type?.name ?? '') + ' ' 
-        + movable.toString()[0] + ' '
-        + (movableToThis ? (piece == null ? 'm' : 'a') : '') + ''
-        + (moveFrom ? 'M' : ''),
-      style: TextStyle(
-        color: Colors.pink,
-        fontSize: 16
-      ),  
     );
   }
 
@@ -309,6 +295,6 @@ class SquareOnTheBoard extends StatelessWidget {
     'pawn': 0.55,
     null: 0.8,
   };
-  static const double PI = 3.141592653592;
+  static const double PI = 3.141592653592y;
   static const double ninetyDegree = PI / 2;
 }
