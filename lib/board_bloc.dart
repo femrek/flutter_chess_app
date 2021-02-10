@@ -52,7 +52,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
 
     else if (event is BoardMoveEvent) {
       if (!(state is BoardFocusedState)) {
-        throw Exception('trying move while state is not focused state');
+        throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
 
       if (!(event.to == null || event.to == (state as BoardFocusedState).focusedCoor)) {

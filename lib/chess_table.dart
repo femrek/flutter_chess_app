@@ -165,6 +165,33 @@ class SquareOnTheBoard extends StatelessWidget {
       lightBg = Colors.red;
     }
 
+    return DragTarget<String>(
+      onAccept: (focusCoor) {
+        context.read<BoardBloc>().add(BoardMoveEvent(to: name));
+      },
+      onWillAccept: (focusCoor) {
+        return movableToThis || attackableToThis;
+      },
+      builder: (_, list1, list2) {
+        return Draggable<String>(
+          data: name,
+          onDragStarted: () {
+            context.read<BoardBloc>().add(BoardFocusEvent(focusCoor: name));
+          },
+          onDragEnd: (details) {
+            if (!details.wasAccepted) 
+              context.read<BoardBloc>().add(BoardMoveEvent());
+          },
+          maxSimultaneousDrags: movable ? null : 0,
+          childWhenDragging: _container(darkBg, lightBg, null),
+          feedback: _pieceImage(),
+          child: _allOfSquare(context, darkBg, lightBg),
+        );
+      },
+    );
+  }
+
+  Widget _allOfSquare(BuildContext context, Color darkBg, Color lightBg) {
     return GestureDetector(
       onTap: () {
         if (context.read<BoardBloc>().state is BoardLoadedState) {
@@ -179,19 +206,23 @@ class SquareOnTheBoard extends StatelessWidget {
           }
         }
       },
-      child: Container(
+      child: _container(darkBg, lightBg, Stack(
+        children: [
+          //_infos(),
+          _moveDots(),
+          _pieceImage(),
+        ],
+      )),
+    );
+  }
+
+  Widget _container(Color darkBg, Color lightBg, Widget child) {
+    return Container(
         width: size,
         height: size,
         color: isDark ? darkBg : lightBg,
         alignment: Alignment.center,
-        child: Stack(
-          children: [
-            //_infos(),
-            _moveDots(),
-            _pieceImage(),
-          ],
-        ),
-      ),
+        child: child ?? Container(),
     );
   }
 
