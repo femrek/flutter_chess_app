@@ -7,7 +7,7 @@ class StorageManager {
   SharedPreferences _sharedPreferences;
 
   Future _setSharedPreferences() async {
-    if (SharedPreferences == null) 
+    if (_sharedPreferences == null) 
       _sharedPreferences = await SharedPreferences.getInstance();
   }
 

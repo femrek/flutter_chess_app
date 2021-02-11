@@ -1,5 +1,6 @@
 import 'package:chess/chess.dart' as ch;
 import 'package:bloc/bloc.dart';
+import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/checkmate_cubit.dart';
 
 import '../../presentation/features/board_state.dart';
@@ -11,7 +12,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
 
   CheckmateCubit checkmateCubit;
 
-  ch.Chess chess = ch.Chess();
+  ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = Set();
 
@@ -19,6 +20,10 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   Stream<BoardState> mapEventToState(BoardEvent event) async* {
 
     if (event is BoardLoadEvent) {
+      chess = (await StorageManager().lastGameFen) == null 
+        ? ch.Chess() 
+        : ch.Chess.fromFEN(await StorageManager().lastGameFen);
+
       findMovablePiecesCoors();
 
       convertToPieceBoard();
@@ -70,6 +75,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         chess.move(thisMove);
         convertToPieceBoard();
         findMovablePiecesCoors();
+        StorageManager().setLastGameFen(chess.fen);
       }
 
       yield BoardLoadedState(
