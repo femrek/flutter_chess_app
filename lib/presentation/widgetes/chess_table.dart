@@ -3,9 +3,9 @@ import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 
-import 'board_bloc.dart';
-import 'board_event.dart';
-import 'board_state.dart';
+import '../features/board_bloc.dart';
+import '../features/board_event.dart';
+import '../features/board_state.dart';
 
 class ChessTable extends StatelessWidget {
   final double size;

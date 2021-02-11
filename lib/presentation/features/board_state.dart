@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:chess/chess.dart' as ch;
-import 'package:mychess/board_event.dart';
+import 'package:mychess/presentation/features/board_event.dart';
 
 abstract class BoardState extends Equatable {
   @override

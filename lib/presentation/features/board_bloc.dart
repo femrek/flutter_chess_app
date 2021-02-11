@@ -1,9 +1,9 @@
 import 'package:chess/chess.dart' as ch;
 import 'package:bloc/bloc.dart';
-import 'package:mychess/checkmate_cubit.dart';
+import 'package:mychess/presentation/features/checkmate_cubit.dart';
 
-import 'board_state.dart';
-import 'board_event.dart';
+import '../../presentation/features/board_state.dart';
+import '../../presentation/features/board_event.dart';
 
 
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
