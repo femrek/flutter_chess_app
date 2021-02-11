@@ -27,6 +27,7 @@ dependencies:
   flutter_bloc: ^6.1.1
   equatable: ^1.2.5
   flutter_svg: ^0.19.1
+  shared_preferences: ^0.5.12+4
 
 
   # The following adds the Cupertino Icons font to your application.
