@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'board_bloc.dart';
 import 'board_event.dart';
 import 'checkmate_cubit.dart';
+import 'package:mychess/data/storage_manager.dart';
 import '../widgetes/chess_table.dart';
 
 class ScreenMain extends StatefulWidget {
@@ -44,6 +45,16 @@ class _ScreenMainState extends State<ScreenMain> {
                   else return Text('');
                 },
               ),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                if (await StorageManager().setLastGameFen(null)) {
+                  context.read<BoardBloc>().add(BoardLoadEvent(restart: true));
+                } else {
+                  print('error');
+                }
+              },
+              child: Text('restart'),
             ),
             Visibility(
               visible: false,

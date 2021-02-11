@@ -15,12 +15,14 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = Set();
+  String history;
 
   @override
   Stream<BoardState> mapEventToState(BoardEvent event) async* {
 
     if (event is BoardLoadEvent) {
-      chess = (await StorageManager().lastGameFen) == null 
+      print('load event');
+      chess = event.restart || (await StorageManager().lastGameFen) == null 
         ? ch.Chess() 
         : ch.Chess.fromFEN(await StorageManager().lastGameFen);
 
@@ -28,11 +30,14 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
 
       convertToPieceBoard();
 
+      setHistoryString();
+
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
+        history: history,
       );
 
       if (!chess.in_checkmate) checkmateCubit.reset();
@@ -76,6 +81,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         convertToPieceBoard();
         findMovablePiecesCoors();
         StorageManager().setLastGameFen(chess.fen);
+        setHistoryString();
       }
 
       yield BoardLoadedState(
@@ -119,6 +125,13 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       movablePiecesCoors.add(move.fromAlgebraic);
     }
     print('movablePiecesCoors: $movablePiecesCoors');
+  }
+
+  void setHistoryString() {
+    history = '';
+    for (ch.State state in chess.history) {
+      history += state.move.fromAlgebraic + state.move.toAlgebraic + '/';
+    }
   }
 
 }

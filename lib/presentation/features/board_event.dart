@@ -5,12 +5,22 @@ class BoardEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class BoardLoadEvent extends BoardEvent {}
+class BoardLoadEvent extends BoardEvent {
+  final bool restart;
+
+  BoardLoadEvent({this.restart = false});
+
+  @override
+  List<Object> get props => [restart];
+}
 
 class BoardFocusEvent extends BoardEvent {
   final String focusCoor;
 
   BoardFocusEvent({this.focusCoor});
+
+  @override
+  List<Object> get props => [focusCoor];
 }
 
 class BoardMoveEvent extends BoardEvent {
@@ -19,6 +29,9 @@ class BoardMoveEvent extends BoardEvent {
   BoardMoveEvent({
     this.to,
   });
+
+  @override
+  List<Object> get props => [to];
 }
 
 class BoardUndoEvent extends BoardEvent {}
