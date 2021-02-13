@@ -56,19 +56,16 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
               },
               child: Text('restart'),
             ),
-            Visibility(
-              visible: false,
-              child: Center(child: RaisedButton(
-                onPressed: () {
-                  context.read<BoardBloc>().add(BoardUndoEvent());
-                },
-                child: Text(
-                  'undo',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
+            RaisedButton(
+              onPressed: () {
+                context.read<BoardBloc>().add(BoardUndoEvent());
+              },
+              child: Text(
+                'undo',
+                style: TextStyle(
+                  color: Colors.black,
                 ),
-              ),),
+              ),
             ),
           ],
         ),

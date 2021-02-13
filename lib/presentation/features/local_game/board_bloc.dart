@@ -42,6 +42,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       );
 
       if (!chess.in_checkmate) checkmateCubit.reset();
+      else checkmateCubit.checkmate();
     }
 
     else if (event is BoardFocusEvent) {
@@ -96,17 +97,20 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     }
 
     else if (event is BoardUndoEvent) {
-      //chess.undo();
-      chess.move(chess.undo());
+      chess.undo();
       findMovablePiecesCoors();
       convertToPieceBoard();
+      setHistoryString();
 
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
+        history: history,
       );
+      if (!chess.in_checkmate) checkmateCubit.reset();
+      else checkmateCubit.checkmate();
     }
 
   }
