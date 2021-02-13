@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/presentation/features/checkmate_cubit.dart';
 
-import 'presentation/features/board_bloc.dart';
-import 'presentation/features/board_event.dart';
-
-import 'presentation/features/screen_main.dart';
+import 'presentation/features/local_game/checkmate_cubit.dart';
+import 'presentation/features/local_game/board_bloc.dart';
+import 'presentation/features/local_game/board_event.dart';
+import 'presentation/features/local_game/screen_local_game.dart';
+import 'presentation/features/main_screen/screen_main.dart';
 
 void main() => runApp(MyApp());
 

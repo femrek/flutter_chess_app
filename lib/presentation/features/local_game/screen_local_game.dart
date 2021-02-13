@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mychess/data/storage_manager.dart';
 
 import 'board_bloc.dart';
 import 'board_event.dart';
 import 'checkmate_cubit.dart';
-import 'package:mychess/data/storage_manager.dart';
-import '../widgetes/chess_table.dart';
+import '../../widgetes/chess_table.dart';
 
-class ScreenMain extends StatefulWidget {
+class ScreenLocalGame extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _ScreenMainState();
+  State<StatefulWidget> createState() => _ScreenLocalGameState();
 }
 
-class _ScreenMainState extends State<ScreenMain> {
+class _ScreenLocalGameState extends State<ScreenLocalGame> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
