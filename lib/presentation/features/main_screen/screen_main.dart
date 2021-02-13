@@ -15,7 +15,7 @@ class ScreenMain extends StatelessWidget {
           children: [
             RaisedButton(
               onPressed: () {
-
+                Navigator.pushNamed(context, '/local_game');
               },
               child: Text('local game'),
             )

@@ -34,7 +34,10 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: ScreenMain(),
+        routes: {
+          '/': (_) => ScreenMain(),
+          '/local_game': (_) => ScreenLocalGame(),
+        },
       ),
     );
   }
