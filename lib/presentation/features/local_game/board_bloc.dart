@@ -17,15 +17,18 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = Set();
   String history;
+  List<ch.Move> undoHistory = List();
 
   @override
   Stream<BoardState> mapEventToState(BoardEvent event) async* {
 
     if (event is BoardLoadEvent) {
-      print('load event');
-      chess = event.restart || (await StorageManager().lastGameFen) == null 
-        ? ch.Chess() 
-        : ch.Chess.fromFEN(await StorageManager().lastGameFen);
+      if (event.restart || (await StorageManager().lastGameFen) == null) {
+        chess = ch.Chess();
+        undoHistory.clear();
+      } else {
+        chess = ch.Chess.fromFEN(await StorageManager().lastGameFen);
+      }
 
       findMovablePiecesCoors();
 
@@ -97,7 +100,10 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     }
 
     else if (event is BoardUndoEvent) {
-      chess.undo();
+      ch.Move move = chess.undo_move();
+      if (move != null) {
+        undoHistory.add(move);
+      }
       findMovablePiecesCoors();
       convertToPieceBoard();
       setHistoryString();
@@ -111,6 +117,27 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       );
       if (!chess.in_checkmate) checkmateCubit.reset();
       else checkmateCubit.checkmate();
+    }
+
+    else if (event is BoardRedoEvent) {
+      if (undoHistory.length == 0) {
+        print('no undo');
+      } else {
+        chess.move(undoHistory.removeLast());
+
+        findMovablePiecesCoors();
+        convertToPieceBoard();
+        setHistoryString();
+
+        yield BoardLoadedState(
+          board: pieceBoard,
+          movablePiecesCoors: movablePiecesCoors,
+          isWhiteTurn: chess.turn == ch.Color.WHITE,
+          inCheck: chess.in_check,
+          history: history,
+        );
+      }
+
     }
 
   }

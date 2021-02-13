@@ -67,6 +67,17 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
                 ),
               ),
             ),
+            RaisedButton(
+              onPressed: () {
+                context.read<BoardBloc>().add(BoardRedoEvent());
+              },
+              child: Text(
+                'redo',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+              ),
+            ),
           ],
         ),
       ),

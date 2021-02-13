@@ -35,3 +35,5 @@ class BoardMoveEvent extends BoardEvent {
 }
 
 class BoardUndoEvent extends BoardEvent {}
+
+class BoardRedoEvent extends BoardEvent {}
