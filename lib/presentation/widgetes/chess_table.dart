@@ -48,9 +48,7 @@ class ChessTable extends StatelessWidget {
     //print("creating square with: (${x + y*16}) ${(chess.board[x + y*16]?.type?.toString() ?? '') + (chess.board[x + y*16]?.color?.toString() ?? '')}");
     return BlocBuilder<BoardBloc, BoardState>(
       builder: (_, state) {
-        print('builder');
         if (state is BoardLoadedState) {
-          print('boardloadstate in the builder');
           return SquareOnTheBoard(
             size: squareSize,
             positionX: x,
