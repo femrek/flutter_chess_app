@@ -98,38 +98,6 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
                 },
               ),
             ),
-            /*RaisedButton(
-              onPressed: () async {
-                if (await StorageManager().setLastGameFen(null)) {
-                  context.read<BoardBloc>().add(BoardLoadEvent(restart: true));
-                } else {
-                  print('error');
-                }
-              },
-              child: Text('restart'),
-            ),
-            RaisedButton(
-              onPressed: () {
-                context.read<BoardBloc>().add(BoardUndoEvent());
-              },
-              child: Text(
-                'undo',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            RaisedButton(
-              onPressed: () {
-                context.read<BoardBloc>().add(BoardRedoEvent());
-              },
-              child: Text(
-                'redo',
-                style: TextStyle(
-                  color: Colors.black,
-                ),
-              ),
-            ),*/
           ],
         ),
       ),
