@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 
 import 'board_bloc.dart';
@@ -21,7 +20,9 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
   void _onMenuItemSeleced(int choice) {
     switch (choice) {
       case _MENU_RESTART:
-        context.read<BoardBloc>().add(BoardLoadEvent(restart: true));
+        _showSureDialog(context, 'Are you sure to restart game', null, () {
+          context.read<BoardBloc>().add(BoardLoadEvent(restart: true));
+        });
         break;
       case _MENU_UNDO:
         context.read<BoardBloc>().add(BoardUndoEvent());
@@ -107,4 +108,33 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
       ),
     );
   }
+
+  void _showSureDialog(BuildContext context, String title, String content, Function action) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) {
+        return AlertDialog(
+          title: title == null ? null : Text(title),
+          content: content == null ? null : Text(content),
+          actions: [
+            FlatButton(
+              onPressed: () {
+                action();
+                Navigator.pop(_);
+              },
+              child: Text('yes'),
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.pop(_);
+              },
+              child: Text('no'),
+            ),
+          ],
+        );
+      }
+    );
+  }
+
 }
