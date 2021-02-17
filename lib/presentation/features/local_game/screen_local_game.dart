@@ -96,6 +96,10 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
                   }
                   else return Text('');
                 },
+                buildWhen: (oldValue, newValue) {
+                  if (oldValue != newValue) return true;
+                  return false;
+                },
               ),
             ),
           ],
