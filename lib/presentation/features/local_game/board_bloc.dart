@@ -1,6 +1,7 @@
 import 'package:chess/chess.dart' as ch;
 import 'package:bloc/bloc.dart';
 import 'package:mychess/data/storage_manager.dart';
+import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 
 import 'checkmate_cubit.dart';
 import 'board_event.dart';
@@ -9,9 +10,10 @@ import 'board_state.dart';
 
 
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
-  BoardBloc(this.checkmateCubit) : super(BoardInitialState());
+  BoardBloc(this.checkmateCubit, this.redoableCubit) : super(BoardInitialState());
 
   CheckmateCubit checkmateCubit;
+  RedoableCubit redoableCubit;
 
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
@@ -24,8 +26,10 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
 
     if (event is BoardLoadEvent) {
       if (event.restart || (await StorageManager().lastGameFen) == null) {
+        await StorageManager().setLastGameFen(null);
         chess = ch.Chess();
         undoHistory.clear();
+        redoableCubit.nonredoable();
       } else {
         chess = ch.Chess.fromFEN(await StorageManager().lastGameFen);
       }
@@ -87,6 +91,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         findMovablePiecesCoors();
         StorageManager().setLastGameFen(chess.fen);
         setHistoryString();
+        undoHistory.clear();
+        redoableCubit.nonredoable();
       }
 
       yield BoardLoadedState(
@@ -103,6 +109,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       ch.Move move = chess.undo_move();
       if (move != null) {
         undoHistory.add(move);
+        redoableCubit.redoable();
       }
       findMovablePiecesCoors();
       convertToPieceBoard();
@@ -124,6 +131,10 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         print('no undo');
       } else {
         chess.move(undoHistory.removeLast());
+
+        if (undoHistory.length == 0) {
+          redoableCubit.nonredoable();
+        }
 
         findMovablePiecesCoors();
         convertToPieceBoard();

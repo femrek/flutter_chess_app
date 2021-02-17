@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 
 import 'presentation/features/local_game/checkmate_cubit.dart';
 import 'presentation/features/local_game/board_bloc.dart';
@@ -12,12 +13,14 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
 
   CheckmateCubit checkmateCubit;
+  RedoableCubit redoableCubit;
   BoardBloc boardBloc;
 
   @override
   Widget build(BuildContext context) {
     checkmateCubit = CheckmateCubit();
-    boardBloc = BoardBloc(checkmateCubit);
+    redoableCubit = RedoableCubit();
+    boardBloc = BoardBloc(checkmateCubit, redoableCubit);
     
     return MultiBlocProvider(
       providers: [
@@ -27,6 +30,9 @@ class MyApp extends StatelessWidget {
         BlocProvider.value(
           value: checkmateCubit,
         ),
+        BlocProvider.value(
+          value: redoableCubit,
+        )
       ],
       child: MaterialApp(
         title: 'Chess',
