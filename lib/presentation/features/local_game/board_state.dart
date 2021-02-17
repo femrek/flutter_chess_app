@@ -38,15 +38,6 @@ class BoardLoadedState extends BoardState {
     ..add(isWhiteTurn)
     ..add(history)
   ;
-
-    // ..addAll(List.generate(8, (i) => board[0][i]?.type?.name))
-    // ..addAll(List.generate(8, (i) => board[1][i]?.type?.name))
-    // ..addAll(List.generate(8, (i) => board[2][i]?.type?.name))
-    // ..addAll(List.generate(8, (i) => board[3][i]?.type?.name))
-    // ..addAll(List.generate(8, (i) => board[4][i]?.type?.name))
-    // ..addAll(List.generate(8, (i) => board[5][i]?.type?.name))
-    // ..addAll(List.generate(8, (i) => board[6][i]?.type?.name))
-    // ..addAll(List.generate(8, (i) => board[7][i]?.type?.name))
 }
 
 class BoardFocusedState extends BoardState {
