@@ -25,9 +25,11 @@ class LocalHostFocusEvent extends LocalHostEvent {
 
 class LocalHostMoveEvent extends LocalHostEvent {
   final String to;
+  final bool fromHost;
 
   LocalHostMoveEvent({
     this.to,
+    this.fromHost,
   });
 
   @override
