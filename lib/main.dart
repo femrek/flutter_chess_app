@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
+import 'package:mychess/presentation/features/local_net_game/screen_local_network_game.dart';
 
 import 'presentation/features/local_game/checkmate_cubit.dart';
 import 'presentation/features/local_game/board_bloc.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (_) => ScreenMain(),
           '/local_game': (_) => ScreenLocalGame(),
+          '/local_net_game': (_) => ScreenLocalNetGame(),
         },
       ),
     );
