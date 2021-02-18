@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'board_bloc.dart';
 import 'board_event.dart';
 import 'board_state.dart';
+import 'package:mychess/data/app_theme.dart';
 
 class ChessTable extends StatelessWidget {
   final double size;
@@ -22,7 +23,7 @@ class ChessTable extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      color: _boardBgColor,
+      color: boardBgColor,
       child: _table(context),
     );
   }
@@ -110,14 +111,6 @@ class ChessTable extends StatelessWidget {
 }
 
 
-final Color _boardBgColor = Colors.blue;
-final Color _darkBgColor = Colors.teal;
-final Color _lightBgColor = Colors.white;
-final Color _blackPiecesColor = Colors.black;
-final Color _whitePiecesColor = Colors.orange;
-
-
-
 class SquareOnTheBoard extends StatelessWidget {
   final double size;
   final int positionX;
@@ -158,8 +151,8 @@ class SquareOnTheBoard extends StatelessWidget {
       }
     }
 
-    Color darkBg = _darkBgColor;
-    Color lightBg = _lightBgColor;
+    Color darkBg = darkBgColor;
+    Color lightBg = lightBgColor;
     if (attackableToThis) {
       darkBg = Colors.red;
       lightBg = Colors.red;
@@ -249,7 +242,7 @@ class SquareOnTheBoard extends StatelessWidget {
           width: size*0.8,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(9999),
-            color: isDark ? _darkBgColor : _lightBgColor,
+            color: isDark ? darkBgColor : lightBgColor,
           ),
         ),
       );
@@ -273,7 +266,7 @@ class SquareOnTheBoard extends StatelessWidget {
           child: (pieceName != null) ?
             SvgPicture.asset(
               'assets/images/$pieceName.svg',
-              color: isBlack ? _blackPiecesColor : _whitePiecesColor,
+              color: isBlack ? blackPiecesColor : whitePiecesColor,
             ) : null,
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mychess/presentation/features/local_game/chess_table.dart';
-import 'package:mychess/presentation/features/local_net_game/single_player_chess_table.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'host_checkmate_cubit.dart';
+import 'single_player_chess_table.dart';
 
 class ScreenLocalNetGame extends StatefulWidget {
   @override
@@ -11,6 +13,7 @@ class ScreenLocalNetGame extends StatefulWidget {
 class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: Text('CHESS'),
@@ -18,9 +21,15 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
       ),
       body: Column(
         children: [
-          SinglePlayerChessTable(),
+          SinglePlayerChessTable(size: width,),
+          BlocBuilder<HostCheckmateCubit, bool>(
+            builder: (_, bool checkmate) {
+              return Text(checkmate ? 'checkmate' : '');
+            },
+          ),
         ],
       ),
+      backgroundColor: Colors.black45,
     );
   }
 

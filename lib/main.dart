@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
+import 'package:mychess/presentation/features/local_net_game/host_checkmate_cubit.dart';
+import 'package:mychess/presentation/features/local_net_game/local_host_bloc.dart';
+import 'package:mychess/presentation/features/local_net_game/local_host_event.dart';
 import 'package:mychess/presentation/features/local_net_game/screen_local_network_game.dart';
 
 import 'presentation/features/local_game/checkmate_cubit.dart';
@@ -16,12 +19,16 @@ class MyApp extends StatelessWidget {
   CheckmateCubit checkmateCubit;
   RedoableCubit redoableCubit;
   BoardBloc boardBloc;
+  HostCheckmateCubit hostCheckmateCubit;
+  LocalHostBloc localHostBloc;
 
   @override
   Widget build(BuildContext context) {
     checkmateCubit = CheckmateCubit();
     redoableCubit = RedoableCubit();
     boardBloc = BoardBloc(checkmateCubit, redoableCubit);
+    hostCheckmateCubit = HostCheckmateCubit();
+    localHostBloc = LocalHostBloc(hostCheckmateCubit);
     
     return MultiBlocProvider(
       providers: [
@@ -33,7 +40,13 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: redoableCubit,
-        )
+        ),
+        BlocProvider.value(
+          value: localHostBloc..add(LocalHostLoadEvent()),
+        ),
+        BlocProvider.value(
+          value: hostCheckmateCubit,
+        ),
       ],
       child: MaterialApp(
         title: 'Chess',
