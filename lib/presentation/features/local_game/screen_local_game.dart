@@ -5,7 +5,7 @@ import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 import 'board_bloc.dart';
 import 'board_event.dart';
 import 'checkmate_cubit.dart';
-import '../../widgetes/chess_table.dart';
+import 'chess_table.dart';
 
 class ScreenLocalGame extends StatefulWidget {
   @override
