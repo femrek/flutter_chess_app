@@ -36,7 +36,13 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
               context.read<LocalHostBloc>().add(LocalHostLoadEvent(restart: true));
             },
             child: Text('restart'),
-          )
+          ),
+          RaisedButton(
+            onPressed: () {
+              context.read<LocalHostBloc>().add(LocalHostUndoEvent());
+            },
+            child: Text('undo'),
+          ),
         ],
       ),
       backgroundColor: Colors.black45,
