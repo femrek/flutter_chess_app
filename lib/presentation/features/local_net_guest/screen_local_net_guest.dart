@@ -9,7 +9,17 @@ class ScreenLocalNetGuest extends StatefulWidget {
 class _ScreenlocalNetGuestState extends State<ScreenLocalNetGuest> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('CHESS'),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          
+        ],
+      ),
+    );
   }
 
 }
