@@ -30,18 +30,18 @@ class SinglePlayerChessTable extends StatelessWidget {
   }
 
   Widget _table(BuildContext context) {
-    return Row(
-      children: List.generate(8, (index) => _tableColumn(context, index))
-        ..insert(0, _letterColumn(context, true))
-        ..add(_letterColumn(context, false))
+    return Column(
+      children: List.generate(8, (index) => _tableRow(context, index)).reversed.toList()
+      ..insert(0, _numberRow(context, true))
+      ..add(_numberRow(context, false)),
     );
   }
 
-  Column _tableColumn(BuildContext context, int y) {
-    return Column(
+  Row _tableRow(BuildContext context, int y) {
+    return Row(
       children: List.generate(8, (index) => _square(context, y, index))
-        ..insert(0, _text(context, (y+1).toString() , true, true))
-        ..add(_text(context, (y+1).toString() , true, false)),
+        ..insert(0, _text(context, String.fromCharCode(65+y), false, true))
+        ..add(_text(context, String.fromCharCode(65+y), false, false)),
     );
   }
 
@@ -82,12 +82,12 @@ class SinglePlayerChessTable extends StatelessWidget {
     );
   }
 
-  Column _letterColumn(BuildContext context, bool isRight) {
-    return Column(
+  Row _numberRow(BuildContext context, bool isTop) {
+    return Row(
       children: List.generate(8, (index) =>
-       _text(context, String.fromCharCode(65+index), false, isRight))
-         ..insert(0, SizedBox(height: size/18,))
-         ..add(SizedBox(height: size/18,)),
+       _text(context, (index+1).toString(), true, !isTop))
+         ..insert(0, SizedBox(width: size/18,))
+         ..add(SizedBox(width: size/18,)),
     );
   }
 
@@ -97,7 +97,7 @@ class SinglePlayerChessTable extends StatelessWidget {
       height: size / (!horizontalSide ? 9 : 18),
       alignment: Alignment.center,
       child: Transform.rotate(
-        angle: turnRight ? ninetyDegres : -ninetyDegres,
+        angle: turnRight ? 0 : 2*ninetyDegres,
         child: Text(
           content,
           style: TextStyle(
@@ -255,21 +255,18 @@ class SquareOnTheBoard extends StatelessWidget {
     if (piece == null) return Container();
     final String pieceName = pieceNameToAssetName[piece?.type?.name];
     final bool isBlack = piece.color.value == 1;
-    return Transform.rotate(
-      angle: isBlack ? -ninetyDegree : ninetyDegree,
-      child: Container(
-        width: size,
-        height: size,
-        alignment: Alignment.center,
-        child: SizedBox(
-          height: size*pieceNameToScale[pieceName],
-          width: size*pieceNameToScale[pieceName],
-          child: (pieceName != null) ?
-            SvgPicture.asset(
-              'assets/images/$pieceName.svg',
-              color: isBlack ? blackPiecesColor : whitePiecesColor,
-            ) : null,
-        ),
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      child: SizedBox(
+        height: size*pieceNameToScale[pieceName],
+        width: size*pieceNameToScale[pieceName],
+        child: (pieceName != null) ?
+          SvgPicture.asset(
+            'assets/images/$pieceName.svg',
+            color: isBlack ? blackPiecesColor : whitePiecesColor,
+          ) : null,
       ),
     );
   }
