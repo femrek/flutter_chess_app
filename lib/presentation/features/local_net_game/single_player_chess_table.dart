@@ -212,7 +212,6 @@ class SquareOnTheBoard extends StatelessWidget {
   }
 
   Widget _container(Color darkBg, Color lightBg, Widget child) {
-    print('size: $size');
     return Container(
         width: size,
         height: size,
