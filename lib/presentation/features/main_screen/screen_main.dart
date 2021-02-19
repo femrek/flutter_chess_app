@@ -25,6 +25,12 @@ class ScreenMain extends StatelessWidget {
               },
               child: Text('create local network game'),
             ),
+            RaisedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/local_net_guest');
+              },
+              child: Text('join local network game'),
+            )
           ],
         ),
       ),
