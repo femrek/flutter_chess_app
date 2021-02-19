@@ -2,14 +2,16 @@ import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/local_net_game/host_checkmate_cubit.dart';
+import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
 
 import 'local_host_event.dart';
 import 'local_host_state.dart';
 
 class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
-  LocalHostBloc(this.hostCheckmateCubit) : super(LocalHostInitialState());
+  LocalHostBloc(this.hostCheckmateCubit, this.hostRedoableCubit) : super(LocalHostInitialState());
 
   HostCheckmateCubit hostCheckmateCubit;
+  HostRedoableCubit hostRedoableCubit;
 
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
@@ -25,7 +27,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
          await StorageManager().setLastHostGameFen(null);
          chess = ch.Chess();
          undoHistory.clear();
-         //redoableCubit.nonredoable();
+         hostRedoableCubit.nonredoable();
        } else {
          chess = ch.Chess.fromFEN(await StorageManager().lastHostGameFen);
        }
@@ -88,7 +90,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         StorageManager().setLastGameFen(chess.fen);
         setHistoryString();
         undoHistory.clear();
-        //redoableCubit.nonredoable();
+        hostRedoableCubit.nonredoable();
       }
 
       yield LocalHostLoadedState(
@@ -105,7 +107,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       ch.Move move = chess.undo_move();
       if (move != null) {
         undoHistory.add(move);
-        //redoableCubit.redoable();
+        hostRedoableCubit.redoable();
       }
       findMovablePiecesCoors();
       convertToPieceBoard();
@@ -129,7 +131,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         chess.move(undoHistory.removeLast());
 
         if (undoHistory.length == 0) {
-          //redoableCubit.nonredoable();
+          hostRedoableCubit.nonredoable();
         }
 
         findMovablePiecesCoors();

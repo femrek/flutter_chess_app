@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
     boardBloc = BoardBloc(checkmateCubit, redoableCubit);
     hostCheckmateCubit = HostCheckmateCubit();
     hostRedoableCubit = HostRedoableCubit();
-    localHostBloc = LocalHostBloc(hostCheckmateCubit);
+    localHostBloc = LocalHostBloc(hostCheckmateCubit, hostRedoableCubit);
     
     return MultiBlocProvider(
       providers: [
