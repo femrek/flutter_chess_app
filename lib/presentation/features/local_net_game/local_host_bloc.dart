@@ -123,7 +123,28 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
     }
  
     else if (event is LocalHostRedoEvent) {
-      
+      if (undoHistory.length == 0) {
+        print('no undo');
+      } else {
+        chess.move(undoHistory.removeLast());
+
+        if (undoHistory.length == 0) {
+          //redoableCubit.nonredoable();
+        }
+
+        findMovablePiecesCoors();
+        convertToPieceBoard();
+        setHistoryString();
+
+        yield LocalHostLoadedState(
+          board: pieceBoard,
+          movablePiecesCoors: movablePiecesCoors,
+          isWhiteTurn: chess.turn == ch.Color.WHITE,
+          inCheck: chess.in_check,
+          history: history,
+        );
+      }
+
     }
 
   }

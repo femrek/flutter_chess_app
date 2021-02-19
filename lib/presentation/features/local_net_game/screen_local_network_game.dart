@@ -31,17 +31,28 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
               );
             },
           ),
-          RaisedButton(
-            onPressed: () {
-              context.read<LocalHostBloc>().add(LocalHostLoadEvent(restart: true));
-            },
-            child: Text('restart'),
-          ),
-          RaisedButton(
-            onPressed: () {
-              context.read<LocalHostBloc>().add(LocalHostUndoEvent());
-            },
-            child: Text('undo'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              RaisedButton(
+                onPressed: () {
+                  context.read<LocalHostBloc>().add(LocalHostLoadEvent(restart: true));
+                },
+                child: Text('restart'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  context.read<LocalHostBloc>().add(LocalHostUndoEvent());
+                },
+                child: Text('undo'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  context.read<LocalHostBloc>().add(LocalHostRedoEvent());
+                },
+                child: Text('redo'),
+              ),
+            ],
           ),
         ],
       ),
