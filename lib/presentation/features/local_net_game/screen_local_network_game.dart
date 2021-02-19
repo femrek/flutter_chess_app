@@ -6,6 +6,7 @@ import 'package:mychess/presentation/features/local_net_game/local_host_event.da
 import 'host_checkmate_cubit.dart';
 import 'local_host_bloc.dart';
 import 'single_player_chess_table.dart';
+import 'local_host_event.dart';
 
 class ScreenLocalNetGame extends StatefulWidget {
   @override
@@ -60,6 +61,23 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
               ),
             ],
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              RaisedButton(
+                onPressed: () {
+                  context.read<LocalHostBloc>().add(LocalHostStartEvent());
+                },
+                child: Text('connect'),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  context.read<LocalHostBloc>().add(LocalHostStopEvent());
+                },
+                child: Text('disconnect'),
+              ),
+            ],
+          )
         ],
       ),
       backgroundColor: Colors.black45,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/data/storage_manager.dart';
@@ -7,11 +9,17 @@ import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit
 import 'local_host_event.dart';
 import 'local_host_state.dart';
 
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
 class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
   LocalHostBloc(this.hostCheckmateCubit, this.hostRedoableCubit) : super(LocalHostInitialState());
 
   HostCheckmateCubit hostCheckmateCubit;
   HostRedoableCubit hostRedoableCubit;
+
+  ServerSocket serverSocket;
+  HttpServer httpServer;
 
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
@@ -48,6 +56,22 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
  
        if (!chess.in_checkmate) hostCheckmateCubit.reset();
        else hostCheckmateCubit.checkmate();
+    }
+
+    else if (event is LocalHostStartEvent) {
+      print('LocalHostConnectEvent event, ip: ${InternetAddress.anyIPv4}');
+      serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 6523);
+      httpServer = HttpServer.listenOn(serverSocket);
+      serverSocket.listen((Socket socket) {
+        socket.write('hello chess player');
+      });
+    }
+
+    else if (event is LocalHostStopEvent) {
+      serverSocket.close();
+      httpServer.close();
+      serverSocket = null;
+      httpServer = null;
     }
  
     else if (event is LocalHostFocusEvent) {

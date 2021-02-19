@@ -14,6 +14,17 @@ class LocalHostLoadEvent extends LocalHostEvent {
   List<Object> get props => [restart];
 }
 
+class LocalHostStartEvent extends LocalHostEvent {
+  final String ipAddress;
+
+  LocalHostStartEvent({this.ipAddress});
+
+  @override
+  List<Object> get props => [ipAddress];
+}
+
+class LocalHostStopEvent extends LocalHostEvent {}
+
 class LocalHostFocusEvent extends LocalHostEvent {
   final String focusCoor;
 
