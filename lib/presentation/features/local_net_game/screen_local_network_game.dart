@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/local_host_event.dart';
 
 import 'host_checkmate_cubit.dart';
@@ -46,11 +47,16 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
                 },
                 child: Text('undo'),
               ),
-              RaisedButton(
-                onPressed: () {
-                  context.read<LocalHostBloc>().add(LocalHostRedoEvent());
-                },
-                child: Text('redo'),
+              BlocBuilder<HostRedoableCubit, bool>(
+                builder: (_, bool redoable) {
+                  return RaisedButton(
+                    onPressed: redoable ? () {
+                      context.read<LocalHostBloc>().add(LocalHostRedoEvent());
+                    } : null ,
+                    disabledColor: Colors.white,
+                    child: Text('redo'),
+                  );
+                }
               ),
             ],
           ),
