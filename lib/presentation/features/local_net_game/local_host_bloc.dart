@@ -9,21 +9,20 @@ import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit
 import 'local_host_event.dart';
 import 'local_host_state.dart';
 
-import 'package:web_socket_channel/io.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-
 class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
   LocalHostBloc(this.hostCheckmateCubit, this.hostRedoableCubit) : super(LocalHostInitialState());
 
   HostCheckmateCubit hostCheckmateCubit;
   HostRedoableCubit hostRedoableCubit;
 
-  ServerSocket serverSocket;
+  //ServerSocket serverSocket;
   HttpServer httpServer;
 
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = Set();
+  Set<String> movableHostPiecesCoors = Set();
+  Set<String> movableGuestPiecesCoors = Set();
   String history;
   List<ch.Move> undoHistory = List();
 
@@ -32,45 +31,57 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
 
     if (event is LocalHostLoadEvent) {
       if (event.restart || (await StorageManager().lastHostGameFen) == null) {
-         await StorageManager().setLastHostGameFen(null);
-         chess = ch.Chess();
-         undoHistory.clear();
-         hostRedoableCubit.nonredoable();
-       } else {
-         chess = ch.Chess.fromFEN(await StorageManager().lastHostGameFen);
-       }
- 
-       findMovablePiecesCoors();
- 
-       convertToPieceBoard();
- 
-       setHistoryString();
- 
-       yield LocalHostLoadedState(
-         board: pieceBoard,
-         movablePiecesCoors: movablePiecesCoors,
-         isWhiteTurn: chess.turn == ch.Color.WHITE,
-         inCheck: chess.in_check,
-         history: history,
-       );
- 
-       if (!chess.in_checkmate) hostCheckmateCubit.reset();
-       else hostCheckmateCubit.checkmate();
+        await StorageManager().setLastHostGameFen(null);
+        chess = ch.Chess();
+        undoHistory.clear();
+        hostRedoableCubit.nonredoable();
+      } else {
+        chess = ch.Chess.fromFEN(await StorageManager().lastHostGameFen);
+      }
+
+      findMovablePiecesCoors();
+
+      convertToPieceBoard();
+
+      setHistoryString();
+
+      yield LocalHostLoadedState(
+        board: pieceBoard,
+        movablePiecesCoors: movablePiecesCoors,
+        isWhiteTurn: chess.turn == ch.Color.WHITE,
+        inCheck: chess.in_check,
+        history: history,
+      );
+
+      if (!chess.in_checkmate) hostCheckmateCubit.reset();
+      else hostCheckmateCubit.checkmate();
     }
 
     else if (event is LocalHostStartEvent) {
-      print('LocalHostConnectEvent event, ip: ${InternetAddress.anyIPv4}');
-      serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 6523);
-      httpServer = HttpServer.listenOn(serverSocket);
-      serverSocket.listen((Socket socket) {
-        socket.write('hello chess player');
+      //serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
+      httpServer = await HttpServer.bind(InternetAddress.anyIPv4, 0); //HttpServer.listenOn(serverSocket);
+      print('LocalHostConnectEvent event, ip: ${httpServer.address.toString()}:${httpServer.port.toString()}');
+      httpServer.listen((HttpRequest request) {
+        print('server socket event');
+        final Map<String, String> params = request.uri.queryParameters;
+        final String action = params['action'];
+        if (action == 'fen') {
+          request.response.write(chess.fen);
+        } else if (action == 'move') {
+          final String from = params['move_from'];
+          final String to = params['move_to'];
+          
+        } else {
+          request.response.write('hello chess player | action: $action');
+        } 
+        request.response.close();
       });
     }
 
     else if (event is LocalHostStopEvent) {
-      serverSocket.close();
+      //serverSocket.close();
       httpServer.close();
-      serverSocket = null;
+      //serverSocket = null;
       httpServer = null;
     }
  
@@ -92,7 +103,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
     }
  
     else if (event is LocalHostMoveEvent) {
-      if (!(state is LocalHostFocusedState || !event.fromHost)) {
+      if (!(state is LocalHostFocusedState)) {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
 
@@ -188,6 +199,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
     movablePiecesCoors.clear();
     for (ch.Move move in moves) {
       movablePiecesCoors.add(move.fromAlgebraic);
+      if (move.color == ch.Color.WHITE) movableHostPiecesCoors.add(move.fromAlgebraic);
+      else movableGuestPiecesCoors.add(move.fromAlgebraic);
     }
     print('movablePiecesCoors: $movablePiecesCoors');
   }
