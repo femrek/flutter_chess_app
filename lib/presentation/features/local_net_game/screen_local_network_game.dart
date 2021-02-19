@@ -26,7 +26,9 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
           SinglePlayerChessTable(size: width,),
           BlocBuilder<HostCheckmateCubit, bool>(
             builder: (_, bool checkmate) {
-              return Text(checkmate ? 'checkmate' : '');
+              return Text(checkmate ? 'checkmate' : 'non checkmate',
+                style: TextStyle(color: Colors.white),
+              );
             },
           ),
           RaisedButton(
