@@ -35,9 +35,11 @@ class LocalHostFocusEvent extends LocalHostEvent {
 }
 
 class LocalHostMoveEvent extends LocalHostEvent {
+  final String from;
   final String to;
 
   LocalHostMoveEvent({
+    this.from = '',
     this.to,
   });
 

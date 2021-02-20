@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +17,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
   HostCheckmateCubit hostCheckmateCubit;
   HostRedoableCubit hostRedoableCubit;
 
-  //ServerSocket serverSocket;
+  ServerSocket serverSocket;
+  Socket clientSocket;
   HttpServer httpServer;
 
   ch.Chess chess;
@@ -58,71 +61,79 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
     }
 
     else if (event is LocalHostStartEvent) {
-      //serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
-      httpServer = await HttpServer.bind(InternetAddress.anyIPv4, 0); //HttpServer.listenOn(serverSocket);
-      print('LocalHostConnectEvent event, ip: ${httpServer.address.toString()}:${httpServer.port.toString()}');
-      httpServer.listen((HttpRequest request) {
-        print('server socket event');
-        final Map<String, String> params = request.uri.queryParameters;
-        final String action = params['action'];
-        if (action == 'fen') {
-          request.response.write(chess.fen);
-        } else if (action == 'move') {
-          final String from = params['move_from'];
-          final String to = params['move_to'];
-          
-        } else {
-          request.response.write('hello chess player | action: $action');
-        } 
-        request.response.close();
+      serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
+      //httpServer = HttpServer.listenOn(serverSocket); //await HttpServer.bind(InternetAddress.anyIPv4, 0);
+      //print('LocalHostConnectEvent event, ip: ${httpServer.address.toString()}:${httpServer.port.toString()}');
+      print('LocalHostConnectEvent event, ip: ${serverSocket.address.toString()}:${serverSocket.port.toString()}');
+      serverSocket.listen((Socket socket) {
+        socket.write('asdf');
+        socket.listen((Uint8List data) {
+          String s = new String.fromCharCodes(data);
+          print(s);
+          //socket.write(s);
+          String query = s.substring(s.indexOf(' '), s.indexOf(' ', (s.indexOf(' ')+1)));
+          print(query);
+          final Map<String, String> params = queryToMap(query);
+          socket.write(params);
+          if (params.length == 0) return; 
+          final String action = params['action'];
+          if (action == 'fen') {
+            socket.write(chess.fen);
+          } else if (action == 'move') {
+            final String from = params['move_from'];
+            final String to = params['move_to'];
+            print('movableguestpiecescoors: $movableGuestPiecesCoors');
+            if (movableGuestPiecesCoors.contains(from)) {
+              add(LocalHostMoveEvent(from: from, to: to,));
+            } else {
+              socket.write('error: move not able');
+            }
+          } else {
+            socket.write('hello chess player | action: $action');
+          }
+        });
       });
     }
 
     else if (event is LocalHostStopEvent) {
-      //serverSocket.close();
-      httpServer.close();
-      //serverSocket = null;
+      if (serverSocket != null) serverSocket.close();
+      if (httpServer != null) httpServer.close();
+      serverSocket = null;
       httpServer = null;
     }
- 
+
     else if (event is LocalHostFocusEvent) {
       final Set<String> movableCoors = Set();
-       for (ch.Move move in chess.generate_moves()) {
-         //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
-         if (move.fromAlgebraic == event.focusCoor) {
-           movableCoors.add(move.toAlgebraic);
-         }
-       }
-       yield LocalHostFocusedState(
-         board: pieceBoard,
-         focusedCoor: event.focusCoor,
-         movableCoors: movableCoors,
-         isWhiteTurn: chess.turn == ch.Color.WHITE,
-         inCheck: chess.in_check,
-       );
+      for (ch.Move move in chess.generate_moves()) {
+        //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
+        if (move.fromAlgebraic == event.focusCoor) {
+          movableCoors.add(move.toAlgebraic);
+        }
+      }
+      setHistoryString();
+      yield LocalHostFocusedState(
+        board: pieceBoard,
+        focusedCoor: event.focusCoor,
+        movableCoors: movableCoors,
+        isWhiteTurn: chess.turn == ch.Color.WHITE,
+        inCheck: chess.in_check,
+        history: history,
+      );
     }
- 
+
     else if (event is LocalHostMoveEvent) {
-      if (!(state is LocalHostFocusedState)) {
+      if (!(state is LocalHostFocusedState || event.from != '')) {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
 
-      if (!(event.to == null || event.to == (state as LocalHostFocusedState).focusedCoor)) {
-        ch.Move thisMove; 
-        for (ch.Move move in chess.generate_moves()) {
-          if (
-            move.fromAlgebraic == (state as LocalHostFocusedState).focusedCoor
-            && move.toAlgebraic == (event.to)
-          ) {
-            thisMove = move;
-            break;
-          }
-        }
-        if (thisMove == null) throw Exception('unknown move');
-        chess.move(thisMove);
+      final String from = event.from == '' ? (state as LocalHostFocusedState).focusedCoor : event.from;
+      final String to = event.to;
+
+      if (!(to == null || to == from)) {
+        move(from, to);
         convertToPieceBoard();
         findMovablePiecesCoors();
-        StorageManager().setLastGameFen(chess.fen);
+        StorageManager().setLastHostGameFen(chess.fen);
         setHistoryString();
         undoHistory.clear();
         hostRedoableCubit.nonredoable();
@@ -133,6 +144,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
+        history: history,
       );
 
       if (chess.in_checkmate) hostCheckmateCubit.checkmate();
@@ -186,6 +198,40 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
 
   }
 
+  
+  Map<String, String> queryToMap(String query) {
+    int keyStartIndex = query.indexOf('?') + 1;
+    if (keyStartIndex == 0) return Map();
+    int valueStartIndex = query.indexOf('=') + 1;
+    int nextKeyStartIndex = query.indexOf('&') + 1;
+    Map<String, String> result = Map();
+    while(true) {
+      result[query.substring(keyStartIndex, valueStartIndex-1)] 
+        = query.substring(valueStartIndex, nextKeyStartIndex == 0 ? null : nextKeyStartIndex-1);
+      if (nextKeyStartIndex == 0) break;
+      keyStartIndex = nextKeyStartIndex;
+      valueStartIndex = query.indexOf('=', nextKeyStartIndex) + 1;
+      nextKeyStartIndex = query.indexOf('&', valueStartIndex) + 1;
+    }
+    return result;
+  }
+
+
+  void move(String from, String to) {
+    ch.Move thisMove; 
+    for (ch.Move move in chess.generate_moves()) {
+      if (
+        move.fromAlgebraic == from
+        && move.toAlgebraic == to
+      ) {
+        thisMove = move;
+        break;
+      }
+    }
+    if (thisMove == null) throw Exception('unknown move');
+    chess.move(thisMove);
+  }
+
   void convertToPieceBoard() {
     for(int x = 0; x < 8; x++) {
       for (int y = 0; y < 8; y++) {
@@ -197,6 +243,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
   void findMovablePiecesCoors() {
     List moves = chess.generate_moves();
     movablePiecesCoors.clear();
+    movableHostPiecesCoors.clear();
+    movableGuestPiecesCoors.clear();
     for (ch.Move move in moves) {
       movablePiecesCoors.add(move.fromAlgebraic);
       if (move.color == ch.Color.WHITE) movableHostPiecesCoors.add(move.fromAlgebraic);
