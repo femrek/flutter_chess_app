@@ -73,9 +73,12 @@ class SinglePlayerChessTable extends StatelessWidget {
           );
         }
 
-        return SizedBox(
-          height: squareSize,
-          width: squareSize,
+        return SquareOnTheBoard(
+          size: squareSize,
+          positionX: x,
+          positionY: y,
+          piece: null,
+          inCheck: false,
         );
       },
     );
