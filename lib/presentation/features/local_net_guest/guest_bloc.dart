@@ -25,12 +25,6 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
   Stream<GuestState> mapEventToState(GuestEvent event) async* {
 
     if (event is GuestLoadEvent) {
-        //final HttpClientRequest request = await httpClient.get(host, port, '');
-        //final HttpClientResponse response = await request.done;
-        //response.listen((event) { })
-
-        //response = await http.get('http://$host:$port?action=move&move_from=a1&move_to=b1');
-
       chess = ch.Chess.fromFEN(event.fen);
       convertToPieceBoard();
       setHistoryString();
@@ -41,8 +35,6 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         inCheck: chess.in_check,
         history: history,
       );
-        //if (!chess.in_checkmate) hostCheckmateCubit.reset();
-        //else hostCheckmateCubit.checkmate();
     }
 
     else if (event is GuestConnectEvent) {
@@ -51,19 +43,18 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       port = event.port;
 
       socket = await Socket.connect(InternetAddress.tryParse(host), port);
-      //socket = await Socket.connect(host, port, sourceAddress: '$host');
       print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
       socket.listen((Uint8List dataAsByte) {
         final String data = String.fromCharCodes(dataAsByte);
         print(data);
         add(GuestLoadEvent(fen: data));
       });
-      socket.write('?action=fen');
-      socket.close();
+      //socket.write('?action=fen');
+      //socket.close().then((value) => print('fen request: $value'));
     }
 
     else if (event is GuestDisconnectEvent) {
-      if (socket != null) socket.close();
+      if (socket != null) socket.destroy();
       socket = null;
     }
 
@@ -87,7 +78,17 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
     }
 
     else if (event is GuestMoveEvent) {
+      if (!(state is GuestFocusedState)) {
+        throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
+      }
 
+      final String from = (state as GuestFocusedState).focusedCoor;
+      final String to = event.to;
+
+      if (!(to == null || to == from)) {
+        socket.write('?action=move&move_from=$from&move_to=$to');
+        socket.close();
+      }
     }
 
   }
