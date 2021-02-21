@@ -13,6 +13,7 @@ import 'presentation/features/local_game/checkmate_cubit.dart';
 import 'presentation/features/local_game/board_bloc.dart';
 import 'presentation/features/local_game/board_event.dart';
 import 'presentation/features/local_game/screen_local_game.dart';
+import 'presentation/features/local_net_game/host_name_cubit.dart';
 import 'presentation/features/main_screen/screen_main.dart';
 
 void main() => runApp(MyApp());
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
   BoardBloc boardBloc;
   HostCheckmateCubit hostCheckmateCubit;
   HostRedoableCubit hostRedoableCubit;
+  HostNameCubit hostNameCubit;
   LocalHostBloc localHostBloc;
   GuestBloc guestBloc;
 
@@ -34,7 +36,8 @@ class MyApp extends StatelessWidget {
     boardBloc = BoardBloc(checkmateCubit, redoableCubit);
     hostCheckmateCubit = HostCheckmateCubit();
     hostRedoableCubit = HostRedoableCubit();
-    localHostBloc = LocalHostBloc(hostCheckmateCubit, hostRedoableCubit);
+    hostNameCubit = HostNameCubit();
+    localHostBloc = LocalHostBloc(hostCheckmateCubit, hostRedoableCubit, hostNameCubit);
     guestBloc = GuestBloc();
     
     return MultiBlocProvider(
@@ -56,6 +59,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: hostRedoableCubit,
+        ),
+        BlocProvider.value(
+          value: hostNameCubit,
         ),
         BlocProvider.value(
           value: guestBloc,

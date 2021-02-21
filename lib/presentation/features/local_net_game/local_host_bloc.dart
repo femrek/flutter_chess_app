@@ -6,20 +6,21 @@ import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/local_net_game/host_checkmate_cubit.dart';
+import 'package:mychess/presentation/features/local_net_game/host_name_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
 
 import 'local_host_event.dart';
 import 'local_host_state.dart';
 
 class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
-  LocalHostBloc(this.hostCheckmateCubit, this.hostRedoableCubit) : super(LocalHostInitialState());
+  LocalHostBloc(this.hostCheckmateCubit, this.hostRedoableCubit, this.hostNameCubit) : super(LocalHostInitialState());
 
-  HostCheckmateCubit hostCheckmateCubit;
-  HostRedoableCubit hostRedoableCubit;
+  final HostCheckmateCubit hostCheckmateCubit;
+  final HostRedoableCubit hostRedoableCubit;
+  final HostNameCubit hostNameCubit;
 
   ServerSocket serverSocket;
-  Socket clientSocket;
-  HttpServer httpServer;
+  Socket firstClientSocket;
 
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
@@ -62,34 +63,40 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
 
     else if (event is LocalHostStartEvent) {
       serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
-      //httpServer = HttpServer.listenOn(serverSocket); //await HttpServer.bind(InternetAddress.anyIPv4, 0);
-      //print('LocalHostConnectEvent event, ip: ${httpServer.address.toString()}:${httpServer.port.toString()}');
       print('LocalHostConnectEvent event, ip: ${serverSocket.address.toString()}:${serverSocket.port.toString()}');
+      hostNameCubit.defineHostName(serverSocket.address.address, serverSocket.port);
       serverSocket.listen((Socket socket) {
-        socket.write('asdf');
-        socket.listen((Uint8List data) {
-          String s = new String.fromCharCodes(data);
+        socket.write(chess.fen);
+        if (firstClientSocket != null) firstClientSocket = socket;
+        socket.listen((Uint8List dataAsByte) {
+          String s = new String.fromCharCodes(dataAsByte);
           print(s);
-          //socket.write(s);
-          String query = s.substring(s.indexOf(' '), s.indexOf(' ', (s.indexOf(' ')+1)));
+          String query;
+          try {
+            query = s.substring(s.indexOf(' ')+1, s.indexOf(' ', (s.indexOf(' ')+1)));
+          } on RangeError {
+            query = s;
+          }
           print(query);
           final Map<String, String> params = queryToMap(query);
-          socket.write(params);
+          print('$params');
           if (params.length == 0) return; 
           final String action = params['action'];
           if (action == 'fen') {
-            socket.write(chess.fen);
+            socket.write('${chess.fen}');
+            print('sending ${chess.fen}');
           } else if (action == 'move') {
             final String from = params['move_from'];
             final String to = params['move_to'];
             print('movableguestpiecescoors: $movableGuestPiecesCoors');
-            if (movableGuestPiecesCoors.contains(from)) {
-              add(LocalHostMoveEvent(from: from, to: to,));
+            if (movablePiecesCoors.contains(from)) {
+              move(from, to);
+              add(LocalHostLoadEvent());
             } else {
-              socket.write('error: move not able');
             }
+            socket.write(chess.fen);
           } else {
-            socket.write('hello chess player | action: $action');
+            socket.write('unknown action');
           }
         });
       });
@@ -97,9 +104,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
 
     else if (event is LocalHostStopEvent) {
       if (serverSocket != null) serverSocket.close();
-      if (httpServer != null) httpServer.close();
       serverSocket = null;
-      httpServer = null;
     }
 
     else if (event is LocalHostFocusEvent) {

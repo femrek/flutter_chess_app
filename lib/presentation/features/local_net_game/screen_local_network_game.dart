@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mychess/presentation/features/local_net_game/host_name_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/local_host_event.dart';
 
@@ -15,72 +16,87 @@ class ScreenLocalNetGame extends StatefulWidget {
 }
 
 class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
+
+  @override
+  void initState() {
+    super.initState();
+    initStateAsync();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future initStateAsync() async {
+    context.read<LocalHostBloc>().add(LocalHostStartEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('CHESS'),
-        centerTitle: true,
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<LocalHostBloc>().add(LocalHostStopEvent());
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('CHESS'),
+          centerTitle: true,
+        ),
+        body: Column(
+          children: [
+            SinglePlayerChessTable(size: width,),
+            BlocBuilder<HostCheckmateCubit, bool>(
+              builder: (_, bool checkmate) {
+                return Text(checkmate ? 'checkmate' : 'non checkmate',
+                  style: TextStyle(color: Colors.white),
+                );
+              },
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                RaisedButton(
+                  onPressed: () {
+                    context.read<LocalHostBloc>().add(LocalHostLoadEvent(restart: true));
+                  },
+                  child: Text('restart'),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    context.read<LocalHostBloc>().add(LocalHostUndoEvent());
+                  },
+                  child: Text('undo'),
+                ),
+                BlocBuilder<HostRedoableCubit, bool>(
+                  builder: (_, bool redoable) {
+                    return RaisedButton(
+                      onPressed: redoable ? () {
+                        context.read<LocalHostBloc>().add(LocalHostRedoEvent());
+                      } : null ,
+                      disabledColor: Colors.white,
+                      child: Text('redo'),
+                    );
+                  }
+                ),
+              ],
+            ),
+            BlocBuilder<HostNameCubit, String>(
+              builder: (_, String hostName) {
+                return Text(
+                  hostName,
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                );
+              },
+            )
+          ],
+        ),
+        backgroundColor: Colors.black45,
       ),
-      body: Column(
-        children: [
-          SinglePlayerChessTable(size: width,),
-          BlocBuilder<HostCheckmateCubit, bool>(
-            builder: (_, bool checkmate) {
-              return Text(checkmate ? 'checkmate' : 'non checkmate',
-                style: TextStyle(color: Colors.white),
-              );
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              RaisedButton(
-                onPressed: () {
-                  context.read<LocalHostBloc>().add(LocalHostLoadEvent(restart: true));
-                },
-                child: Text('restart'),
-              ),
-              RaisedButton(
-                onPressed: () {
-                  context.read<LocalHostBloc>().add(LocalHostUndoEvent());
-                },
-                child: Text('undo'),
-              ),
-              BlocBuilder<HostRedoableCubit, bool>(
-                builder: (_, bool redoable) {
-                  return RaisedButton(
-                    onPressed: redoable ? () {
-                      context.read<LocalHostBloc>().add(LocalHostRedoEvent());
-                    } : null ,
-                    disabledColor: Colors.white,
-                    child: Text('redo'),
-                  );
-                }
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              RaisedButton(
-                onPressed: () {
-                  context.read<LocalHostBloc>().add(LocalHostStartEvent());
-                },
-                child: Text('connect'),
-              ),
-              RaisedButton(
-                onPressed: () {
-                  context.read<LocalHostBloc>().add(LocalHostStopEvent());
-                },
-                child: Text('disconnect'),
-              ),
-            ],
-          )
-        ],
-      ),
-      backgroundColor: Colors.black45,
     );
   }
 
