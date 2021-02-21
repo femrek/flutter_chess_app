@@ -34,6 +34,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       if (event.fen != null) {
         chess = ch.Chess.fromFEN(event.fen);
       } else if (event.restart || (await StorageManager().lastHostGameFen) == null) {
+        yield LocalHostInitialState();
         await StorageManager().setLastHostGameFen(null);
         chess = ch.Chess();
         undoHistory.clear();
