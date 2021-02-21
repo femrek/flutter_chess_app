@@ -28,6 +28,8 @@ Future runServer() async {
   //httpServer = HttpServer.listenOn(serverSocket);
   print('LocalHostConnectEvent event, ip: ${serverSocket.address.toString()}:${serverSocket.port.toString()}');
   serverSocket.listen((Socket socket) {
+    socket.write(chess.fen);
+    socket.close();
     if (firstClientSocket != null) {
       firstClientSocket = socket;
       socket.listen((Uint8List dataAsByte) {
@@ -49,19 +51,18 @@ Future runServer() async {
         if (action == 'fen') {
           socket.write('${chess.fen}');
           print('sending ${chess.fen}');
-          //socket.write('HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\n');
         } else if (action == 'move') {
           final String from = params['move_from'];
           final String to = params['move_to'];
           print('movableguestpiecescoors: $movableGuestPiecesCoors');
-          if (movableGuestPiecesCoors.contains(from)) {
+          if (movablePiecesCoors.contains(from)) {
             move(from, to);
           } else {
-            //socket.write('error: move not able');
+            socket.write('error: move not able');
           }
-          //socket.write('$responsPrefix${chess.fen}');
+          socket.write('$responsPrefix${chess.fen}');
         } else {
-          //socket.write('hello chess player | action: $action');
+          socket.write('unknown action');
         }
         socket.close();
       });
