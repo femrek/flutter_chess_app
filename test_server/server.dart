@@ -18,6 +18,7 @@ List<ch.Move> undoHistory = List();
 
 main() async {
   chess = ch.Chess();
+  findMovablePiecesCoors();
   await runServer();
 }
 
@@ -29,44 +30,38 @@ Future runServer() async {
   print('LocalHostConnectEvent event, ip: ${serverSocket.address.toString()}:${serverSocket.port.toString()}');
   serverSocket.listen((Socket socket) {
     socket.write(chess.fen);
-    socket.close();
-    if (firstClientSocket != null) {
-      firstClientSocket = socket;
-      socket.listen((Uint8List dataAsByte) {
-        String s = new String.fromCharCodes(dataAsByte);
-        print(s);
-        //socket.write(s);
-        String query;
-        try {
-          query = s.substring(s.indexOf(' ')+1, s.indexOf(' ', (s.indexOf(' ')+1)));
-        } on RangeError {
-          query = s;
-        }
-        print(query);
-        final Map<String, String> params = queryToMap(query);
-        print('$params');
-        //socket.write(params);
-        if (params.length == 0) return; 
-        final String action = params['action'];
-        if (action == 'fen') {
-          socket.write('${chess.fen}');
-          print('sending ${chess.fen}');
-        } else if (action == 'move') {
-          final String from = params['move_from'];
-          final String to = params['move_to'];
-          print('movableguestpiecescoors: $movableGuestPiecesCoors');
-          if (movablePiecesCoors.contains(from)) {
-            move(from, to);
-          } else {
-            socket.write('error: move not able');
-          }
-          socket.write('$responsPrefix${chess.fen}');
+    firstClientSocket = socket;
+    socket.listen((Uint8List dataAsByte) {
+      String s = new String.fromCharCodes(dataAsByte);
+      print(s);
+      String query;
+      try {
+        query = s.substring(s.indexOf(' ')+1, s.indexOf(' ', (s.indexOf(' ')+1)));
+      } on RangeError {
+        query = s;
+      }
+      print(query);
+      final Map<String, String> params = queryToMap(query);
+      print('$params');
+      if (params.length == 0) return; 
+      final String action = params['action'];
+      if (action == 'fen') {
+        socket.write('${chess.fen}');
+        print('sending ${chess.fen}');
+      } else if (action == 'move') {
+        final String from = params['move_from'];
+        final String to = params['move_to'];
+        print('movableguestpiecescoors: $movableGuestPiecesCoors');
+        if (movablePiecesCoors.contains(from)) {
+          move(from, to);
+          findMovablePiecesCoors();
         } else {
-          socket.write('unknown action');
         }
-        socket.close();
-      });
-    } 
+        socket.write(chess.fen);
+      } else {
+        socket.write('unknown action');
+      }
+    });
   });
 }
 

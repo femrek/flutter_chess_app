@@ -26,6 +26,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
 
     if (event is GuestLoadEvent) {
       chess = ch.Chess.fromFEN(event.fen);
+      findMovablePiecesCoors();
       convertToPieceBoard();
       setHistoryString();
       yield GuestLoadedState(
@@ -54,6 +55,12 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
     else if (event is GuestDisconnectEvent) {
       if (socket != null) socket.destroy();
       socket = null;
+    }
+
+    else if (event is GuestRefreshEvent) {
+      if (socket != null) {
+        socket.write('?action=fen');
+      }
     }
 
     else if (event is GuestFocusEvent) {
@@ -85,7 +92,6 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
 
       if (!(to == null || to == from)) {
         socket.write('?action=move&move_from=$from&move_to=$to');
-        socket.close();
       }
     }
 

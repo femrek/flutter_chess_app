@@ -31,6 +31,8 @@ class GuestConnectEvent extends GuestEvent {
 
 class GuestDisconnectEvent extends GuestEvent {}
 
+class GuestRefreshEvent extends GuestEvent {}
+
 class GuestFocusEvent extends GuestEvent {
   final String focusCoor;
 
