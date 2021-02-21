@@ -5,7 +5,16 @@ class GuestEvent extends Equatable {
   List<Object> get props => []; 
 }
 
-class GuestLoadEvent extends GuestEvent {}
+class GuestLoadEvent extends GuestEvent {
+  final String fen;
+
+  GuestLoadEvent({
+    this.fen,
+  });
+
+  @override
+  List<Object> get props => [fen];
+}
 
 class GuestConnectEvent extends GuestEvent {
   final String host;
@@ -21,3 +30,25 @@ class GuestConnectEvent extends GuestEvent {
 }
 
 class GuestDisconnectEvent extends GuestEvent {}
+
+class GuestFocusEvent extends GuestEvent {
+  final String focusCoor;
+
+  GuestFocusEvent({
+    this.focusCoor,
+  });
+
+  @override
+  List<Object> get props => [focusCoor];
+}
+
+class GuestMoveEvent extends GuestEvent {
+  final String to;
+
+  GuestMoveEvent({
+    this.to,
+  });
+
+  @override
+  List<Object> get props => [to];
+}

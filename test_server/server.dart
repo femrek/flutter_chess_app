@@ -6,6 +6,8 @@ import 'dart:typed_data';
 import 'package:chess/chess.dart' as ch;
 
 ServerSocket serverSocket;
+Socket firstClientSocket;
+
 ch.Chess chess;
 List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
 Set<String> movablePiecesCoors = Set();
@@ -19,37 +21,51 @@ main() async {
   await runServer();
 }
 
+const String responsPrefix = 'HTTP/1.1 200 OK\nContent-Type: text/html\n\n';
+
 Future runServer() async {
   serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
+  //httpServer = HttpServer.listenOn(serverSocket);
   print('LocalHostConnectEvent event, ip: ${serverSocket.address.toString()}:${serverSocket.port.toString()}');
   serverSocket.listen((Socket socket) {
-    socket.listen((Uint8List dataAsByte) {
-      String s = new String.fromCharCodes(dataAsByte);
-      print(s);
-      //socket.write(s);
-      String query = s.substring(s.indexOf(' '), s.indexOf(' ', (s.indexOf(' ')+1)));
-      print(query);
-      final Map<String, String> params = queryToMap(query);
-      socket.write(params);
-      if (params.length == 0) return; 
-      final String action = params['action'];
-      if (action == 'fen') {
-        socket.write(chess.fen);
-      } else if (action == 'move') {
-        final String from = params['move_from'];
-        final String to = params['move_to'];
-        print('movableguestpiecescoors: $movableGuestPiecesCoors');
-        if (movableGuestPiecesCoors.contains(from)) {
-          move(from, to);
-        } else {
-          socket.write('error: move not able');
+    if (firstClientSocket != null) {
+      firstClientSocket = socket;
+      socket.listen((Uint8List dataAsByte) {
+        String s = new String.fromCharCodes(dataAsByte);
+        print(s);
+        //socket.write(s);
+        String query;
+        try {
+          query = s.substring(s.indexOf(' ')+1, s.indexOf(' ', (s.indexOf(' ')+1)));
+        } on RangeError {
+          query = s;
         }
-        socket.write(chess.fen);
-      } else {
-        socket.write('hello chess player | action: $action');
-      }
-      socket.close();
-    }); 
+        print(query);
+        final Map<String, String> params = queryToMap(query);
+        print('$params');
+        //socket.write(params);
+        if (params.length == 0) return; 
+        final String action = params['action'];
+        if (action == 'fen') {
+          socket.write('${chess.fen}');
+          print('sending ${chess.fen}');
+          //socket.write('HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=\r\n');
+        } else if (action == 'move') {
+          final String from = params['move_from'];
+          final String to = params['move_to'];
+          print('movableguestpiecescoors: $movableGuestPiecesCoors');
+          if (movableGuestPiecesCoors.contains(from)) {
+            move(from, to);
+          } else {
+            //socket.write('error: move not able');
+          }
+          //socket.write('$responsPrefix${chess.fen}');
+        } else {
+          //socket.write('hello chess player | action: $action');
+        }
+        socket.close();
+      });
+    } 
   });
 }
 
