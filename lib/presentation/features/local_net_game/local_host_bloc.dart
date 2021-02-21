@@ -34,7 +34,9 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
   Stream<LocalHostState> mapEventToState(LocalHostEvent event) async* {
 
     if (event is LocalHostLoadEvent) {
-      if (event.restart || (await StorageManager().lastHostGameFen) == null) {
+      if (event.fen != null) {
+        chess = ch.Chess.fromFEN(event.fen);
+      } else if (event.restart || (await StorageManager().lastHostGameFen) == null) {
         await StorageManager().setLastHostGameFen(null);
         chess = ch.Chess();
         undoHistory.clear();
@@ -49,6 +51,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
 
       setHistoryString();
 
+      print('new loaded state');
       yield LocalHostLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -67,10 +70,14 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       hostNameCubit.defineHostName(serverSocket.address.address, serverSocket.port);
       serverSocket.listen((Socket socket) {
         socket.write(chess.fen);
-        if (firstClientSocket != null) firstClientSocket = socket;
+        print('new connection');
+        if (firstClientSocket == null) {
+          print('first client socket is setting');
+          firstClientSocket = socket;
+        }
         socket.listen((Uint8List dataAsByte) {
           String s = new String.fromCharCodes(dataAsByte);
-          print(s);
+          //print(s);
           String query;
           try {
             query = s.substring(s.indexOf(' ')+1, s.indexOf(' ', (s.indexOf(' ')+1)));
@@ -91,8 +98,11 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
             print('movableguestpiecescoors: $movableGuestPiecesCoors');
             if (movablePiecesCoors.contains(from)) {
               move(from, to);
-              add(LocalHostLoadEvent());
-            } else {
+              StorageManager().setLastHostGameFen(chess.fen);
+              undoHistory.clear();
+              hostRedoableCubit.nonredoable();
+              print('new local host load event form socket');
+              add(LocalHostLoadEvent(fen: chess.fen));
             }
             socket.write(chess.fen);
           } else {
@@ -105,6 +115,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
     else if (event is LocalHostStopEvent) {
       if (serverSocket != null) serverSocket.close();
       serverSocket = null;
+      if (firstClientSocket != null) firstClientSocket.destroy();
+      firstClientSocket = null;
     }
 
     else if (event is LocalHostFocusEvent) {

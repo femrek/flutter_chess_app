@@ -7,8 +7,12 @@ class LocalHostEvent extends Equatable {
 
 class LocalHostLoadEvent extends LocalHostEvent {
   final bool restart;
+  final String fen;
 
-  LocalHostLoadEvent({this.restart = false});
+  LocalHostLoadEvent({
+    this.restart = false,
+    this.fen,
+  });
 
   @override
   List<Object> get props => [restart];
