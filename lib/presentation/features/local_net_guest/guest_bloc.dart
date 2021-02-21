@@ -49,8 +49,6 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         print(data);
         add(GuestLoadEvent(fen: data));
       });
-      //socket.write('?action=fen');
-      //socket.close().then((value) => print('fen request: $value'));
     }
 
     else if (event is GuestDisconnectEvent) {

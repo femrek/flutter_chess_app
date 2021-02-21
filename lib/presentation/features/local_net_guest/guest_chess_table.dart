@@ -31,7 +31,7 @@ class GuestChessTable extends StatelessWidget {
 
   Widget _table(BuildContext context) {
     return Column(
-      children: List.generate(8, (index) => _tableRow(context, index)).reversed.toList()
+      children: List.generate(8, (index) => _tableRow(context, 7-index)).reversed.toList()
       ..insert(0, _letterRow(context, true))
       ..add(_letterRow(context, false)),
     );
@@ -39,7 +39,7 @@ class GuestChessTable extends StatelessWidget {
 
   Row _tableRow(BuildContext context, int y) {
     return Row(
-      children: List.generate(8, (index) => _square(context, y, index))
+      children: List.generate(8, (index) => _square(context, y, 7-index))
         ..insert(0, _text(context, (y+1).toString(), false, true))
         ..add(_text(context, (y+1).toString(), false, false)),
     );
@@ -84,7 +84,7 @@ class GuestChessTable extends StatelessWidget {
   Row _letterRow(BuildContext context, bool isTop) {
     return Row(
       children: List.generate(8, (index) =>
-       _text(context, String.fromCharCode(65+index), true, !isTop))
+       _text(context, String.fromCharCode(72-index), true, !isTop))
          ..insert(0, SizedBox(width: size/18,))
          ..add(SizedBox(width: size/18,)),
     );
