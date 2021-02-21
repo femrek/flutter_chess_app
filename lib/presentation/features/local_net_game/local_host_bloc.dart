@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:chess/chess.dart' as ch;
@@ -25,8 +24,6 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = Set();
-  Set<String> movableHostPiecesCoors = Set();
-  Set<String> movableGuestPiecesCoors = Set();
   String history;
   List<ch.Move> undoHistory = List();
 
@@ -95,8 +92,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
           } else if (action == 'move') {
             final String from = params['move_from'];
             final String to = params['move_to'];
-            print('movableguestpiecescoors: $movableGuestPiecesCoors');
-            if (movablePiecesCoors.contains(from)) {
+            if (chess.turn == ch.Color.BLACK && movablePiecesCoors.contains(from)) {
               move(from, to);
               StorageManager().setLastHostGameFen(chess.fen);
               undoHistory.clear();
@@ -260,12 +256,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
   void findMovablePiecesCoors() {
     List moves = chess.generate_moves();
     movablePiecesCoors.clear();
-    movableHostPiecesCoors.clear();
-    movableGuestPiecesCoors.clear();
     for (ch.Move move in moves) {
       movablePiecesCoors.add(move.fromAlgebraic);
-      if (move.color == ch.Color.WHITE) movableHostPiecesCoors.add(move.fromAlgebraic);
-      else movableGuestPiecesCoors.add(move.fromAlgebraic);
     }
     print('movablePiecesCoors: $movablePiecesCoors');
   }
