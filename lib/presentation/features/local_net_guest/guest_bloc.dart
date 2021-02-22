@@ -49,7 +49,11 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       socket.listen((Uint8List dataAsByte) {
         final String data = String.fromCharCodes(dataAsByte);
         print(data);
-        add(GuestLoadEvent(fen: data));
+        if (ch.Chess.validate_fen(data)['valid']) {
+          add(GuestLoadEvent(fen: data));
+        } else {
+          add(GuestRefreshEvent());
+        }
       });
     }
 
