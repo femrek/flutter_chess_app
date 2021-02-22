@@ -53,7 +53,10 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
     }
 
     else if (event is GuestDisconnectEvent) {
-      if (socket != null) socket.destroy();
+      if (socket != null) {
+        socket.write('?action=disconnect');
+        socket.destroy();
+      }
       socket = null;
     }
 

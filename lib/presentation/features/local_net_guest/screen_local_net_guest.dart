@@ -19,6 +19,7 @@ class _ScreenlocalNetGuestState extends State<ScreenLocalNetGuest> {
 
   @override
   void dispose() {
+    //todo disconnect when quit guest screen
     super.dispose();
   }
 

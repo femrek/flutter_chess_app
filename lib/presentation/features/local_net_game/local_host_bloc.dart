@@ -19,7 +19,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
   final HostNameCubit hostNameCubit;
 
   ServerSocket serverSocket;
-  Socket firstClientSocket;
+  Socket clientSocket;
 
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
@@ -43,7 +43,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       } else {
         chess = ch.Chess.fromFEN(await StorageManager().lastHostGameFen);
       }
-      if (firstClientSocket != null) firstClientSocket.write(chess.fen);
+      if (clientSocket != null) clientSocket.write(chess.fen);
 
       findMovablePiecesCoors();
 
@@ -71,10 +71,11 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       serverSocket.listen((Socket socket) {
         socket.write(chess.fen);
         print('new connection');
-        if (firstClientSocket == null) {
+        if (clientSocket == null) {
           print('first client socket is setting');
-          firstClientSocket = socket;
+          clientSocket = socket;
         }
+        //todo set as null clientSocket when client left
         socket.listen((Uint8List dataAsByte) {
           String s = new String.fromCharCodes(dataAsByte);
           //print(s);
@@ -99,6 +100,11 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
               add(LocalHostMoveEvent(from: from, to: to));
             }
             socket.write(chess.fen);
+          } else if (action == 'disconnect') {
+            if (socket == clientSocket) {
+              clientSocket.destroy();
+              clientSocket = null;
+            }
           } else {
             socket.write('unknown action');
           }
@@ -109,8 +115,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
     else if (event is LocalHostStopEvent) {
       if (serverSocket != null) serverSocket.close();
       serverSocket = null;
-      if (firstClientSocket != null) firstClientSocket.destroy();
-      firstClientSocket = null;
+      if (clientSocket != null) clientSocket.destroy();
+      clientSocket = null;
       print('server stoped');
     }
 
@@ -149,7 +155,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         setHistoryString();
         undoHistory.clear();
         hostRedoableCubit.nonredoable();
-        firstClientSocket.write(chess.fen);
+        clientSocket.write(chess.fen);
       }
 
       yield LocalHostLoadedState(
@@ -169,7 +175,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         undoHistory.add(move);
         hostRedoableCubit.redoable();
       }
-      firstClientSocket.write(chess.fen);
+      clientSocket.write(chess.fen);
       findMovablePiecesCoors();
       convertToPieceBoard();
       setHistoryString();
@@ -191,7 +197,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       } else {
         chess.move(undoHistory.removeLast());
 
-        firstClientSocket.write(chess.fen);
+        clientSocket.write(chess.fen);
 
         if (undoHistory.length == 0) {
           hostRedoableCubit.nonredoable();
