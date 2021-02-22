@@ -141,7 +141,8 @@ class SquareOnTheBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (context.read<LocalHostBloc>().state is LocalHostLoadedState) {
       //print(name);
-      movable = (context.read<LocalHostBloc>().state as LocalHostLoadedState).movablePiecesCoors.contains(name);
+      movable = (context.read<LocalHostBloc>().state as LocalHostLoadedState).isWhiteTurn 
+        && (context.read<LocalHostBloc>().state as LocalHostLoadedState).movablePiecesCoors.contains(name);
     } else if (context.read<LocalHostBloc>().state is LocalHostFocusedState) {
       movableToThis = (context.read<LocalHostBloc>().state as LocalHostFocusedState).movableCoors.contains(name);
       if (piece != null && movableToThis) {
