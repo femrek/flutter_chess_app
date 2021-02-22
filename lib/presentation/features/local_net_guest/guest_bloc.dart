@@ -43,6 +43,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       host = event.host;
       port = event.port;
 
+      yield GuestInitialState();
       socket = await Socket.connect(InternetAddress.tryParse(host), port);
       print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
       socket.listen((Uint8List dataAsByte) {
