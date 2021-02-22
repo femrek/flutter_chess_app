@@ -12,13 +12,17 @@ class ScreenLocalNetGuest extends StatefulWidget {
 
 class _ScreenlocalNetGuestState extends State<ScreenLocalNetGuest> {
 
+  GuestBloc guestBloc;
+
   @override
   void initState() {
+    guestBloc = context.read<GuestBloc>();
     super.initState();
   }
 
   @override
   void dispose() {
+    guestBloc.add(GuestDisconnectEvent());
     super.dispose();
   }
 
@@ -30,35 +34,27 @@ class _ScreenlocalNetGuestState extends State<ScreenLocalNetGuest> {
       host: arg[0],
       port: arg[1],
     ));
-    return WillPopScope(
-      onWillPop: () async {
-        context.read<GuestBloc>().add(GuestDisconnectEvent());
-        return true;
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('CHESS'),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-        ),
-        body: Column(
-          children: [
-            GuestChessTable(size: width),
-            RaisedButton(
-              onPressed: () {
-                context.read<GuestBloc>().add(GuestDisconnectEvent());
-                Navigator.pop(context);
-              },
-              child: Text('disconnent'),
-            ),
-            RaisedButton(
-              onPressed: () {
-                context.read<GuestBloc>().add(GuestRefreshEvent());
-              },
-              child: Text('reload from host'),
-            ),
-          ],
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('CHESS'),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          GuestChessTable(size: width),
+          RaisedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('disconnent'),
+          ),
+          RaisedButton(
+            onPressed: () {
+              context.read<GuestBloc>().add(GuestRefreshEvent());
+            },
+            child: Text('reload from host'),
+          ),
+        ],
       ),
     );
   }
