@@ -93,10 +93,20 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
 
       final String from = (state as GuestFocusedState).focusedCoor;
       final String to = event.to;
+      bool whiteTurn = false;
 
       if (!(to == null || to == from)) {
         socket.write('?action=move&move_from=$from&move_to=$to');
+        whiteTurn = true;
       }
+      
+      yield GuestLoadedState(
+        board: pieceBoard,
+        movablePiecesCoors: movablePiecesCoors,
+        isWhiteTurn: whiteTurn,
+        history: history,
+        inCheck: chess.in_check,
+      );
     }
 
   }
