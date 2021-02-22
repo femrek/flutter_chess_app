@@ -49,7 +49,7 @@ class _ScreenlocalNetGuestState extends State<ScreenLocalNetGuest> {
             onPressed: () {
               context.read<GuestBloc>().add(GuestRefreshEvent());
             },
-            child: Text('load'),
+            child: Text('reload from host'),
           ),
         ],
       ),
