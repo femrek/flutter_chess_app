@@ -100,7 +100,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
             socket.write(chess.fen);
           } else if (action == 'disconnect') {
             if (socket == clientSocket) {
-              clientSocket.destroy();
+              if (clientSocket != null) clientSocket.destroy();
               clientSocket = null;
             }
           } else {
