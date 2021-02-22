@@ -75,7 +75,6 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
           print('first client socket is setting');
           clientSocket = socket;
         }
-        //todo set as null clientSocket when client left
         socket.listen((Uint8List dataAsByte) {
           String s = new String.fromCharCodes(dataAsByte);
           //print(s);
