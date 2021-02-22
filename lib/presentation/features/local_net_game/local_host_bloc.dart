@@ -155,7 +155,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         setHistoryString();
         undoHistory.clear();
         hostRedoableCubit.nonredoable();
-        clientSocket.write(chess.fen);
+        if (clientSocket != null) clientSocket.write(chess.fen);
       }
 
       yield LocalHostLoadedState(
