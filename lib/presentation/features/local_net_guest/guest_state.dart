@@ -14,6 +14,7 @@ class GuestLoadedState extends GuestState {
   final bool isWhiteTurn;
   final bool inCheck;
   final String history;
+  final String fen;
 
   GuestLoadedState({
     this.board,
@@ -21,23 +22,11 @@ class GuestLoadedState extends GuestState {
     this.isWhiteTurn,
     this.inCheck,
     this.history,
+    this.fen,
   }):super();
 
   @override
-  List<Object> get props => []
-    ..addAll(board[0])
-    ..addAll(board[1])
-    ..addAll(board[2])
-    ..addAll(board[3])
-    ..addAll(board[4])
-    ..addAll(board[5])
-    ..addAll(board[6])
-    ..addAll(board[7])
-    ..addAll(movablePiecesCoors.toList())
-    ..add(inCheck)
-    ..add(isWhiteTurn)
-    ..add(history)
-  ;
+  List<Object> get props => [fen];
 }
 
 class GuestFocusedState extends GuestState {
@@ -47,6 +36,7 @@ class GuestFocusedState extends GuestState {
   final bool isWhiteTurn;
   final bool inCheck;
   final String history;
+  final String fen;
 
   GuestFocusedState({
     this.board,
@@ -55,21 +45,9 @@ class GuestFocusedState extends GuestState {
     this.isWhiteTurn,
     this.inCheck,
     this.history,
+    this.fen,
   }):super();
 
   @override
-  List<Object> get props => []
-    ..addAll(board[0])
-    ..addAll(board[1])
-    ..addAll(board[2])
-    ..addAll(board[3])
-    ..addAll(board[4])
-    ..addAll(board[5])
-    ..addAll(board[6])
-    ..addAll(board[7])
-    ..addAll(movableCoors.toList())
-    ..add(inCheck)
-    ..add(isWhiteTurn)
-    ..add(history)
-  ;
+  List<Object> get props => [fen];
 }

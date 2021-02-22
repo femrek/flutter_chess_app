@@ -35,6 +35,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
         history: history,
+        fen: chess.fen,
       );
     }
 
@@ -43,7 +44,6 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       host = event.host;
       port = event.port;
 
-      yield GuestInitialState();
       socket = await Socket.connect(InternetAddress.tryParse(host), port);
       print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
       socket.listen((Uint8List dataAsByte) {
@@ -83,6 +83,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
         history: history,
+        fen: chess.fen,
       );
     }
 
@@ -106,6 +107,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         isWhiteTurn: whiteTurn,
         history: history,
         inCheck: chess.in_check,
+        fen: chess.fen,
       );
     }
 
