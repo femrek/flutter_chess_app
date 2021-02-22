@@ -34,6 +34,7 @@ class _ScreenlocalNetGuestState extends State<ScreenLocalNetGuest> {
       appBar: AppBar(
         title: Text('CHESS'),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
