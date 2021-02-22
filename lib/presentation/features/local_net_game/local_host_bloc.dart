@@ -32,7 +32,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
 
     if (event is LocalHostLoadEvent) {
       if (event.fen != null) {
-        chess = ch.Chess.fromFEN(event.fen);
+        if (chess != null) chess.load(event.fen);
+        else chess = ch.Chess.fromFEN(event.fen);
       } else if (event.restart || (await StorageManager().lastHostGameFen) == null) {
         yield LocalHostInitialState();
         await StorageManager().setLastHostGameFen(null);
@@ -42,6 +43,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       } else {
         chess = ch.Chess.fromFEN(await StorageManager().lastHostGameFen);
       }
+      if (firstClientSocket != null) firstClientSocket.write(chess.fen);
 
       findMovablePiecesCoors();
 
@@ -94,12 +96,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
             final String from = params['move_from'];
             final String to = params['move_to'];
             if (chess.turn == ch.Color.BLACK && movablePiecesCoors.contains(from)) {
-              move(from, to);
-              StorageManager().setLastHostGameFen(chess.fen);
-              undoHistory.clear();
-              hostRedoableCubit.nonredoable();
-              print('new local host load event form socket');
-              add(LocalHostLoadEvent(fen: chess.fen));
+              add(LocalHostMoveEvent(from: from, to: to));
             }
             socket.write(chess.fen);
           } else {
@@ -114,6 +111,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       serverSocket = null;
       if (firstClientSocket != null) firstClientSocket.destroy();
       firstClientSocket = null;
+      print('server stoped');
     }
 
     else if (event is LocalHostFocusEvent) {
