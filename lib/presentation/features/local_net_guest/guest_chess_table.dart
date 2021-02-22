@@ -205,7 +205,6 @@ class SquareOnTheBoard extends StatelessWidget {
         children: [
           _moveDots(),
           _pieceImage(),
-          Text(name),
         ],
       )),
     );
