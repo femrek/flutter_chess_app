@@ -13,31 +13,18 @@ class LocalHostLoadedState extends LocalHostState {
   final Set<String> movablePiecesCoors;
   final bool isWhiteTurn;
   final bool inCheck;
-  final String history;
+  final String fen;
 
   LocalHostLoadedState({
     this.board,
     this.movablePiecesCoors,
     this.isWhiteTurn,
     this.inCheck,
-    this.history,
+    this.fen,
   }):super();
 
   @override
-  List<Object> get props => []
-    ..addAll(board[0])
-    ..addAll(board[1])
-    ..addAll(board[2])
-    ..addAll(board[3])
-    ..addAll(board[4])
-    ..addAll(board[5])
-    ..addAll(board[6])
-    ..addAll(board[7])
-    ..addAll(movablePiecesCoors.toList())
-    ..add(inCheck)
-    ..add(isWhiteTurn)
-    ..add(history)
-  ;
+  List<Object> get props => [fen];
 }
 
 class LocalHostFocusedState extends LocalHostState {
@@ -46,7 +33,7 @@ class LocalHostFocusedState extends LocalHostState {
   final Set<String> movableCoors;
   final bool isWhiteTurn;
   final bool inCheck;
-  final String history;
+  final String fen;
 
   LocalHostFocusedState({
     this.board,
@@ -54,24 +41,9 @@ class LocalHostFocusedState extends LocalHostState {
     this.movableCoors,
     this.isWhiteTurn,
     this.inCheck,
-    this.history,
+    this.fen,
   });
 
   @override
-  List<Object> get props => []
-    ..addAll(board[0])
-    ..addAll(board[1])
-    ..addAll(board[2])
-    ..addAll(board[3])
-    ..addAll(board[4])
-    ..addAll(board[5])
-    ..addAll(board[6])
-    ..addAll(board[7])
-    ..addAll(movableCoors)
-    ..add(focusedCoor)
-    ..add(isWhiteTurn)
-    ..add(inCheck)
-    ..add(history)
-  ;
-
+  List<Object> get props => [fen];
 }

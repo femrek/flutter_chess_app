@@ -35,7 +35,6 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         if (chess != null) chess.load(event.fen);
         else chess = ch.Chess.fromFEN(event.fen);
       } else if (event.restart || (await StorageManager().lastHostGameFen) == null) {
-        yield LocalHostInitialState();
         await StorageManager().setLastHostGameFen(null);
         chess = ch.Chess();
         undoHistory.clear();
@@ -57,7 +56,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        history: history,
+        fen: chess.fen,
       );
 
       if (!chess.in_checkmate) hostCheckmateCubit.reset();
@@ -134,7 +133,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         movableCoors: movableCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        history: history,
+        fen: chess.fen,
       );
     }
 
@@ -162,7 +161,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        history: history,
+        fen: chess.fen,
       );
 
       if (chess.in_checkmate) hostCheckmateCubit.checkmate();
@@ -184,7 +183,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        history: history,
+        fen: chess.fen,
       );
       if (!chess.in_checkmate) hostCheckmateCubit.reset();
       else hostCheckmateCubit.checkmate();
@@ -211,7 +210,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
           movablePiecesCoors: movablePiecesCoors,
           isWhiteTurn: chess.turn == ch.Color.WHITE,
           inCheck: chess.in_check,
-          history: history,
+          fen: chess.fen,
         );
       }
 
