@@ -110,6 +110,10 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
   }
 
   void findMovablePiecesCoors() {
+    if (chess.turn == ch.Color.WHITE) {
+      movablePiecesCoors.clear();
+      return;
+    }
     List moves = chess.generate_moves();
     movablePiecesCoors.clear();
     for (ch.Move move in moves) {
