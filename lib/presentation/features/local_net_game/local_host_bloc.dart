@@ -151,6 +151,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         setHistoryString();
         undoHistory.clear();
         hostRedoableCubit.nonredoable();
+        firstClientSocket.write(chess.fen);
       }
 
       yield LocalHostLoadedState(
@@ -170,6 +171,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         undoHistory.add(move);
         hostRedoableCubit.redoable();
       }
+      firstClientSocket.write(chess.fen);
       findMovablePiecesCoors();
       convertToPieceBoard();
       setHistoryString();
@@ -190,6 +192,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         print('no undo');
       } else {
         chess.move(undoHistory.removeLast());
+
+        firstClientSocket.write(chess.fen);
 
         if (undoHistory.length == 0) {
           hostRedoableCubit.nonredoable();
