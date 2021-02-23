@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
-import 'package:mychess/presentation/features/local_game/turn_cubit.dart';
-import 'package:mychess/presentation/features/local_net_game/host_checkmate_cubit.dart';
-import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
-import 'package:mychess/presentation/features/local_net_game/host_turn_cubit.dart';
-import 'package:mychess/presentation/features/local_net_game/local_host_bloc.dart';
-import 'package:mychess/presentation/features/local_net_game/local_host_event.dart';
-import 'package:mychess/presentation/features/local_net_game/screen_local_network_game.dart';
-import 'package:mychess/presentation/features/local_net_guest/guest_bloc.dart';
-import 'package:mychess/presentation/features/local_net_guest/screen_local_net_guest.dart';
 
+import 'presentation/features/local_game/redoable_cubit.dart';
+import 'presentation/features/local_game/turn_cubit.dart';
+import 'presentation/features/local_net_game/host_redoable_cubit.dart';
+import 'presentation/features/local_net_game/host_turn_cubit.dart';
+import 'presentation/features/local_net_game/local_host_bloc.dart';
+import 'presentation/features/local_net_game/local_host_event.dart';
+import 'presentation/features/local_net_game/screen_local_network_game.dart';
+import 'presentation/features/local_net_guest/guest_bloc.dart';
+import 'presentation/features/local_net_guest/screen_local_net_guest.dart';
 import 'presentation/features/local_game/board_bloc.dart';
 import 'presentation/features/local_game/board_event.dart';
 import 'presentation/features/local_game/screen_local_game.dart';
@@ -24,7 +23,6 @@ class MyApp extends StatelessWidget {
   RedoableCubit redoableCubit;
   TurnCubit turnCubit;
   BoardBloc boardBloc;
-  HostCheckmateCubit hostCheckmateCubit;
   HostRedoableCubit hostRedoableCubit;
   HostNameCubit hostNameCubit;
   HostTurnCubit hostTurnCubit;
@@ -36,11 +34,10 @@ class MyApp extends StatelessWidget {
     redoableCubit = RedoableCubit();
     turnCubit = TurnCubit();
     boardBloc = BoardBloc(redoableCubit, turnCubit);
-    hostCheckmateCubit = HostCheckmateCubit();
     hostRedoableCubit = HostRedoableCubit();
     hostNameCubit = HostNameCubit();
     hostTurnCubit = HostTurnCubit();
-    localHostBloc = LocalHostBloc(hostCheckmateCubit, hostRedoableCubit, hostNameCubit, hostTurnCubit);
+    localHostBloc = LocalHostBloc(hostRedoableCubit, hostNameCubit, hostTurnCubit);
     guestBloc = GuestBloc();
     
     return MultiBlocProvider(
@@ -56,9 +53,6 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: localHostBloc..add(LocalHostLoadEvent()),
-        ),
-        BlocProvider.value(
-          value: hostCheckmateCubit,
         ),
         BlocProvider.value(
           value: hostRedoableCubit,

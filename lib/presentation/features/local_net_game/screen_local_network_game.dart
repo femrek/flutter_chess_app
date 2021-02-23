@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mychess/data/model/turn_model.dart';
 import 'package:mychess/presentation/features/local_net_game/host_name_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/host_turn_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/local_host_event.dart';
 
-import 'host_checkmate_cubit.dart';
 import 'local_host_bloc.dart';
 import 'single_player_chess_table.dart';
 import 'local_host_event.dart';
@@ -76,18 +76,21 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
         body: Column(
           children: [
             SinglePlayerChessTable(size: width,),
-            BlocBuilder<HostCheckmateCubit, bool>(
-              builder: (_, bool checkmate) {
-                return Text(checkmate ? 'checkmate' : 'non checkmate',
-                  style: TextStyle(color: Colors.white),
+            BlocBuilder<HostTurnCubit, TurnModel>(
+              builder: (_, TurnModel turnModel) {
+                final bool isWhiteTurn = turnModel.isWhiteTurn;
+                final bool checkmate = turnModel.checkmate;
+                if (checkmate) return Container(
+                  child: Text(
+                    'checkmate, ${isWhiteTurn ? 'black' : 'white'} is winner',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 );
-              },
-            ),
-            BlocBuilder<HostTurnCubit, bool>(
-              builder: (_, bool isWhiteTrun) {
                 return Container(
                   child: Text(
-                    isWhiteTrun ? 'white turn' : 'black turn',
+                    isWhiteTurn ? 'white turn' : 'black turn',
                     style: TextStyle(
                       color: Colors.white,
                     ),
