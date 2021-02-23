@@ -61,6 +61,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
+        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
         fen: chess.fen,
       );
     }
@@ -136,6 +138,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         movableCoors: movableCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
+        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
         fen: chess.fen,
       );
     }
@@ -165,6 +169,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
+        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
         fen: chess.fen,
       );
     }
@@ -186,6 +192,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
+        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
         fen: chess.fen,
       );
     }
@@ -212,6 +220,8 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
           movablePiecesCoors: movablePiecesCoors,
           isWhiteTurn: chess.turn == ch.Color.WHITE,
           inCheck: chess.in_check,
+          lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+          lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
           fen: chess.fen,
         );
       }

@@ -136,13 +136,16 @@ class SquareOnTheBoard extends StatelessWidget {
   bool movableToThis = false;
   bool attackableToThis = false;
   bool moveFrom = false;
+  bool lastMoveFromThis = false;
+  bool lastMoveToThis = false;
 
   @override
   Widget build(BuildContext context) {
     if (context.read<LocalHostBloc>().state is LocalHostLoadedState) {
-      //print(name);
       movable = (context.read<LocalHostBloc>().state as LocalHostLoadedState).isWhiteTurn 
         && (context.read<LocalHostBloc>().state as LocalHostLoadedState).movablePiecesCoors.contains(name);
+      lastMoveFromThis = (context.read<LocalHostBloc>().state as LocalHostLoadedState).lastMoveFrom == name;
+      lastMoveToThis = (context.read<LocalHostBloc>().state as LocalHostLoadedState).lastMoveTo == name;
     } else if (context.read<LocalHostBloc>().state is LocalHostFocusedState) {
       movableToThis = (context.read<LocalHostBloc>().state as LocalHostFocusedState).movableCoors.contains(name);
       if (piece != null && movableToThis) {
@@ -209,6 +212,7 @@ class SquareOnTheBoard extends StatelessWidget {
         children: [
           _moveDots(),
           _pieceImage(),
+          _lastMoveImage(),
         ],
       )),
     );
@@ -271,6 +275,16 @@ class SquareOnTheBoard extends StatelessWidget {
           ) : null,
       ),
     );
+  }
+
+  Widget _lastMoveImage() {
+    if (lastMoveFromThis) return Container(
+      child: Text('from'),
+    );
+    else if (lastMoveToThis) return Container(
+      child: Text('to'),
+    );
+    return Container();
   }
 
   static const Map<String, String> pieceNameToAssetName = {

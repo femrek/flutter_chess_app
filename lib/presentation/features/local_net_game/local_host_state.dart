@@ -13,6 +13,8 @@ class LocalHostLoadedState extends LocalHostState {
   final Set<String> movablePiecesCoors;
   final bool isWhiteTurn;
   final bool inCheck;
+  final String lastMoveFrom;
+  final String lastMoveTo;
   final String fen;
 
   LocalHostLoadedState({
@@ -20,6 +22,8 @@ class LocalHostLoadedState extends LocalHostState {
     this.movablePiecesCoors,
     this.isWhiteTurn,
     this.inCheck,
+    this.lastMoveFrom,
+    this.lastMoveTo,
     this.fen,
   }):super();
 
@@ -33,6 +37,8 @@ class LocalHostFocusedState extends LocalHostState {
   final Set<String> movableCoors;
   final bool isWhiteTurn;
   final bool inCheck;
+  final String lastMoveFrom;
+  final String lastMoveTo;
   final String fen;
 
   LocalHostFocusedState({
@@ -41,6 +47,8 @@ class LocalHostFocusedState extends LocalHostState {
     this.movableCoors,
     this.isWhiteTurn,
     this.inCheck,
+    this.lastMoveFrom,
+    this.lastMoveTo,
     this.fen,
   });
 
