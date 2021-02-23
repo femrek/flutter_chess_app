@@ -4,6 +4,7 @@ import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 import 'package:mychess/presentation/features/local_game/turn_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/host_checkmate_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
+import 'package:mychess/presentation/features/local_net_game/host_turn_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/local_host_bloc.dart';
 import 'package:mychess/presentation/features/local_net_game/local_host_event.dart';
 import 'package:mychess/presentation/features/local_net_game/screen_local_network_game.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
   HostCheckmateCubit hostCheckmateCubit;
   HostRedoableCubit hostRedoableCubit;
   HostNameCubit hostNameCubit;
+  HostTurnCubit hostTurnCubit;
   LocalHostBloc localHostBloc;
   GuestBloc guestBloc;
 
@@ -40,7 +42,8 @@ class MyApp extends StatelessWidget {
     hostCheckmateCubit = HostCheckmateCubit();
     hostRedoableCubit = HostRedoableCubit();
     hostNameCubit = HostNameCubit();
-    localHostBloc = LocalHostBloc(hostCheckmateCubit, hostRedoableCubit, hostNameCubit);
+    hostTurnCubit = HostTurnCubit();
+    localHostBloc = LocalHostBloc(hostCheckmateCubit, hostRedoableCubit, hostNameCubit, hostTurnCubit);
     guestBloc = GuestBloc();
     
     return MultiBlocProvider(
@@ -68,6 +71,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider.value(
           value: hostNameCubit,
+        ),
+        BlocProvider.value(
+          value: hostTurnCubit,
         ),
         BlocProvider.value(
           value: guestBloc,

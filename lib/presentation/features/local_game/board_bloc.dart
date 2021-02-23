@@ -13,9 +13,9 @@ import 'board_state.dart';
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
   BoardBloc(this.checkmateCubit, this.redoableCubit, this.turnCubit) : super(BoardInitialState());
 
-  CheckmateCubit checkmateCubit;
-  RedoableCubit redoableCubit;
-  TurnCubit turnCubit;
+  final CheckmateCubit checkmateCubit;
+  final RedoableCubit redoableCubit;
+  final TurnCubit turnCubit;
 
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);

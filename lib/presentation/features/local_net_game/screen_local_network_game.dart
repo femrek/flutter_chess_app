@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/presentation/features/local_net_game/host_name_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
+import 'package:mychess/presentation/features/local_net_game/host_turn_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/local_host_event.dart';
 
 import 'host_checkmate_cubit.dart';
@@ -79,6 +80,18 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
               builder: (_, bool checkmate) {
                 return Text(checkmate ? 'checkmate' : 'non checkmate',
                   style: TextStyle(color: Colors.white),
+                );
+              },
+            ),
+            BlocBuilder<HostTurnCubit, bool>(
+              builder: (_, bool isWhiteTrun) {
+                return Container(
+                  child: Text(
+                    isWhiteTrun ? 'white turn' : 'black turn',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                 );
               },
             ),

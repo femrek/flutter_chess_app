@@ -7,16 +7,23 @@ import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/local_net_game/host_checkmate_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/host_name_cubit.dart';
 import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
+import 'package:mychess/presentation/features/local_net_game/host_turn_cubit.dart';
 
 import 'local_host_event.dart';
 import 'local_host_state.dart';
 
 class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
-  LocalHostBloc(this.hostCheckmateCubit, this.hostRedoableCubit, this.hostNameCubit) : super(LocalHostInitialState());
+  LocalHostBloc(
+    this.hostCheckmateCubit,
+    this.hostRedoableCubit,
+    this.hostNameCubit,
+    this.hostTurnCubit,
+  ) : super(LocalHostInitialState());
 
   final HostCheckmateCubit hostCheckmateCubit;
   final HostRedoableCubit hostRedoableCubit;
   final HostNameCubit hostNameCubit;
+  final HostTurnCubit hostTurnCubit;
 
   ServerSocket serverSocket;
   Socket clientSocket;
@@ -51,6 +58,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       setHistoryString();
 
       print('new loaded state');
+      hostTurnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
       yield LocalHostLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -127,6 +135,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         }
       }
       setHistoryString();
+      hostTurnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
       yield LocalHostFocusedState(
         board: pieceBoard,
         focusedCoor: event.focusCoor,
@@ -156,6 +165,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         if (clientSocket != null) clientSocket.write(chess.fen);
       }
 
+      hostTurnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
       yield LocalHostLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -178,6 +188,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       convertToPieceBoard();
       setHistoryString();
 
+      hostTurnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
       yield LocalHostLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -205,6 +216,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         convertToPieceBoard();
         setHistoryString();
 
+        hostTurnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
         yield LocalHostLoadedState(
           board: pieceBoard,
           movablePiecesCoors: movablePiecesCoors,
