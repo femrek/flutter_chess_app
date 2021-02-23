@@ -95,14 +95,11 @@ class GuestChessTable extends StatelessWidget {
       width: size / (horizontalSide ? 9 : 18),
       height: size / (!horizontalSide ? 9 : 18),
       alignment: Alignment.center,
-      child: Transform.rotate(
-        angle: turnRight ? 0 : 2*ninetyDegres,
-        child: Text(
-          content,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: size/25/MediaQuery.of(context).textScaleFactor,
-          ),
+      child: Text(
+        content,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: size/25/MediaQuery.of(context).textScaleFactor,
         ),
       ),
     );
