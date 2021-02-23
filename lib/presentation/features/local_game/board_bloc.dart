@@ -46,7 +46,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        history: history,
+        fen: chess.generate_fen(),
       );
     }
 
@@ -119,7 +119,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        history: history,
+        fen: chess.generate_fen(),
       );
     }
 
@@ -143,7 +143,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
           movablePiecesCoors: movablePiecesCoors,
           isWhiteTurn: chess.turn == ch.Color.WHITE,
           inCheck: chess.in_check,
-          history: history,
+          fen: chess.generate_fen(),
         );
       }
 
