@@ -16,6 +16,9 @@ class ScreenLocalNetGame extends StatefulWidget {
 }
 
 class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
+  static const int _MENU_RESTART = 0x100;
+  static const int _MENU_UNDO = 0x101;
+  static const int _MENU_REDO = 0x102;
 
   @override
   void initState() {
@@ -23,10 +26,6 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
     initStateAsync();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   Future initStateAsync() async {
     context.read<LocalHostBloc>().add(LocalHostStartEvent());
@@ -44,6 +43,34 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
         appBar: AppBar(
           title: Text('CHESS'),
           centerTitle: true,
+          actions: [
+            BlocBuilder<HostRedoableCubit, bool>(
+              builder: (_, bool redoable) {
+                return PopupMenuButton<int>(
+                  onSelected: _onMenuItemSeleced,
+                  itemBuilder: (_) {
+                    return <PopupMenuEntry<int>>[
+                      PopupMenuItem(
+                        enabled: true,
+                        value: _MENU_RESTART,
+                        child: Text('restart'),
+                      ),
+                      PopupMenuItem(
+                        enabled: true,
+                        value: _MENU_UNDO,
+                        child: Text('undo'),
+                      ),
+                      PopupMenuItem(
+                        enabled: redoable,
+                        value: _MENU_REDO,
+                        child: Text('redo'),
+                      ),
+                    ];
+                  },
+                );
+              }
+            ),
+          ],
         ),
         body: Column(
           children: [
@@ -97,6 +124,51 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
         ),
         backgroundColor: Colors.black45,
       ),
+    );
+  }
+
+  void _onMenuItemSeleced(int choice) {
+    switch (choice) {
+      case _MENU_RESTART:
+        _showSureDialog(context, 'Are you sure to restart game', null, () {
+          context.read<LocalHostBloc>().add(LocalHostLoadEvent(restart: true));
+        });
+        break;
+      case _MENU_UNDO:
+        context.read<LocalHostBloc>().add(LocalHostUndoEvent());
+        break;
+      case _MENU_REDO:
+        context.read<LocalHostBloc>().add(LocalHostRedoEvent());
+        break;
+      default: break; 
+    }
+  }
+
+  void _showSureDialog(BuildContext context, String title, String content, Function action) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (_) {
+        return AlertDialog(
+          title: title == null ? null : Text(title),
+          content: content == null ? null : Text(content),
+          actions: [
+            FlatButton(
+              onPressed: () {
+                action();
+                Navigator.pop(_);
+              },
+              child: Text('yes'),
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.pop(_);
+              },
+              child: Text('no'),
+            ),
+          ],
+        );
+      }
     );
   }
 
