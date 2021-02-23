@@ -6,6 +6,7 @@ import 'board_bloc.dart';
 import 'board_event.dart';
 import 'checkmate_cubit.dart';
 import 'chess_table.dart';
+import 'turn_cubit.dart';
 
 class ScreenLocalGame extends StatefulWidget {
   @override
@@ -83,7 +84,42 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
               size: width,
             ),
             Container(
-              color: Colors.pink,
+              width: width,
+              height: 24,
+              child: BlocBuilder<TurnCubit, bool>(
+                builder: (_, bool isWhiteTurn) {
+                  final Container colorTurnBar = Container(
+                    width: width/3,
+                    color: Colors.grey,
+                  );
+                  final Container transparentTurnBar = Container(
+                    width: width/3,
+                    color: Colors.transparent,
+                  );
+                  if (isWhiteTurn) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        colorTurnBar,
+                        Text('white turn'),
+                        transparentTurnBar,
+                      ],
+                    );
+                  } else {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        transparentTurnBar,
+                        Text('black turn'),
+                        colorTurnBar,
+                      ],
+                    );
+                  }
+                },
+              ),
+            ),
+            Container(
+              color: Colors.blue,
               child: BlocBuilder<CheckmateCubit, bool>(
                 builder: (_, bool state) {
                   if (state) {

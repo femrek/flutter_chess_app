@@ -2,6 +2,7 @@ import 'package:chess/chess.dart' as ch;
 import 'package:bloc/bloc.dart';
 import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
+import 'package:mychess/presentation/features/local_game/turn_cubit.dart';
 
 import 'checkmate_cubit.dart';
 import 'board_event.dart';
@@ -10,10 +11,11 @@ import 'board_state.dart';
 
 
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
-  BoardBloc(this.checkmateCubit, this.redoableCubit) : super(BoardInitialState());
+  BoardBloc(this.checkmateCubit, this.redoableCubit, this.turnCubit) : super(BoardInitialState());
 
   CheckmateCubit checkmateCubit;
   RedoableCubit redoableCubit;
+  TurnCubit turnCubit;
 
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
@@ -40,6 +42,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
 
       setHistoryString();
 
+      turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -60,6 +63,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
           movableCoors.add(move.toAlgebraic);
         }
       }
+      turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
       yield BoardFocusedState(
         board: pieceBoard,
         focusedCoor: event.focusCoor,
@@ -95,6 +99,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         redoableCubit.nonredoable();
       }
 
+      turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -115,6 +120,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       convertToPieceBoard();
       setHistoryString();
 
+      turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -140,6 +146,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         convertToPieceBoard();
         setHistoryString();
 
+        turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
         yield BoardLoadedState(
           board: pieceBoard,
           movablePiecesCoors: movablePiecesCoors,
