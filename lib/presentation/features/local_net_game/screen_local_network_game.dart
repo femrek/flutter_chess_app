@@ -82,34 +82,6 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
                 );
               },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                RaisedButton(
-                  onPressed: () {
-                    context.read<LocalHostBloc>().add(LocalHostLoadEvent(restart: true));
-                  },
-                  child: Text('restart'),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    context.read<LocalHostBloc>().add(LocalHostUndoEvent());
-                  },
-                  child: Text('undo'),
-                ),
-                BlocBuilder<HostRedoableCubit, bool>(
-                  builder: (_, bool redoable) {
-                    return RaisedButton(
-                      onPressed: redoable ? () {
-                        context.read<LocalHostBloc>().add(LocalHostRedoEvent());
-                      } : null ,
-                      disabledColor: Colors.white,
-                      child: Text('redo'),
-                    );
-                  }
-                ),
-              ],
-            ),
             BlocBuilder<HostNameCubit, String>(
               builder: (_, String hostName) {
                 return Text(
