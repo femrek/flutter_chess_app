@@ -11,7 +11,6 @@ import 'package:mychess/presentation/features/local_net_game/screen_local_networ
 import 'package:mychess/presentation/features/local_net_guest/guest_bloc.dart';
 import 'package:mychess/presentation/features/local_net_guest/screen_local_net_guest.dart';
 
-import 'presentation/features/local_game/checkmate_cubit.dart';
 import 'presentation/features/local_game/board_bloc.dart';
 import 'presentation/features/local_game/board_event.dart';
 import 'presentation/features/local_game/screen_local_game.dart';
@@ -22,7 +21,6 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
 
-  CheckmateCubit checkmateCubit;
   RedoableCubit redoableCubit;
   TurnCubit turnCubit;
   BoardBloc boardBloc;
@@ -35,10 +33,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    checkmateCubit = CheckmateCubit();
     redoableCubit = RedoableCubit();
     turnCubit = TurnCubit();
-    boardBloc = BoardBloc(checkmateCubit, redoableCubit, turnCubit);
+    boardBloc = BoardBloc(redoableCubit, turnCubit);
     hostCheckmateCubit = HostCheckmateCubit();
     hostRedoableCubit = HostRedoableCubit();
     hostNameCubit = HostNameCubit();
@@ -50,9 +47,6 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider.value(
           value: boardBloc..add(BoardLoadEvent()),
-        ),
-        BlocProvider.value(
-          value: checkmateCubit,
         ),
         BlocProvider.value(
           value: redoableCubit,

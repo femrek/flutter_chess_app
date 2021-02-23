@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mychess/data/model/turn_model.dart';
 import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 
 import 'board_bloc.dart';
 import 'board_event.dart';
-import 'checkmate_cubit.dart';
 import 'chess_table.dart';
 import 'turn_cubit.dart';
 
@@ -86,8 +86,17 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
             Container(
               width: width,
               height: 24,
-              child: BlocBuilder<TurnCubit, bool>(
-                builder: (_, bool isWhiteTurn) {
+              child: BlocBuilder<TurnCubit, TurnModel>(
+                builder: (_, TurnModel turnModel) {
+                  final bool isWhiteTurn = turnModel.isWhiteTurn;
+                  final bool checkmate = turnModel.checkmate;
+                  if (checkmate) {
+                    return Center(
+                      child: Text(
+                        'checkmate, ${isWhiteTurn ? 'black' : 'white'} is winner',
+                      ),
+                    );
+                  }
                   final Container colorTurnBar = Container(
                     width: width/3,
                     color: Colors.grey,
@@ -115,27 +124,6 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
                       ],
                     );
                   }
-                },
-              ),
-            ),
-            Container(
-              color: Colors.blue,
-              child: BlocBuilder<CheckmateCubit, bool>(
-                builder: (_, bool state) {
-                  if (state) {
-                    return Text(
-                      'checkmate',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                      ),
-                    );
-                  }
-                  else return Text('');
-                },
-                buildWhen: (oldValue, newValue) {
-                  if (oldValue != newValue) return true;
-                  return false;
                 },
               ),
             ),

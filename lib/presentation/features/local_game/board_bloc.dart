@@ -4,16 +4,14 @@ import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 import 'package:mychess/presentation/features/local_game/turn_cubit.dart';
 
-import 'checkmate_cubit.dart';
 import 'board_event.dart';
 import 'board_state.dart';
 
 
 
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
-  BoardBloc(this.checkmateCubit, this.redoableCubit, this.turnCubit) : super(BoardInitialState());
+  BoardBloc(this.redoableCubit, this.turnCubit) : super(BoardInitialState());
 
-  final CheckmateCubit checkmateCubit;
   final RedoableCubit redoableCubit;
   final TurnCubit turnCubit;
 
@@ -42,7 +40,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
 
       setHistoryString();
 
-      turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
+      turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -50,9 +48,6 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         inCheck: chess.in_check,
         history: history,
       );
-
-      if (!chess.in_checkmate) checkmateCubit.reset();
-      else checkmateCubit.checkmate();
     }
 
     else if (event is BoardFocusEvent) {
@@ -63,7 +58,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
           movableCoors.add(move.toAlgebraic);
         }
       }
-      turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
+      turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
       yield BoardFocusedState(
         board: pieceBoard,
         focusedCoor: event.focusCoor,
@@ -99,15 +94,13 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         redoableCubit.nonredoable();
       }
 
-      turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
+      turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
       );
-
-      if (chess.in_checkmate) checkmateCubit.checkmate();
     }
 
     else if (event is BoardUndoEvent) {
@@ -120,7 +113,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       convertToPieceBoard();
       setHistoryString();
 
-      turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
+      turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
       yield BoardLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -128,8 +121,6 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         inCheck: chess.in_check,
         history: history,
       );
-      if (!chess.in_checkmate) checkmateCubit.reset();
-      else checkmateCubit.checkmate();
     }
 
     else if (event is BoardRedoEvent) {
@@ -146,7 +137,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         convertToPieceBoard();
         setHistoryString();
 
-        turnCubit.whiteTurn(chess.turn == ch.Color.WHITE);
+        turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
         yield BoardLoadedState(
           board: pieceBoard,
           movablePiecesCoors: movablePiecesCoors,
