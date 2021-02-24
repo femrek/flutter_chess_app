@@ -1,0 +1,92 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mychess/presentation/features/local_game/screen_local_game.dart';
+import 'package:mychess/presentation/features/local_net_game/screen_local_network_game.dart';
+import 'package:mychess/presentation/features/local_net_guest/guest_event.dart';
+import 'package:mychess/presentation/features/local_net_guest/screen_local_net_guest.dart';
+import 'package:mychess/presentation/features/main_screen/screen_main.dart';
+
+import 'presentation/features/local_game/board_bloc.dart';
+import 'presentation/features/local_game/board_event.dart';
+import 'presentation/features/local_game/redoable_cubit.dart';
+import 'presentation/features/local_game/turn_cubit.dart';
+import 'presentation/features/local_net_game/host_name_cubit.dart';
+import 'presentation/features/local_net_game/host_redoable_cubit.dart';
+import 'presentation/features/local_net_game/host_turn_cubit.dart';
+import 'presentation/features/local_net_game/local_host_bloc.dart';
+import 'presentation/features/local_net_game/local_host_event.dart';
+import 'presentation/features/local_net_guest/guest_bloc.dart';
+
+const String screenMain = '/';
+const String screenLocalGame = '/local_game';
+const String screenHostGame = '/local_net_game';
+const String screenClientGame = '/local_net_guest';
+
+RedoableCubit _redoableCubit = RedoableCubit();
+TurnCubit _turnCubit = TurnCubit();
+BoardBloc _boardBloc = BoardBloc(_redoableCubit, _turnCubit);
+HostRedoableCubit _hostRedoableCubit = HostRedoableCubit();
+HostNameCubit _hostNameCubit = HostNameCubit();
+HostTurnCubit _hostTurnCubit = HostTurnCubit();
+LocalHostBloc _localHostBloc = LocalHostBloc(_hostRedoableCubit, _hostNameCubit, _hostTurnCubit);
+GuestBloc _guestBloc = GuestBloc();
+
+
+
+class Routes {
+  static Route<dynamic> generateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case screenMain:
+        return MaterialPageRoute(builder: (_) => ScreenMain());
+      case screenLocalGame:
+        return MaterialPageRoute(builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(
+              value: _boardBloc..add(BoardLoadEvent()),
+            ),
+            BlocProvider.value(
+              value: _redoableCubit,
+            ),
+            BlocProvider.value(
+              value: _turnCubit,
+            ),
+          ],
+          child: ScreenLocalGame(),
+        ));
+      case screenHostGame:
+        return MaterialPageRoute(builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(
+              value: _localHostBloc..add(LocalHostLoadEvent()),
+            ),
+            BlocProvider.value(
+              value: _hostRedoableCubit,
+            ),
+            BlocProvider.value(
+              value: _hostNameCubit,
+            ),
+            BlocProvider.value(
+              value: _hostTurnCubit,
+            ),
+          ],
+          child: ScreenLocalNetGame(),
+        ));
+      case screenClientGame:
+        final List arg = settings.arguments; // [String host, int port]
+        _guestBloc.add(GuestConnectEvent(
+          host: arg[0],
+          port: arg[1],
+        ));
+        return MaterialPageRoute(builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(
+              value: _guestBloc..add(GuestConnectEvent()),
+            ),
+          ],
+          child: ScreenLocalNetGuest(),
+        ));
+      default:
+        throw Exception('route not found');
+    }
+  }
+}

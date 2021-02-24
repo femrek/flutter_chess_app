@@ -29,11 +29,6 @@ class _ScreenlocalNetGuestState extends State<ScreenLocalNetGuest> {
   @override
   Widget build(BuildContext context) {
     final double width = MediaQuery.of(context).size.width;
-    final List arg = ModalRoute.of(context).settings.arguments; // [String host, int port]
-    context.read<GuestBloc>().add(GuestConnectEvent(
-      host: arg[0],
-      port: arg[1],
-    ));
     return Scaffold(
       appBar: AppBar(
         title: Text('CHESS'),

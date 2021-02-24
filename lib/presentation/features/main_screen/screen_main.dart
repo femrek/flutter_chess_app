@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mychess/data/storage_manager.dart';
+import 'package:mychess/routes.dart';
 
 class ScreenMain extends StatelessWidget {
 
@@ -26,13 +27,13 @@ class ScreenMain extends StatelessWidget {
           children: [
             RaisedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/local_game');
+                Navigator.pushNamed(context, screenLocalGame);
               },
               child: Text('local game'),
             ),
             RaisedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/local_net_game');
+                Navigator.pushNamed(context, screenHostGame);
               },
               child: Text('create local network game'),
             ),
@@ -55,7 +56,7 @@ class ScreenMain extends StatelessWidget {
                     print('port input is $port');
                     StorageManager().setLastConnectedHost(host);
                     StorageManager().setLastConnectedPort(port);
-                    Navigator.pushNamed(context, '/local_net_guest', arguments: [host, port]);
+                    Navigator.pushNamed(context, screenClientGame, arguments: [host, port]);
                   },
                   child: Text('join local network game'),
                 ),
