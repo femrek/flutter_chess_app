@@ -152,6 +152,8 @@ class SquareOnTheBoard extends StatelessWidget {
       if ((context.read<HostBloc>().state as HostFocusedState).focusedCoor == name) {
         moveFrom = true;
       }
+      lastMoveFromThis = (context.read<HostBloc>().state as HostFocusedState).lastMoveFrom == name;
+      lastMoveToThis = (context.read<HostBloc>().state as HostFocusedState).lastMoveTo == name;
     }
 
     Color darkBg = darkBgColor;
