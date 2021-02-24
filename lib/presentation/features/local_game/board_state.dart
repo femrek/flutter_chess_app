@@ -13,6 +13,8 @@ class BoardLoadedState extends BoardState {
   final Set<String> movablePiecesCoors;
   final bool isWhiteTurn;
   final bool inCheck;
+  final String lastMoveFrom;
+  final String lastMoveTo;
   final String fen;
 
   BoardLoadedState({
@@ -20,6 +22,8 @@ class BoardLoadedState extends BoardState {
     this.movablePiecesCoors,
     this.isWhiteTurn,
     this.inCheck,
+    this.lastMoveTo,
+    this.lastMoveFrom,
     this.fen
   }):super();
 
@@ -33,6 +37,8 @@ class BoardFocusedState extends BoardState {
   final Set<String> movableCoors;
   final bool isWhiteTurn;
   final bool inCheck;
+  final String lastMoveFrom;
+  final String lastMoveTo;
   final String fen;
 
   BoardFocusedState({
@@ -41,6 +47,8 @@ class BoardFocusedState extends BoardState {
     this.movableCoors,
     this.isWhiteTurn,
     this.inCheck,
+    this.lastMoveTo,
+    this.lastMoveFrom,
     this.fen
   });
 

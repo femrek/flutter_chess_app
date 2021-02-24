@@ -46,6 +46,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
+        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
         fen: chess.generate_fen(),
       );
     }
@@ -64,6 +66,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         focusedCoor: event.focusCoor,
         movableCoors: movableCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
+        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
         inCheck: chess.in_check,
       );
     }
@@ -99,6 +103,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
+        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
         inCheck: chess.in_check,
       );
     }
@@ -119,6 +125,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
+        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
         fen: chess.generate_fen(),
       );
     }
@@ -143,6 +151,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
           movablePiecesCoors: movablePiecesCoors,
           isWhiteTurn: chess.turn == ch.Color.WHITE,
           inCheck: chess.in_check,
+          lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+          lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
           fen: chess.generate_fen(),
         );
       }

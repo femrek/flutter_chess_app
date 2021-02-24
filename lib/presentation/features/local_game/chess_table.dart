@@ -134,12 +134,16 @@ class SquareOnTheBoard extends StatelessWidget {
   bool movableToThis = false;
   bool attackableToThis = false;
   bool moveFrom = false;
+  bool lastMoveFromThis = false;
+  bool lastMoveToThis = false;
 
   @override
   Widget build(BuildContext context) {
     if (context.read<BoardBloc>().state is BoardLoadedState) {
       //print(name);
       movable = (context.read<BoardBloc>().state as BoardLoadedState).movablePiecesCoors.contains(name);
+      lastMoveFromThis = (context.read<BoardBloc>().state as BoardLoadedState).lastMoveFrom == name;
+      lastMoveToThis = (context.read<BoardBloc>().state as BoardLoadedState).lastMoveTo == name;
     } else if (context.read<BoardBloc>().state is BoardFocusedState) {
       movableToThis = (context.read<BoardBloc>().state as BoardFocusedState).movableCoors.contains(name);
       if (piece != null && movableToThis) {
@@ -149,6 +153,8 @@ class SquareOnTheBoard extends StatelessWidget {
       if ((context.read<BoardBloc>().state as BoardFocusedState).focusedCoor == name) {
         moveFrom = true;
       }
+      lastMoveFromThis = (context.read<BoardBloc>().state as BoardFocusedState).lastMoveFrom == name;
+      lastMoveToThis = (context.read<BoardBloc>().state as BoardFocusedState).lastMoveTo == name;
     }
 
     Color darkBg = darkBgColor;
@@ -206,6 +212,7 @@ class SquareOnTheBoard extends StatelessWidget {
         children: [
           _moveDots(),
           _pieceImage(),
+          _lastMoveImage(),
         ],
       )),
     );
@@ -271,6 +278,16 @@ class SquareOnTheBoard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _lastMoveImage() {
+    if (lastMoveFromThis) return Container(
+      child: Text('from'),
+    );
+    else if (lastMoveToThis) return Container(
+      child: Text('to'),
+    );
+    return Container();
   }
 
   static const Map<String, String> pieceNameToAssetName = {
