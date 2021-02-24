@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/data/model/turn_model.dart';
-import 'package:mychess/presentation/features/local_net_game/host_name_cubit.dart';
-import 'package:mychess/presentation/features/local_net_game/host_redoable_cubit.dart';
-import 'package:mychess/presentation/features/local_net_game/host_turn_cubit.dart';
-import 'package:mychess/presentation/features/local_net_game/local_host_event.dart';
 
 import 'local_host_bloc.dart';
-import 'single_player_chess_table.dart';
+import 'host_name_cubit.dart';
+import 'host_redoable_cubit.dart';
+import 'host_turn_cubit.dart';
 import 'local_host_event.dart';
+import 'single_player_chess_table.dart';
 
-class ScreenLocalNetGame extends StatefulWidget {
+class ScreenHostGame extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _ScreenLocalNetGameState();
-
+  State<StatefulWidget> createState() => _ScreenHostGameState();
 }
 
-class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
+class _ScreenHostGameState extends State<ScreenHostGame> {
   static const int _MENU_RESTART = 0x100;
   static const int _MENU_UNDO = 0x101;
   static const int _MENU_REDO = 0x102;
@@ -26,7 +24,6 @@ class _ScreenLocalNetGameState extends State<ScreenLocalNetGame> {
     super.initState();
     initStateAsync();
   }
-
 
   Future initStateAsync() async {
     context.read<LocalHostBloc>().add(LocalHostStartEvent());
