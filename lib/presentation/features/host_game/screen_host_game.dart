@@ -21,12 +21,8 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
 
   @override
   void initState() {
-    super.initState();
-    initStateAsync();
-  }
-
-  Future initStateAsync() async {
     context.read<LocalHostBloc>().add(LocalHostStartEvent());
+    super.initState();
   }
 
   @override
