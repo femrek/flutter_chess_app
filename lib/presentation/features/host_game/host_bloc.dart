@@ -8,15 +8,15 @@ import 'package:mychess/data/storage_manager.dart';
 import 'host_name_cubit.dart';
 import 'host_redoable_cubit.dart';
 import 'host_turn_cubit.dart';
-import 'local_host_event.dart';
-import 'local_host_state.dart';
+import 'host_event.dart';
+import 'host_state.dart';
 
-class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
-  LocalHostBloc(
+class HostBloc extends Bloc<HostEvent, HostState> {
+  HostBloc(
     this.hostRedoableCubit,
     this.hostNameCubit,
     this.hostTurnCubit,
-  ) : super(LocalHostInitialState());
+  ) : super(HostInitialState());
 
   final HostRedoableCubit hostRedoableCubit;
   final HostNameCubit hostNameCubit;
@@ -32,9 +32,9 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
   List<ch.Move> undoHistory = List();
 
   @override
-  Stream<LocalHostState> mapEventToState(LocalHostEvent event) async* {
+  Stream<HostState> mapEventToState(HostEvent event) async* {
 
-    if (event is LocalHostLoadEvent) {
+    if (event is HostLoadEvent) {
       if (event.fen != null) {
         if (chess != null) chess.load(event.fen);
         else chess = ch.Chess.fromFEN(event.fen);
@@ -56,7 +56,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
 
       print('new loaded state');
       hostTurnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
-      yield LocalHostLoadedState(
+      yield HostLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
@@ -67,7 +67,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       );
     }
 
-    else if (event is LocalHostStartEvent) {
+    else if (event is HostStartEvent) {
       serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
       print('LocalHostConnectEvent event, ip: ${serverSocket.address.toString()}:${serverSocket.port.toString()}');
       hostNameCubit.defineHostName(serverSocket.address.address, serverSocket.port);
@@ -99,7 +99,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
             final String from = params['move_from'];
             final String to = params['move_to'];
             if (chess.turn == ch.Color.BLACK && movablePiecesCoors.contains(from)) {
-              add(LocalHostMoveEvent(from: from, to: to));
+              add(HostMoveEvent(from: from, to: to));
             }
             socket.write(chess.fen);
           } else if (action == 'disconnect') {
@@ -114,7 +114,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       });
     }
 
-    else if (event is LocalHostStopEvent) {
+    else if (event is HostStopEvent) {
       if (serverSocket != null) serverSocket.close();
       serverSocket = null;
       if (clientSocket != null) clientSocket.destroy();
@@ -122,7 +122,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       print('server stoped');
     }
 
-    else if (event is LocalHostFocusEvent) {
+    else if (event is HostFocusEvent) {
       final Set<String> movableCoors = Set();
       for (ch.Move move in chess.generate_moves()) {
         //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
@@ -132,7 +132,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       }
       setHistoryString();
       hostTurnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
-      yield LocalHostFocusedState(
+      yield HostFocusedState(
         board: pieceBoard,
         focusedCoor: event.focusCoor,
         movableCoors: movableCoors,
@@ -144,12 +144,12 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       );
     }
 
-    else if (event is LocalHostMoveEvent) {
-      if (!(state is LocalHostFocusedState || event.from != '')) {
+    else if (event is HostMoveEvent) {
+      if (!(state is HostFocusedState || event.from != '')) {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
 
-      final String from = event.from == '' ? (state as LocalHostFocusedState).focusedCoor : event.from;
+      final String from = event.from == '' ? (state as HostFocusedState).focusedCoor : event.from;
       final String to = event.to;
 
       if (!(to == null || to == from)) {
@@ -164,7 +164,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       }
 
       hostTurnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
-      yield LocalHostLoadedState(
+      yield HostLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
@@ -175,7 +175,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       );
     }
  
-    else if (event is LocalHostUndoEvent) {
+    else if (event is HostUndoEvent) {
       ch.Move move = chess.undo_move();
       if (move != null) {
         undoHistory.add(move);
@@ -187,7 +187,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       setHistoryString();
 
       hostTurnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
-      yield LocalHostLoadedState(
+      yield HostLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
@@ -198,7 +198,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
       );
     }
  
-    else if (event is LocalHostRedoEvent) {
+    else if (event is HostRedoEvent) {
       if (undoHistory.length == 0) {
         print('no undo');
       } else {
@@ -215,7 +215,7 @@ class LocalHostBloc extends Bloc<LocalHostEvent, LocalHostState> {
         setHistoryString();
 
         hostTurnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
-        yield LocalHostLoadedState(
+        yield HostLoadedState(
           board: pieceBoard,
           movablePiecesCoors: movablePiecesCoors,
           isWhiteTurn: chess.turn == ch.Color.WHITE,

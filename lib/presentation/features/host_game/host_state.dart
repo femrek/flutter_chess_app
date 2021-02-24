@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:chess/chess.dart' as ch;
 
-class LocalHostState extends Equatable {
+class HostState extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class LocalHostInitialState extends LocalHostState {}
+class HostInitialState extends HostState {}
 
-class LocalHostLoadedState extends LocalHostState {
+class HostLoadedState extends HostState {
   final List<List<ch.Piece>> board;
   final Set<String> movablePiecesCoors;
   final bool isWhiteTurn;
@@ -17,7 +17,7 @@ class LocalHostLoadedState extends LocalHostState {
   final String lastMoveTo;
   final String fen;
 
-  LocalHostLoadedState({
+  HostLoadedState({
     this.board,
     this.movablePiecesCoors,
     this.isWhiteTurn,
@@ -31,7 +31,7 @@ class LocalHostLoadedState extends LocalHostState {
   List<Object> get props => [fen];
 }
 
-class LocalHostFocusedState extends LocalHostState {
+class HostFocusedState extends HostState {
   final List<List<ch.Piece>> board;
   final String focusedCoor;
   final Set<String> movableCoors;
@@ -41,7 +41,7 @@ class LocalHostFocusedState extends LocalHostState {
   final String lastMoveTo;
   final String fen;
 
-  LocalHostFocusedState({
+  HostFocusedState({
     this.board,
     this.focusedCoor,
     this.movableCoors,

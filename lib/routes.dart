@@ -10,8 +10,8 @@ import 'presentation/features/local_game/turn_cubit.dart';
 import 'presentation/features/host_game/host_name_cubit.dart';
 import 'presentation/features/host_game/host_redoable_cubit.dart';
 import 'presentation/features/host_game/host_turn_cubit.dart';
-import 'presentation/features/host_game/local_host_bloc.dart';
-import 'presentation/features/host_game/local_host_event.dart';
+import 'presentation/features/host_game/host_bloc.dart';
+import 'presentation/features/host_game/host_event.dart';
 import 'presentation/features/guest_game/guest_bloc.dart';
 import 'presentation/features/guest_game/guest_event.dart';
 import 'presentation/features/guest_game/screen_guest_game.dart';
@@ -28,7 +28,7 @@ BoardBloc _boardBloc = BoardBloc(_redoableCubit, _turnCubit);
 HostRedoableCubit _hostRedoableCubit = HostRedoableCubit();
 HostNameCubit _hostNameCubit = HostNameCubit();
 HostTurnCubit _hostTurnCubit = HostTurnCubit();
-LocalHostBloc _localHostBloc = LocalHostBloc(_hostRedoableCubit, _hostNameCubit, _hostTurnCubit);
+HostBloc _localHostBloc = HostBloc(_hostRedoableCubit, _hostNameCubit, _hostTurnCubit);
 GuestBloc _guestBloc = GuestBloc();
 
 
@@ -57,7 +57,7 @@ class Routes {
         return MaterialPageRoute(builder: (_) => MultiBlocProvider(
           providers: [
             BlocProvider.value(
-              value: _localHostBloc..add(LocalHostLoadEvent()),
+              value: _localHostBloc..add(HostLoadEvent()),
             ),
             BlocProvider.value(
               value: _hostRedoableCubit,

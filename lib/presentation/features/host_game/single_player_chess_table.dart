@@ -6,9 +6,9 @@ import 'package:mychess/data/app_theme.dart';
 import 'package:chess/chess.dart' as ch;
 
 
-import 'local_host_bloc.dart';
-import 'local_host_state.dart';
-import 'local_host_event.dart';
+import 'host_bloc.dart';
+import 'host_state.dart';
+import 'host_event.dart';
 
 class SinglePlayerChessTable extends StatelessWidget {
   final double size;
@@ -47,9 +47,9 @@ class SinglePlayerChessTable extends StatelessWidget {
 
   Widget _square(BuildContext context, int y, int x) {
     final double squareSize = size / 9;
-    return BlocBuilder<LocalHostBloc, LocalHostState>(
+    return BlocBuilder<HostBloc, HostState>(
       builder: (_, state) {
-        if (state is LocalHostLoadedState) {
+        if (state is HostLoadedState) {
           return SquareOnTheBoard(
             size: squareSize,
             positionX: x,
@@ -61,7 +61,7 @@ class SinglePlayerChessTable extends StatelessWidget {
           );
         }
 
-        else if (state is LocalHostFocusedState) {
+        else if (state is HostFocusedState) {
           return SquareOnTheBoard(
             size: squareSize,
             positionX: x,
@@ -138,18 +138,18 @@ class SquareOnTheBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.read<LocalHostBloc>().state is LocalHostLoadedState) {
-      movable = (context.read<LocalHostBloc>().state as LocalHostLoadedState).isWhiteTurn 
-        && (context.read<LocalHostBloc>().state as LocalHostLoadedState).movablePiecesCoors.contains(name);
-      lastMoveFromThis = (context.read<LocalHostBloc>().state as LocalHostLoadedState).lastMoveFrom == name;
-      lastMoveToThis = (context.read<LocalHostBloc>().state as LocalHostLoadedState).lastMoveTo == name;
-    } else if (context.read<LocalHostBloc>().state is LocalHostFocusedState) {
-      movableToThis = (context.read<LocalHostBloc>().state as LocalHostFocusedState).movableCoors.contains(name);
+    if (context.read<HostBloc>().state is HostLoadedState) {
+      movable = (context.read<HostBloc>().state as HostLoadedState).isWhiteTurn 
+        && (context.read<HostBloc>().state as HostLoadedState).movablePiecesCoors.contains(name);
+      lastMoveFromThis = (context.read<HostBloc>().state as HostLoadedState).lastMoveFrom == name;
+      lastMoveToThis = (context.read<HostBloc>().state as HostLoadedState).lastMoveTo == name;
+    } else if (context.read<HostBloc>().state is HostFocusedState) {
+      movableToThis = (context.read<HostBloc>().state as HostFocusedState).movableCoors.contains(name);
       if (piece != null && movableToThis) {
         attackableToThis = true;
         movableToThis = false;
       }
-      if ((context.read<LocalHostBloc>().state as LocalHostFocusedState).focusedCoor == name) {
+      if ((context.read<HostBloc>().state as HostFocusedState).focusedCoor == name) {
         moveFrom = true;
       }
     }
@@ -166,7 +166,7 @@ class SquareOnTheBoard extends StatelessWidget {
 
     return DragTarget<String>(
       onAccept: (focusCoor) {
-        context.read<LocalHostBloc>().add(LocalHostMoveEvent(to: name));
+        context.read<HostBloc>().add(HostMoveEvent(to: name));
       },
       onWillAccept: (focusCoor) {
         return movableToThis || attackableToThis;
@@ -175,11 +175,11 @@ class SquareOnTheBoard extends StatelessWidget {
         return Draggable<String>(
           data: name,
           onDragStarted: () {
-            context.read<LocalHostBloc>().add(LocalHostFocusEvent(focusCoor: name));
+            context.read<HostBloc>().add(HostFocusEvent(focusCoor: name));
           },
           onDragEnd: (details) {
             if (!details.wasAccepted) 
-              context.read<LocalHostBloc>().add(LocalHostMoveEvent());
+              context.read<HostBloc>().add(HostMoveEvent());
           },
           maxSimultaneousDrags: movable ? null : 0,
           childWhenDragging: _container(darkBg, lightBg, null),
@@ -193,15 +193,15 @@ class SquareOnTheBoard extends StatelessWidget {
   Widget _allOfSquare(BuildContext context, Color darkBg, Color lightBg) {
     return GestureDetector(
       onTap: () {
-        if (context.read<LocalHostBloc>().state is LocalHostLoadedState) {
+        if (context.read<HostBloc>().state is HostLoadedState) {
           if (movable) {
-            context.read<LocalHostBloc>().add(LocalHostFocusEvent(focusCoor: name));
+            context.read<HostBloc>().add(HostFocusEvent(focusCoor: name));
           }
-        } else if (context.read<LocalHostBloc>().state is LocalHostFocusedState) {
+        } else if (context.read<HostBloc>().state is HostFocusedState) {
           if (movableToThis || attackableToThis|| moveFrom) {
-            context.read<LocalHostBloc>().add(LocalHostMoveEvent(to: name));
+            context.read<HostBloc>().add(HostMoveEvent(to: name));
           } else {
-            context.read<LocalHostBloc>().add(LocalHostMoveEvent());
+            context.read<HostBloc>().add(HostMoveEvent());
           }
         }
       },

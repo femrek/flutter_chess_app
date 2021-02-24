@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-class LocalHostEvent extends Equatable {
+class HostEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class LocalHostLoadEvent extends LocalHostEvent {
+class HostLoadEvent extends HostEvent {
   final bool restart;
   final String fen;
 
-  LocalHostLoadEvent({
+  HostLoadEvent({
     this.restart = false,
     this.fen,
   });
@@ -18,31 +18,31 @@ class LocalHostLoadEvent extends LocalHostEvent {
   List<Object> get props => [restart];
 }
 
-class LocalHostStartEvent extends LocalHostEvent {
+class HostStartEvent extends HostEvent {
   final String ipAddress;
 
-  LocalHostStartEvent({this.ipAddress});
+  HostStartEvent({this.ipAddress});
 
   @override
   List<Object> get props => [ipAddress];
 }
 
-class LocalHostStopEvent extends LocalHostEvent {}
+class HostStopEvent extends HostEvent {}
 
-class LocalHostFocusEvent extends LocalHostEvent {
+class HostFocusEvent extends HostEvent {
   final String focusCoor;
 
-  LocalHostFocusEvent({this.focusCoor});
+  HostFocusEvent({this.focusCoor});
 
   @override
   List<Object> get props => [focusCoor];
 }
 
-class LocalHostMoveEvent extends LocalHostEvent {
+class HostMoveEvent extends HostEvent {
   final String from;
   final String to;
 
-  LocalHostMoveEvent({
+  HostMoveEvent({
     this.from = '',
     this.to,
   });
@@ -51,6 +51,6 @@ class LocalHostMoveEvent extends LocalHostEvent {
   List<Object> get props => [to];
 }
 
-class LocalHostUndoEvent extends LocalHostEvent {}
+class HostUndoEvent extends HostEvent {}
 
-class LocalHostRedoEvent extends LocalHostEvent {}
+class HostRedoEvent extends HostEvent {}

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/data/model/turn_model.dart';
 
-import 'local_host_bloc.dart';
+import 'host_bloc.dart';
 import 'host_name_cubit.dart';
 import 'host_redoable_cubit.dart';
 import 'host_turn_cubit.dart';
-import 'local_host_event.dart';
+import 'host_event.dart';
 import 'single_player_chess_table.dart';
 
 class ScreenHostGame extends StatefulWidget {
@@ -21,7 +21,7 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
 
   @override
   void initState() {
-    context.read<LocalHostBloc>().add(LocalHostStartEvent());
+    context.read<HostBloc>().add(HostStartEvent());
     super.initState();
   }
 
@@ -30,7 +30,7 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
     final width = MediaQuery.of(context).size.width;
     return WillPopScope(
       onWillPop: () async {
-        context.read<LocalHostBloc>().add(LocalHostStopEvent());
+        context.read<HostBloc>().add(HostStopEvent());
         return true;
       },
       child: Scaffold(
@@ -112,14 +112,14 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
     switch (choice) {
       case _MENU_RESTART:
         _showSureDialog(context, 'Are you sure to restart game', null, () {
-          context.read<LocalHostBloc>().add(LocalHostLoadEvent(restart: true));
+          context.read<HostBloc>().add(HostLoadEvent(restart: true));
         });
         break;
       case _MENU_UNDO:
-        context.read<LocalHostBloc>().add(LocalHostUndoEvent());
+        context.read<HostBloc>().add(HostUndoEvent());
         break;
       case _MENU_REDO:
-        context.read<LocalHostBloc>().add(LocalHostRedoEvent());
+        context.read<HostBloc>().add(HostRedoEvent());
         break;
       default: break; 
     }
