@@ -56,7 +56,7 @@ class ScreenMain extends StatelessWidget {
                     print('port input is $port');
                     StorageManager().setLastConnectedHost(host);
                     StorageManager().setLastConnectedPort(port);
-                    Navigator.pushNamed(context, screenClientGame, arguments: [host, port]);
+                    Navigator.pushNamed(context, screenGuestGame, arguments: [host, port]);
                   },
                   child: Text('join local network game'),
                 ),

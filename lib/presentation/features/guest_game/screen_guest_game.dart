@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:mychess/presentation/features/local_net_guest/guest_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/presentation/features/local_net_guest/guest_event.dart';
 
+import 'guest_bloc.dart';
+import 'guest_event.dart';
 import 'guest_chess_table.dart';
 
-class ScreenLocalNetGuest extends StatefulWidget {
+class ScreenGuestGame extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ScreenlocalNetGuestState();
 }
 
-class _ScreenlocalNetGuestState extends State<ScreenLocalNetGuest> {
+class _ScreenlocalNetGuestState extends State<ScreenGuestGame> {
 
   GuestBloc guestBloc;
 

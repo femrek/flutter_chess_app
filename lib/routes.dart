@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/presentation/features/local_game/screen_local_game.dart';
 import 'package:mychess/presentation/features/local_net_game/screen_local_network_game.dart';
-import 'package:mychess/presentation/features/local_net_guest/guest_event.dart';
-import 'package:mychess/presentation/features/local_net_guest/screen_local_net_guest.dart';
 import 'package:mychess/presentation/features/main_screen/screen_main.dart';
 
 import 'presentation/features/local_game/board_bloc.dart';
@@ -15,12 +13,14 @@ import 'presentation/features/local_net_game/host_redoable_cubit.dart';
 import 'presentation/features/local_net_game/host_turn_cubit.dart';
 import 'presentation/features/local_net_game/local_host_bloc.dart';
 import 'presentation/features/local_net_game/local_host_event.dart';
-import 'presentation/features/local_net_guest/guest_bloc.dart';
+import 'presentation/features/guest_game/guest_bloc.dart';
+import 'presentation/features/guest_game/guest_event.dart';
+import 'presentation/features/guest_game/screen_guest_game.dart';
 
 const String screenMain = '/';
 const String screenLocalGame = '/local_game';
 const String screenHostGame = '/local_net_game';
-const String screenClientGame = '/local_net_guest';
+const String screenGuestGame = '/local_guest_game';
 
 RedoableCubit _redoableCubit = RedoableCubit();
 TurnCubit _turnCubit = TurnCubit();
@@ -71,7 +71,7 @@ class Routes {
           ],
           child: ScreenLocalNetGame(),
         ));
-      case screenClientGame:
+      case screenGuestGame:
         final List arg = settings.arguments; // [String host, int port]
         _guestBloc.add(GuestConnectEvent(
           host: arg[0],
@@ -83,7 +83,7 @@ class Routes {
               value: _guestBloc..add(GuestConnectEvent()),
             ),
           ],
-          child: ScreenLocalNetGuest(),
+          child: ScreenGuestGame(),
         ));
       default:
         throw Exception('route not found');
