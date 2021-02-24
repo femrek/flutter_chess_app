@@ -181,7 +181,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         undoHistory.add(move);
         hostRedoableCubit.redoable();
       }
-      clientSocket.write(chess.fen);
+      if (clientSocket != null) clientSocket.write(chess.fen);
       findMovablePiecesCoors();
       convertToPieceBoard();
       setHistoryString();
@@ -204,7 +204,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
       } else {
         chess.move(undoHistory.removeLast());
 
-        clientSocket.write(chess.fen);
+        if (clientSocket != null) clientSocket.write(chess.fen);
 
         if (undoHistory.length == 0) {
           hostRedoableCubit.nonredoable();
