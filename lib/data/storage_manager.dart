@@ -1,3 +1,4 @@
+import 'package:mychess/data/model/last_move_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageManager {
@@ -6,6 +7,8 @@ class StorageManager {
   static const String LAST_HOST_GAME_FEN = 'lastHostGameFen';
   static const String LAST_CONNECTED_HOST = 'lastConnectedHost';
   static const String LAST_CONNECTED_PORT = 'lastConnectedPort';
+  static const String LAST_GAME_LAST_FROM = 'lastGameLastFrom';
+  static const String LAST_GAME_LAST_TO = 'lastGameLastTo';
 
   SharedPreferences _sharedPreferences;
 
@@ -28,6 +31,25 @@ class StorageManager {
     await _setSharedPreferences();
     _lastGameFen = _sharedPreferences.getString(LAST_GAME_FEN);
     return _lastGameFen;
+  }
+  LastMoveModel _lastGameLastMove;
+  Future<bool> setLastGameLastMove(LastMoveModel newMove) async {
+    await _setSharedPreferences();
+    if (await _sharedPreferences.setString(LAST_GAME_LAST_FROM, newMove.from)
+      && await _sharedPreferences.setString(LAST_GAME_LAST_TO, newMove.to)
+    ) {
+      _lastGameLastMove = newMove;
+      return true;
+    }
+    return false;
+  }
+  Future<LastMoveModel> get lastGameLastMove async {
+    if (_lastGameLastMove != null) return _lastGameLastMove;
+    await _setSharedPreferences();
+    String from = _sharedPreferences.getString(LAST_GAME_LAST_FROM);
+    String to = _sharedPreferences.getString(LAST_GAME_LAST_TO);
+    _lastGameLastMove = LastMoveModel(from: from, to: to);
+    return _lastGameLastMove;
   }
 
   String _lastHostGameFen;
