@@ -1,5 +1,6 @@
 import 'package:chess/chess.dart' as ch;
 import 'package:bloc/bloc.dart';
+import 'package:mychess/data/model/last_move_model.dart';
 import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 import 'package:mychess/presentation/features/local_game/turn_cubit.dart';
@@ -18,7 +19,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = Set();
-  String history;
+  LastMoveModel lastMove;
   List<ch.Move> undoHistory = List();
 
   @override
@@ -27,18 +28,18 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     if (event is BoardLoadEvent) {
       if (event.restart || (await StorageManager().lastGameFen) == null) {
         await StorageManager().setLastGameFen(null);
+        lastMove = LastMoveModel(from: '', to: '');
+        StorageManager().setLastGameLastMove(lastMove);
         chess = ch.Chess();
         undoHistory.clear();
         redoableCubit.nonredoable();
       } else {
         chess = ch.Chess.fromFEN(await StorageManager().lastGameFen);
+        lastMove = (await StorageManager().lastGameLastMove);
       }
 
       findMovablePiecesCoors();
-
       convertToPieceBoard();
-
-      setHistoryString();
 
       turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
       yield BoardLoadedState(
@@ -46,8 +47,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
-        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
+        lastMoveFrom: lastMove.from,
+        lastMoveTo: lastMove.to,
         fen: chess.generate_fen(),
       );
     }
@@ -66,8 +67,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         focusedCoor: event.focusCoor,
         movableCoors: movableCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
-        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
-        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
+        lastMoveFrom: lastMove.from,
+        lastMoveTo: lastMove.to,
         inCheck: chess.in_check,
       );
     }
@@ -76,9 +77,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       if (!(state is BoardFocusedState)) {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
-
+      ch.Move thisMove;
       if (!(event.to == null || event.to == (state as BoardFocusedState).focusedCoor)) {
-        ch.Move thisMove; 
         for (ch.Move move in chess.generate_moves()) {
           if (
             move.fromAlgebraic == (state as BoardFocusedState).focusedCoor
@@ -93,7 +93,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         convertToPieceBoard();
         findMovablePiecesCoors();
         StorageManager().setLastGameFen(chess.fen);
-        setHistoryString();
+        lastMove = LastMoveModel(from: thisMove.fromAlgebraic, to: thisMove.toAlgebraic);
+        StorageManager().setLastGameLastMove(lastMove);
         undoHistory.clear();
         redoableCubit.nonredoable();
       }
@@ -103,8 +104,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
-        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
-        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
+        lastMoveFrom: thisMove?.fromAlgebraic ?? lastMove.from,
+        lastMoveTo: thisMove?.toAlgebraic ?? lastMove.to,
         inCheck: chess.in_check,
       );
     }
@@ -114,10 +115,15 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       if (move != null) {
         undoHistory.add(move);
         redoableCubit.redoable();
+        lastMove = LastMoveModel(
+          from: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+          to: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
+        );
+        StorageManager().setLastGameLastMove(lastMove);
+        StorageManager().setLastGameFen(chess.fen);
       }
       findMovablePiecesCoors();
       convertToPieceBoard();
-      setHistoryString();
 
       turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
       yield BoardLoadedState(
@@ -125,8 +131,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
-        lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
+        lastMoveFrom: lastMove.from,
+        lastMoveTo: lastMove.to,
         fen: chess.generate_fen(),
       );
     }
@@ -136,14 +142,18 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         print('no undo');
       } else {
         chess.move(undoHistory.removeLast());
-
         if (undoHistory.length == 0) {
           redoableCubit.nonredoable();
         }
+        lastMove = LastMoveModel(
+          from: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
+          to: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
+        );
+        StorageManager().setLastGameLastMove(lastMove);
+        StorageManager().setLastGameFen(chess.fen);
 
         findMovablePiecesCoors();
         convertToPieceBoard();
-        setHistoryString();
 
         turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
         yield BoardLoadedState(
@@ -151,8 +161,8 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
           movablePiecesCoors: movablePiecesCoors,
           isWhiteTurn: chess.turn == ch.Color.WHITE,
           inCheck: chess.in_check,
-          lastMoveFrom: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
-          lastMoveTo: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
+          lastMoveFrom: lastMove.from,
+          lastMoveTo: lastMove.to,
           fen: chess.generate_fen(),
         );
       }
@@ -177,13 +187,5 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     }
     print('movablePiecesCoors: $movablePiecesCoors');
   }
-
-  void setHistoryString() {
-    history = '';
-    for (ch.State state in chess.history) {
-      history += state.move.fromAlgebraic + state.move.toAlgebraic + '/';
-    }
-  }
-
 }
 

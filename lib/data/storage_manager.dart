@@ -46,8 +46,8 @@ class StorageManager {
   Future<LastMoveModel> get lastGameLastMove async {
     if (_lastGameLastMove != null) return _lastGameLastMove;
     await _setSharedPreferences();
-    String from = _sharedPreferences.getString(LAST_GAME_LAST_FROM);
-    String to = _sharedPreferences.getString(LAST_GAME_LAST_TO);
+    String from = _sharedPreferences.getString(LAST_GAME_LAST_FROM) ?? '';
+    String to = _sharedPreferences.getString(LAST_GAME_LAST_TO) ?? '';
     _lastGameLastMove = LastMoveModel(from: from, to: to);
     return _lastGameLastMove;
   }
