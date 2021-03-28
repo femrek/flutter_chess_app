@@ -9,6 +9,8 @@ class StorageManager {
   static const String LAST_CONNECTED_PORT = 'lastConnectedPort';
   static const String LAST_GAME_LAST_FROM = 'lastGameLastFrom';
   static const String LAST_GAME_LAST_TO = 'lastGameLastTo';
+  static const String LAST_HOST_GAME_LAST_FROM = 'lastHostGameLastFrom';
+  static const String LAST_HOST_GAME_LAST_TO = 'lastHostGameLastTo';
 
   SharedPreferences _sharedPreferences;
 
@@ -17,6 +19,7 @@ class StorageManager {
       _sharedPreferences = await SharedPreferences.getInstance();
   }
 
+  // TWO PLAYER GAME ----------------------------------------------------
   String _lastGameFen;
   Future<bool> setLastGameFen(String newFen) async {
     await _setSharedPreferences();
@@ -52,6 +55,7 @@ class StorageManager {
     return _lastGameLastMove;
   }
 
+  // HOST GAME ----------------------------------------------------
   String _lastHostGameFen;
   Future<bool> setLastHostGameFen(String newFen) async {
     await _setSharedPreferences();
@@ -67,7 +71,27 @@ class StorageManager {
     _lastHostGameFen = _sharedPreferences.getString(LAST_HOST_GAME_FEN);
     return _lastHostGameFen;
   }
+  LastMoveModel _lastHostGameLastMove;
+  Future<bool> setLastHostGameLastMove(LastMoveModel newMove) async {
+    await _setSharedPreferences();
+    if (await _sharedPreferences.setString(LAST_HOST_GAME_LAST_FROM, newMove.from)
+      && await _sharedPreferences.setString(LAST_HOST_GAME_LAST_TO, newMove.to)
+    ) {
+      _lastHostGameLastMove = newMove;
+      return true;
+    }
+    return false;
+  }
+  Future<LastMoveModel> get lastHostGameLastMove async {
+    if (_lastHostGameLastMove != null) return _lastHostGameLastMove;
+    await _setSharedPreferences();
+    String from = _sharedPreferences.getString(LAST_HOST_GAME_LAST_FROM) ?? '';
+    String to = _sharedPreferences.getString(LAST_HOST_GAME_LAST_TO) ?? '';
+    _lastHostGameLastMove = LastMoveModel(from: from, to: to);
+    return _lastHostGameLastMove;
+  }
 
+  // CLIENT ----------------------------------------------------
   String _lastConnectedHost;
   Future<bool> setLastConnectedHost(String newHost) async {
     await _setSharedPreferences();
