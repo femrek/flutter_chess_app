@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/data/model/turn_model.dart';
+import 'package:mychess/presentation/features/host_game/find_ip_cubit.dart';
 
 import 'host_bloc.dart';
-import 'host_name_cubit.dart';
 import 'host_redoable_cubit.dart';
 import 'host_turn_cubit.dart';
 import 'host_event.dart';
@@ -91,7 +91,7 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
                 );
               },
             ),
-            BlocBuilder<HostNameCubit, String>(
+            BlocBuilder<FindIpCubit, String>(
               builder: (_, String hostName) {
                 return Text(
                   hostName,

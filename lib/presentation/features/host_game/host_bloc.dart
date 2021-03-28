@@ -4,8 +4,8 @@ import 'dart:typed_data';
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/data/storage_manager.dart';
+import 'package:mychess/presentation/features/host_game/find_ip_cubit.dart';
 
-import 'host_name_cubit.dart';
 import 'host_redoable_cubit.dart';
 import 'host_turn_cubit.dart';
 import 'host_event.dart';
@@ -14,12 +14,12 @@ import 'host_state.dart';
 class HostBloc extends Bloc<HostEvent, HostState> {
   HostBloc(
     this.hostRedoableCubit,
-    this.hostNameCubit,
+    this.findIpCubit,
     this.hostTurnCubit,
   ) : super(HostInitialState());
 
   final HostRedoableCubit hostRedoableCubit;
-  final HostNameCubit hostNameCubit;
+  final FindIpCubit findIpCubit;
   final HostTurnCubit hostTurnCubit;
 
   ServerSocket serverSocket;
@@ -70,7 +70,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
     else if (event is HostStartEvent) {
       serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
       print('LocalHostConnectEvent event, ip: ${serverSocket.address.toString()}:${serverSocket.port.toString()}');
-      hostNameCubit.defineHostName(serverSocket.address.address, serverSocket.port);
+      findIpCubit.defineIpAndPortNum(serverSocket.port);
       serverSocket.listen((Socket socket) {
         socket.write(chess.fen);
         print('new connection');

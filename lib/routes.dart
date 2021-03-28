@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mychess/presentation/features/host_game/find_ip_cubit.dart';
 
 import 'presentation/features/host_game/screen_host_game.dart';
 import 'presentation/features/local_game/screen_local_game.dart';
@@ -7,7 +8,6 @@ import 'presentation/features/local_game/board_bloc.dart';
 import 'presentation/features/local_game/board_event.dart';
 import 'presentation/features/local_game/redoable_cubit.dart';
 import 'presentation/features/local_game/turn_cubit.dart';
-import 'presentation/features/host_game/host_name_cubit.dart';
 import 'presentation/features/host_game/host_redoable_cubit.dart';
 import 'presentation/features/host_game/host_turn_cubit.dart';
 import 'presentation/features/host_game/host_bloc.dart';
@@ -26,9 +26,9 @@ RedoableCubit _redoableCubit = RedoableCubit();
 TurnCubit _turnCubit = TurnCubit();
 BoardBloc _boardBloc = BoardBloc(_redoableCubit, _turnCubit);
 HostRedoableCubit _hostRedoableCubit = HostRedoableCubit();
-HostNameCubit _hostNameCubit = HostNameCubit();
+FindIpCubit _findIpCubit = FindIpCubit();
 HostTurnCubit _hostTurnCubit = HostTurnCubit();
-HostBloc _localHostBloc = HostBloc(_hostRedoableCubit, _hostNameCubit, _hostTurnCubit);
+HostBloc _localHostBloc = HostBloc(_hostRedoableCubit, _findIpCubit, _hostTurnCubit);
 GuestBloc _guestBloc = GuestBloc();
 
 
@@ -63,7 +63,7 @@ class Routes {
               value: _hostRedoableCubit,
             ),
             BlocProvider.value(
-              value: _hostNameCubit,
+              value: _findIpCubit,
             ),
             BlocProvider.value(
               value: _hostTurnCubit,
