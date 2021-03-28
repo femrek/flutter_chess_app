@@ -6,4 +6,9 @@ class LastMoveModel {
     this.from,
     this.to,
   });
+
+ @override
+  String toString() {
+    return '$from/$to';
+  }
 }

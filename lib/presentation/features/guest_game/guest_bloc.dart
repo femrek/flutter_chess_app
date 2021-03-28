@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mychess/data/model/last_move_model.dart';
 
 import 'guest_event.dart';
 import 'guest_state.dart';
@@ -18,7 +19,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = Set();
-  String history;
+  LastMoveModel lastMove;
   List<ch.Move> undoHistory = List();
 
   @override
@@ -28,13 +29,13 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       chess = ch.Chess.fromFEN(event.fen);
       findMovablePiecesCoors();
       convertToPieceBoard();
-      setHistoryString();
       yield GuestLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        history: history,
+        lastMoveFrom: lastMove.from,
+        lastMoveTo: lastMove.to,
         fen: chess.fen,
       );
     }
@@ -48,9 +49,18 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
       socket.listen((Uint8List dataAsByte) {
         final String data = String.fromCharCodes(dataAsByte);
-        print(data);
-        if (ch.Chess.validate_fen(data)['valid']) {
-          add(GuestLoadEvent(fen: data));
+        final String fenData = data.substring(0, data.indexOf('#'));
+        print('data: $data');
+        print('fenData: $fenData');
+        if (ch.Chess.validate_fen(fenData)['valid']) {
+          final int sharpIndex = data.indexOf('#');
+          final int moveDividerIndex = data.indexOf('/', sharpIndex);
+          lastMove = LastMoveModel(
+            from: data.substring(sharpIndex + 1, moveDividerIndex),
+            to: data.substring(moveDividerIndex + 1)
+          );
+          print('last move from host: $lastMove');
+          add(GuestLoadEvent(fen: fenData));
         } else {
           add(GuestRefreshEvent());
         }
@@ -79,14 +89,14 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
           movableCoors.add(move.toAlgebraic);
         }
       }
-      setHistoryString();
       yield GuestFocusedState(
         board: pieceBoard,
         focusedCoor: event.focusCoor,
         movableCoors: movableCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
-        history: history,
+        lastMoveFrom: lastMove.from,
+        lastMoveTo: lastMove.to,
         fen: chess.fen,
       );
     }
@@ -109,8 +119,9 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: whiteTurn,
-        history: history,
         inCheck: chess.in_check,
+        lastMoveFrom: lastMove.from,
+        lastMoveTo: lastMove.to,
         fen: chess.fen,
       );
     }
@@ -136,13 +147,6 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       movablePiecesCoors.add(move.fromAlgebraic);
     }
     print('movablePiecesCoors: $movablePiecesCoors');
-  }
-
-  void setHistoryString() {
-    history = '';
-    for (ch.State state in chess.history) {
-      history += state.move.fromAlgebraic + state.move.toAlgebraic + '/';
-    }
   }
 
 }

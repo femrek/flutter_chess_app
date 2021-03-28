@@ -13,7 +13,8 @@ class GuestLoadedState extends GuestState {
   final Set<String> movablePiecesCoors;
   final bool isWhiteTurn;
   final bool inCheck;
-  final String history;
+  final String lastMoveFrom;
+  final String lastMoveTo;
   final String fen;
 
   GuestLoadedState({
@@ -21,7 +22,8 @@ class GuestLoadedState extends GuestState {
     this.movablePiecesCoors,
     this.isWhiteTurn,
     this.inCheck,
-    this.history,
+    this.lastMoveFrom,
+    this.lastMoveTo,
     this.fen,
   }):super();
 
@@ -35,7 +37,8 @@ class GuestFocusedState extends GuestState {
   final Set<String> movableCoors;
   final bool isWhiteTurn;
   final bool inCheck;
-  final String history;
+  final String lastMoveFrom;
+  final String lastMoveTo;
   final String fen;
 
   GuestFocusedState({
@@ -44,7 +47,8 @@ class GuestFocusedState extends GuestState {
     this.movableCoors,
     this.isWhiteTurn,
     this.inCheck,
-    this.history,
+    this.lastMoveFrom,
+    this.lastMoveTo,
     this.fen,
   }):super();
 

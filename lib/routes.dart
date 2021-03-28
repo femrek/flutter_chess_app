@@ -80,7 +80,7 @@ class Routes {
         return MaterialPageRoute(builder: (_) => MultiBlocProvider(
           providers: [
             BlocProvider.value(
-              value: _guestBloc..add(GuestConnectEvent()),
+              value: _guestBloc,
             ),
           ],
           child: ScreenGuestGame(),
