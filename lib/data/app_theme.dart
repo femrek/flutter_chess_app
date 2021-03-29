@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final Color boardBgColor = Colors.blue;
+final Color boardBgColor = Colors.teal;
 final Color darkBgColor = Colors.teal;
 final Color lightBgColor = Colors.white;
 final Color blackPiecesColor = Colors.black;

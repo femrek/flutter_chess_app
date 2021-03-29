@@ -25,7 +25,18 @@ class GuestChessTable extends StatelessWidget {
       width: size,
       height: size,
       color: boardBgColor,
-      child: _table(context),
+      child: Container(
+        child: _table(context),
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              spreadRadius: 5,
+            )
+          ]
+        ),
+      ),
     );
   }
 
