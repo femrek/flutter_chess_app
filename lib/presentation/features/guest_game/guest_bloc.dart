@@ -115,7 +115,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         whiteTurn = true;
       }
       
-      yield GuestLoadedState(
+      else yield GuestLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: whiteTurn,
