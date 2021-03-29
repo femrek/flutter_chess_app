@@ -168,20 +168,16 @@ class SquareOnTheBoard extends StatelessWidget {
 
     return DragTarget<String>(
       onAccept: (focusCoor) {
-        context.read<HostBloc>().add(HostMoveEvent(to: name));
-      },
-      onWillAccept: (focusCoor) {
-        return movableToThis || attackableToThis;
+        if (movableToThis || attackableToThis)
+          context.read<HostBloc>().add(HostMoveEvent(to: name));
+        else
+          context.read<HostBloc>().add(HostMoveEvent());
       },
       builder: (_, list1, list2) {
         return Draggable<String>(
-          data: name,
+          data: name, 
           onDragStarted: () {
             context.read<HostBloc>().add(HostFocusEvent(focusCoor: name));
-          },
-          onDragEnd: (details) {
-            if (!details.wasAccepted) 
-              context.read<HostBloc>().add(HostMoveEvent());
           },
           maxSimultaneousDrags: movable ? null : 0,
           childWhenDragging: _container(darkBg, lightBg, null),
