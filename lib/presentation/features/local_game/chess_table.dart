@@ -78,6 +78,36 @@ class ChessTable extends StatelessWidget {
           width: size,
         );
       },
+      buildWhen: (oldState, newState) {
+        final String name = '${String.fromCharCode(x+97)}${y+1}';
+        if (newState is BoardLoadedState) {
+          if (oldState is BoardFocusedState) {
+            /*final bool a1 = (name!='a1' && name!='a8' && name!='h1' && name!='h8');
+            final bool a3 = (!oldState.movableCoors.contains(name));
+            final bool a4 = (oldState.focusedCoor != name);
+            final bool a5 = (!newState.movablePiecesCoors.contains(name));
+            final bool a6 = (oldState.lastMoveFrom != name);
+            final bool a7 = (oldState.lastMoveTo != name);
+            print('$name ---- 1: $a1 | 3: $a3 | 4: $a4 | 5: $a5 | 6: $a6 | 7: $a7');
+            if (a1 && a3 && a4 && a5 && a6 && a7) return false;*/
+            if (   (!newState.movablePiecesCoors.contains(name))
+                && (!oldState.movableCoors.contains(name))
+                && (oldState.focusedCoor != name)
+                && (oldState.lastMoveFrom != name)
+                && (oldState.lastMoveTo != name)
+                && (name!='a1' && name!='a8' && name!='h1' && name!='h8'))
+              return false;
+          }
+        } else if (newState is BoardFocusedState) {
+          if (oldState is BoardLoadedState) {
+            if (!newState.movableCoors.contains(name)
+                && newState.focusedCoor != name
+                && !oldState.movablePiecesCoors.contains(name))
+              return false;
+          }
+        }
+        return true;
+      },
     );
   
   }
@@ -169,20 +199,18 @@ class SquareOnTheBoard extends StatelessWidget {
 
     return DragTarget<String>(
       onAccept: (focusCoor) {
-        context.read<BoardBloc>().add(BoardMoveEvent(to: name));
-      },
-      onWillAccept: (focusCoor) {
-        return movableToThis || attackableToThis;
+        //print('movableToThis || attackableToThis : ${(movableToThis || attackableToThis)}');
+        if (movableToThis || attackableToThis)
+          context.read<BoardBloc>().add(BoardMoveEvent(to: name));
+        else {
+          context.read<BoardBloc>().add(BoardMoveEvent());
+        }
       },
       builder: (_, list1, list2) {
         return Draggable<String>(
           data: name,
           onDragStarted: () {
             context.read<BoardBloc>().add(BoardFocusEvent(focusCoor: name));
-          },
-          onDragEnd: (details) {
-            if (!details.wasAccepted) 
-              context.read<BoardBloc>().add(BoardMoveEvent());
           },
           maxSimultaneousDrags: movable ? null : 0,
           childWhenDragging: _container(darkBg, lightBg, null),

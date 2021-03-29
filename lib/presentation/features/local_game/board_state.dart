@@ -2,8 +2,14 @@ import 'package:equatable/equatable.dart';
 import 'package:chess/chess.dart' as ch;
 
 abstract class BoardState extends Equatable {
+  final String fen;
+
+  BoardState({
+    this.fen,
+  });
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [fen];
 }
 
 class BoardInitialState extends BoardState {}
@@ -15,7 +21,6 @@ class BoardLoadedState extends BoardState {
   final bool inCheck;
   final String lastMoveFrom;
   final String lastMoveTo;
-  final String fen;
 
   BoardLoadedState({
     this.board,
@@ -24,11 +29,8 @@ class BoardLoadedState extends BoardState {
     this.inCheck,
     this.lastMoveTo,
     this.lastMoveFrom,
-    this.fen
-  }):super();
-
-  @override
-  List<Object> get props => [fen];
+    String fen,
+  }):super(fen: fen);
 }
 
 class BoardFocusedState extends BoardState {
@@ -39,7 +41,6 @@ class BoardFocusedState extends BoardState {
   final bool inCheck;
   final String lastMoveFrom;
   final String lastMoveTo;
-  final String fen;
 
   BoardFocusedState({
     this.board,
@@ -49,10 +50,6 @@ class BoardFocusedState extends BoardState {
     this.inCheck,
     this.lastMoveTo,
     this.lastMoveFrom,
-    this.fen
-  });
-
-  @override
-  List<Object> get props => [fen];
-
+    String fen,
+  }):super(fen: fen);
 }
