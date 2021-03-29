@@ -218,9 +218,9 @@ class SquareOnTheBoard extends StatelessWidget {
       },
       child: _container(darkBg, lightBg, Stack(
         children: [
+          _lastMoveImage(),
           _moveDots(),
           _pieceImage(),
-          _lastMoveImage(),
         ],
       )),
     );
@@ -289,11 +289,12 @@ class SquareOnTheBoard extends StatelessWidget {
   }
 
   Widget _lastMoveImage() {
+    final Color c = Colors.blue.withOpacity(0.5);
     if (lastMoveFromThis) return Container(
-      child: Text('from'),
+      color: c,
     );
     else if (lastMoveToThis) return Container(
-      child: Text('to'),
+      color: c,
     );
     return Container();
   }
