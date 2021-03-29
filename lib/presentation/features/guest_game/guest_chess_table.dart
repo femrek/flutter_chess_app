@@ -172,6 +172,9 @@ class SquareOnTheBoard extends StatelessWidget {
     } else if (inCheck) {
       darkBg = Colors.red;
       lightBg = Colors.red;
+    } else if (moveFrom) {
+      darkBg = Colors.green;
+      lightBg = Colors.green;
     }
 
     return DragTarget<String>(
@@ -244,12 +247,36 @@ class SquareOnTheBoard extends StatelessWidget {
           ),
         ),
       );
-    } else if (attackableToThis) {
+    } else if (attackableToThis && (lastMoveToThis || lastMoveFromThis)) {
+      return Container(
+        alignment: Alignment.center,
+        child: Stack(
+          children: [
+            Container(
+              height: size*0.9,
+              width: size*0.9,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(9999),
+                color: isDark ? darkBgColor : lightBgColor,
+              ),
+            ),
+            Container(
+              height: size*0.9,
+              width: size*0.9,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(9999),
+                color: lastMoveEffect,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (attackableToThis || moveFrom) {
       return Container(
         alignment: Alignment.center,
         child: Container(
-          height: size*0.8,
-          width: size*0.8,
+          height: size*0.9,
+          width: size*0.9,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(9999),
             color: isDark ? darkBgColor : lightBgColor,
@@ -280,13 +307,15 @@ class SquareOnTheBoard extends StatelessWidget {
     );
   }
 
+  static final Color lastMoveEffect = Colors.blue.withOpacity(0.5);
   Widget _lastMoveImage() {
-    final Color c = Colors.blue.withOpacity(0.5);
-    if (lastMoveFromThis) return Container(
-      color: c,
+    if (attackableToThis) {
+      return Container();
+    } else if (lastMoveFromThis) return Container(
+      color: lastMoveEffect,
     );
     else if (lastMoveToThis) return Container(
-      color: c,
+      color: lastMoveEffect,
     );
     return Container();
   }
