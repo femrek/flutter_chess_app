@@ -7,11 +7,9 @@ class HostEvent extends Equatable {
 
 class HostLoadEvent extends HostEvent {
   final bool restart;
-  final String fen;
 
   HostLoadEvent({
     this.restart = false,
-    this.fen,
   });
 
   @override

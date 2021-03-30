@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/data/model/last_move_model.dart';
 import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/host_game/find_ip_cubit.dart';
+import 'package:mychess/utils.dart';
 
 import 'host_redoable_cubit.dart';
 import 'host_turn_cubit.dart';
@@ -31,15 +32,13 @@ class HostBloc extends Bloc<HostEvent, HostState> {
   Set<String> movablePiecesCoors = Set();
   LastMoveModel lastMove;
   List<ch.Move> undoHistory = List();
+  List<String> undoStateHistory = List();
 
   @override
   Stream<HostState> mapEventToState(HostEvent event) async* {
 
     if (event is HostLoadEvent) {
-      if (event.fen != null) {
-        if (chess != null) chess.load(event.fen);
-        else chess = ch.Chess.fromFEN(event.fen);
-      } else if (event.restart || (await StorageManager().lastHostGameFen) == null) {
+      if (event.restart || (await StorageManager().lastHostGameFen) == null) {
         await StorageManager().setLastHostGameFen(null);
         lastMove = LastMoveModel(from: '', to: '');
         StorageManager().setLastHostGameLastMove(lastMove);
@@ -161,6 +160,9 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         StorageManager().setLastHostGameFen(chess.fen);
         lastMove = LastMoveModel(from: from, to: to);
         StorageManager().setLastHostGameLastMove(lastMove);
+        final String stateBundle = fenAndLastMoveToBundleString(chess.fen, lastMove.toString());
+        print('stateBundle: $stateBundle');
+        StorageManager().addHostBoardStateHistory(stateBundle);
         undoHistory.clear();
         hostRedoableCubit.nonredoable();
         if (clientSocket != null) clientSocket.write('${chess.fen}#$lastMove');
@@ -179,16 +181,20 @@ class HostBloc extends Bloc<HostEvent, HostState> {
     }
  
     else if (event is HostUndoEvent) {
-      ch.Move move = chess.undo_move();
       if (move != null) {
-        undoHistory.add(move);
+        undoStateHistory.add(await StorageManager().removeLastFromHostBoardStateHistory());
+        String currentState;
+        try {
+          currentState = (await StorageManager().hostBoardStateHistory).last;
+        } on StateError {
+          currentState = ch.Chess.DEFAULT_POSITION + '#/';
+        }
         hostRedoableCubit.redoable();
-        lastMove = LastMoveModel(
-          from: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
-          to: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
-        );
+        lastMove = getLastMoveFromBundleString(currentState);
+        final String fen = getFenFromBundleString(currentState);
         StorageManager().setLastHostGameLastMove(lastMove);
         StorageManager().setLastHostGameFen(chess.fen);
+        chess.load(fen);
       }
       if (clientSocket != null) clientSocket.write('${chess.fen}#$lastMove');
       findMovablePiecesCoors();
@@ -207,23 +213,22 @@ class HostBloc extends Bloc<HostEvent, HostState> {
     }
  
     else if (event is HostRedoEvent) {
-      if (undoHistory.length == 0) {
+      if (undoStateHistory.length == 0) {
         print('no undo');
       } else {
-        chess.move(undoHistory.removeLast());
+        final String lastUndoState = undoStateHistory.removeLast();
+        final String fen = getFenFromBundleString(lastUndoState);
+        chess.load(fen);
 
         if (clientSocket != null) clientSocket.write('${chess.fen}#$lastMove');
 
-        if (undoHistory.length == 0) {
+        if (undoStateHistory.length == 0) {
           hostRedoableCubit.nonredoable();
         }
-        lastMove = LastMoveModel(
-          from: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
-          to: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
-        );
+        lastMove = getLastMoveFromBundleString(lastUndoState);
         StorageManager().setLastHostGameLastMove(lastMove);
         StorageManager().setLastHostGameFen(chess.fen);
-
+        StorageManager().addHostBoardStateHistory(fenAndLastMoveToBundleString(fen, lastMove.toString()));
         findMovablePiecesCoors();
         convertToPieceBoard();
 
