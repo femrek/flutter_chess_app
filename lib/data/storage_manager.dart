@@ -116,6 +116,29 @@ class StorageManager {
     _lastHostGameLastMove = LastMoveModel(from: from, to: to);
     return _lastHostGameLastMove;
   }
+  List<String> _hostBoardStateHistory;
+  Future<bool> setHostBoardStateHistory(List<String> newList) async {
+    await _setSharedPreferences();
+    if (await _sharedPreferences.setStringList(HOST_GAME_STATE_HISTORY, newList)) {
+      _hostBoardStateHistory = newList;
+      return true;
+    }
+    return false;
+  }
+  Future<List<String>> get hostBoardStateHistory async {
+    if (_hostBoardStateHistory != null) return _hostBoardStateHistory;
+    await _setSharedPreferences();
+    _hostBoardStateHistory = _sharedPreferences.getStringList(HOST_GAME_STATE_HISTORY) ?? List();
+    return _hostBoardStateHistory;
+  }
+  Future<bool> addHostBoardStateHistory(String bundleString) async =>
+    await setHostBoardStateHistory((await hostBoardStateHistory)..add(bundleString));
+  Future<String> removeLastFromHostBoardStateHistory() async {
+    final List<String> currentHistoryList = (await hostBoardStateHistory);
+    final String removedState = currentHistoryList.removeLast();
+    await setHostBoardStateHistory(currentHistoryList);
+    return removedState;
+  }
 
   // CLIENT ------------------------------------------------------------------------------------
   String _lastConnectedHost;
