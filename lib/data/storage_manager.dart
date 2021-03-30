@@ -11,6 +11,8 @@ class StorageManager {
   static const String LAST_GAME_LAST_TO = 'lastGameLastTo';
   static const String LAST_HOST_GAME_LAST_FROM = 'lastHostGameLastFrom';
   static const String LAST_HOST_GAME_LAST_TO = 'lastHostGameLastTo';
+  static const String GAME_STATE_HISTORY = 'gameStateHistory';
+  static const String HOST_GAME_STATE_HISTORY = 'hostGameStateHistory';
 
   SharedPreferences _sharedPreferences;
 
@@ -19,7 +21,7 @@ class StorageManager {
       _sharedPreferences = await SharedPreferences.getInstance();
   }
 
-  // TWO PLAYER GAME ----------------------------------------------------
+  // TWO PLAYER GAME ------------------------------------------------------------------------------
   String _lastGameFen;
   Future<bool> setLastGameFen(String newFen) async {
     await _setSharedPreferences();
@@ -54,8 +56,32 @@ class StorageManager {
     _lastGameLastMove = LastMoveModel(from: from, to: to);
     return _lastGameLastMove;
   }
+  List<String> _boardStateHistory;
+  Future<bool> setBoardStateHistory(List<String> newList) async {
+    await _setSharedPreferences();
+    if (await _sharedPreferences.setStringList(GAME_STATE_HISTORY, newList)) {
+      _boardStateHistory = newList;
+      return true;
+    }
+    return false;
+  }
+  Future<List<String>> get boardStateHistory async {
+    if (_boardStateHistory != null) return _boardStateHistory;
+    await _setSharedPreferences();
+    _boardStateHistory = _sharedPreferences.getStringList(GAME_STATE_HISTORY);
+    return _boardStateHistory;
+  }
+  Future<bool> addBoardStateHistory(String bundleString) async =>
+    await setBoardStateHistory((await boardStateHistory)..add(bundleString));
+  Future<String> removeLastFromBoardStateHistory() async {
+    final List<String> currentHistoryList = (await boardStateHistory);
+    final String removedState = currentHistoryList.removeLast();
+    await setBoardStateHistory(currentHistoryList);
+    return removedState;
+  }
+  
 
-  // HOST GAME ----------------------------------------------------
+  // HOST GAME -------------------------------------------------------------------------------------
   String _lastHostGameFen;
   Future<bool> setLastHostGameFen(String newFen) async {
     await _setSharedPreferences();
@@ -91,7 +117,7 @@ class StorageManager {
     return _lastHostGameLastMove;
   }
 
-  // CLIENT ----------------------------------------------------
+  // CLIENT ------------------------------------------------------------------------------------
   String _lastConnectedHost;
   Future<bool> setLastConnectedHost(String newHost) async {
     await _setSharedPreferences();
