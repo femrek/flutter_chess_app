@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mychess/data/model/last_move_model.dart';
+import 'package:mychess/utils.dart';
 
 import 'guest_event.dart';
 import 'guest_state.dart';
@@ -51,16 +52,11 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
       socket.listen((Uint8List dataAsByte) {
         final String data = String.fromCharCodes(dataAsByte);
-        final String fenData = data.substring(0, data.indexOf('#'));
+        final String fenData = getFenFromBundleString(data);
         print('data: $data');
         print('fenData: $fenData');
         if (ch.Chess.validate_fen(fenData)['valid']) {
-          final int sharpIndex = data.indexOf('#');
-          final int moveDividerIndex = data.indexOf('/', sharpIndex);
-          lastMove = LastMoveModel(
-            from: data.substring(sharpIndex + 1, moveDividerIndex),
-            to: data.substring(moveDividerIndex + 1)
-          );
+          lastMove = getLastMoveFromBundleString(data);
           print('last move from host: $lastMove');
           add(GuestLoadEvent(fen: fenData));
         } else {
