@@ -4,6 +4,7 @@ import 'package:mychess/data/model/last_move_model.dart';
 import 'package:mychess/data/storage_manager.dart';
 import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 import 'package:mychess/presentation/features/local_game/turn_cubit.dart';
+import 'package:mychess/utils.dart';
 
 import 'board_event.dart';
 import 'board_state.dart';
@@ -95,6 +96,9 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         StorageManager().setLastGameFen(chess.fen);
         lastMove = LastMoveModel(from: thisMove.fromAlgebraic, to: thisMove.toAlgebraic);
         StorageManager().setLastGameLastMove(lastMove);
+        final String stateBundle = fenAndLastMoveToBundleString(chess.fen, lastMove.toString());
+        print('stateBundle: $stateBundle');
+        StorageManager().addBoardStateHistory(stateBundle);
         undoHistory.clear();
         redoableCubit.nonredoable();
       }

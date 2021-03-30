@@ -68,7 +68,7 @@ class StorageManager {
   Future<List<String>> get boardStateHistory async {
     if (_boardStateHistory != null) return _boardStateHistory;
     await _setSharedPreferences();
-    _boardStateHistory = _sharedPreferences.getStringList(GAME_STATE_HISTORY);
+    _boardStateHistory = _sharedPreferences.getStringList(GAME_STATE_HISTORY) ?? List();
     return _boardStateHistory;
   }
   Future<bool> addBoardStateHistory(String bundleString) async =>
