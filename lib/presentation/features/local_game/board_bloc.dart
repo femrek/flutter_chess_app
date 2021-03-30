@@ -21,7 +21,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = Set();
   LastMoveModel lastMove;
-  List<ch.Move> undoHistory = List();
+  List<String> undoStateHistory = List();
 
   @override
   Stream<BoardState> mapEventToState(BoardEvent event) async* {
@@ -31,8 +31,9 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         await StorageManager().setLastGameFen(null);
         lastMove = LastMoveModel(from: '', to: '');
         StorageManager().setLastGameLastMove(lastMove);
+        StorageManager().setBoardStateHistory(List());
         chess = ch.Chess();
-        undoHistory.clear();
+        undoStateHistory.clear();
         redoableCubit.nonredoable();
       } else {
         chess = ch.Chess.fromFEN(await StorageManager().lastGameFen);
@@ -99,7 +100,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         final String stateBundle = fenAndLastMoveToBundleString(chess.fen, lastMove.toString());
         print('stateBundle: $stateBundle');
         StorageManager().addBoardStateHistory(stateBundle);
-        undoHistory.clear();
+        undoStateHistory.clear();
         redoableCubit.nonredoable();
       }
 
@@ -115,16 +116,20 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     }
 
     else if (event is BoardUndoEvent) {
-      ch.Move move = chess.undo_move();
-      if (move != null) {
-        undoHistory.add(move);
+      if ((await StorageManager().boardStateHistory).length > 0) {
+        undoStateHistory.add(await StorageManager().removeLastFromBoardStateHistory());
+        String currentState;
+        try {
+          currentState = (await StorageManager().boardStateHistory).last;
+        } on StateError {
+          currentState = ch.Chess.DEFAULT_POSITION + '#/';
+        }
         redoableCubit.redoable();
-        lastMove = LastMoveModel(
-          from: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
-          to: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
-        );
+        lastMove = getLastMoveFromBundleString(currentState);
+        final String fen = getFenFromBundleString(currentState);
         StorageManager().setLastGameLastMove(lastMove);
-        StorageManager().setLastGameFen(chess.fen);
+        StorageManager().setLastGameFen(fen);
+        chess.load(fen);
       }
       findMovablePiecesCoors();
       convertToPieceBoard();
@@ -142,20 +147,17 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     }
 
     else if (event is BoardRedoEvent) {
-      if (undoHistory.length == 0) {
+      if (undoStateHistory.length == 0) {
         print('no undo');
       } else {
-        chess.move(undoHistory.removeLast());
-        if (undoHistory.length == 0) {
-          redoableCubit.nonredoable();
-        }
-        lastMove = LastMoveModel(
-          from: (chess.history.length == 0) ? '' : (chess.history.last.move?.fromAlgebraic ?? ''),
-          to: (chess.history.length == 0) ? '' : (chess.history.last.move?.toAlgebraic ?? ''),
-        );
+        final String lastUndoState = undoStateHistory.removeLast();
+        final String fen = getFenFromBundleString(lastUndoState);
+        chess.load(fen);
+        if (undoStateHistory.length == 0) redoableCubit.nonredoable();
+        lastMove = getLastMoveFromBundleString(lastUndoState);
         StorageManager().setLastGameLastMove(lastMove);
-        StorageManager().setLastGameFen(chess.fen);
-
+        StorageManager().setLastGameFen(fen);
+        StorageManager().addBoardStateHistory(fenAndLastMoveToBundleString(fen, lastMove.toString()));
         findMovablePiecesCoors();
         convertToPieceBoard();
 
@@ -170,7 +172,6 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
           fen: chess.generate_fen(),
         );
       }
-
     }
 
   }
