@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mychess/data/model/last_move_model.dart';
 
 /// param lastMove: last move coord. like a1/a5
@@ -17,3 +18,8 @@ LastMoveModel getLastMoveFromBundleString(String bundleString) {
 String getFenFromBundleString(String bundleString) {
   return bundleString.substring(0, bundleString.indexOf('#'));
 }
+
+const double PI = 3.1415926535;
+const double ninetyDegree = PI / 2;
+
+final Color lastMoveEffect = Colors.blue.withOpacity(0.5);

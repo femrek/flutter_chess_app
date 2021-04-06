@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'guest_bloc.dart';
 import 'guest_event.dart';
-import 'guest_chess_table.dart';
+import 'guest_board.dart';
 
 class ScreenGuestGame extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class _ScreenlocalNetGuestState extends State<ScreenGuestGame> {
       ),
       body: Column(
         children: [
-          GuestChessTable(size: width),
+          GuestBoard(size: width),
           RaisedButton(
             onPressed: () {
               Navigator.pop(context);

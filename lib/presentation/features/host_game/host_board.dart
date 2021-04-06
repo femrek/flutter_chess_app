@@ -4,18 +4,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mychess/data/app_theme.dart';
 import 'package:chess/chess.dart' as ch;
+import 'package:mychess/utils.dart';
 
 
-import 'guest_bloc.dart';
-import 'guest_state.dart';
-import 'guest_event.dart';
+import 'host_bloc.dart';
+import 'host_state.dart';
+import 'host_event.dart';
 
-class GuestChessTable extends StatelessWidget {
+class HostBoard extends StatelessWidget {
   final double size;
 
-  GuestChessTable({this.size = 200, Key key}) : super(key: key);
+  HostBoard({this.size = 200, Key key}) : super(key: key);
 
-  final List<SquareOnTheBoard> squares = List();
+  final List<_SquareOnTheBoard> squares = List();
 
   static const double ninetyDegres = 3.1415926435 / 2;
 
@@ -42,7 +43,7 @@ class GuestChessTable extends StatelessWidget {
 
   Widget _table(BuildContext context) {
     return Column(
-      children: List.generate(8, (index) => _tableRow(context, 7-index)).reversed.toList()
+      children: List.generate(8, (index) => _tableRow(context, index)).reversed.toList()
       ..insert(0, _letterRow(context, true))
       ..add(_letterRow(context, false)),
     );
@@ -50,7 +51,7 @@ class GuestChessTable extends StatelessWidget {
 
   Row _tableRow(BuildContext context, int y) {
     return Row(
-      children: List.generate(8, (index) => _square(context, y, 7-index))
+      children: List.generate(8, (index) => _square(context, y, index))
         ..insert(0, _text(context, (y+1).toString(), false, true))
         ..add(_text(context, (y+1).toString(), false, false)),
     );
@@ -58,10 +59,10 @@ class GuestChessTable extends StatelessWidget {
 
   Widget _square(BuildContext context, int y, int x) {
     final double squareSize = size / 9;
-    return BlocBuilder<GuestBloc, GuestState>(
+    return BlocBuilder<HostBloc, HostState>(
       builder: (_, state) {
-        if (state is GuestLoadedState) {
-          return SquareOnTheBoard(
+        if (state is HostLoadedState) {
+          return _SquareOnTheBoard(
             size: squareSize,
             positionX: x,
             positionY: y,
@@ -72,8 +73,8 @@ class GuestChessTable extends StatelessWidget {
           );
         }
 
-        else if (state is GuestFocusedState) {
-          return SquareOnTheBoard(
+        else if (state is HostFocusedState) {
+          return _SquareOnTheBoard(
             size: squareSize,
             positionX: x,
             positionY: y,
@@ -84,9 +85,12 @@ class GuestChessTable extends StatelessWidget {
           );
         }
 
-        return SizedBox(
-          height: squareSize,
-          width: squareSize,
+        return _SquareOnTheBoard(
+          size: squareSize,
+          positionX: x,
+          positionY: y,
+          piece: null,
+          inCheck: false,
         );
       },
     );
@@ -95,7 +99,7 @@ class GuestChessTable extends StatelessWidget {
   Row _letterRow(BuildContext context, bool isTop) {
     return Row(
       children: List.generate(8, (index) =>
-       _text(context, String.fromCharCode(72-index), true, !isTop))
+       _text(context, String.fromCharCode(65+index), true, !isTop))
          ..insert(0, SizedBox(width: size/18,))
          ..add(SizedBox(width: size/18,)),
     );
@@ -118,14 +122,14 @@ class GuestChessTable extends StatelessWidget {
 
 }
 
-class SquareOnTheBoard extends StatelessWidget {
+class _SquareOnTheBoard extends StatelessWidget {
   final double size;
   final int positionX;
   final int positionY;
   final ch.Piece piece;
   final bool inCheck;
 
-  SquareOnTheBoard({
+  _SquareOnTheBoard({
     this.size,
     this.positionX,
     this.positionY,
@@ -137,60 +141,60 @@ class SquareOnTheBoard extends StatelessWidget {
   bool get isDark => (positionX + positionY) % 2 == 0;
 
 
-  bool movable = false;
-  bool movableToThis = false;
-  bool attackableToThis = false;
-  bool moveFrom = false;
-  bool lastMoveFromThis = false;
-  bool lastMoveToThis = false;
+  bool _movable = false;
+  bool _movableToThis = false;
+  bool _attackableToThis = false;
+  bool _moveFrom = false;
+  bool _lastMoveFromThis = false;
+  bool _lastMoveToThis = false;
 
   @override
   Widget build(BuildContext context) {
-    if (context.read<GuestBloc>().state is GuestLoadedState) {
-      //print(name);
-      movable = (context.read<GuestBloc>().state as GuestLoadedState).movablePiecesCoors.contains(name);
-      lastMoveFromThis = (context.read<GuestBloc>().state as GuestLoadedState).lastMoveFrom == name;
-      lastMoveToThis = (context.read<GuestBloc>().state as GuestLoadedState).lastMoveTo == name;
-    } else if (context.read<GuestBloc>().state is GuestFocusedState) {
-      movableToThis = (context.read<GuestBloc>().state as GuestFocusedState).movableCoors.contains(name);
-      if (piece != null && movableToThis) {
-        attackableToThis = true;
-        movableToThis = false;
+    if (context.read<HostBloc>().state is HostLoadedState) {
+      _movable = (context.read<HostBloc>().state as HostLoadedState).isWhiteTurn 
+        && (context.read<HostBloc>().state as HostLoadedState).movablePiecesCoors.contains(name);
+      _lastMoveFromThis = (context.read<HostBloc>().state as HostLoadedState).lastMoveFrom == name;
+      _lastMoveToThis = (context.read<HostBloc>().state as HostLoadedState).lastMoveTo == name;
+    } else if (context.read<HostBloc>().state is HostFocusedState) {
+      _movableToThis = (context.read<HostBloc>().state as HostFocusedState).movableCoors.contains(name);
+      if (piece != null && _movableToThis) {
+        _attackableToThis = true;
+        _movableToThis = false;
       }
-      if ((context.read<GuestBloc>().state as GuestFocusedState).focusedCoor == name) {
-        moveFrom = true;
+      if ((context.read<HostBloc>().state as HostFocusedState).focusedCoor == name) {
+        _moveFrom = true;
       }
-      lastMoveFromThis = (context.read<GuestBloc>().state as GuestFocusedState).lastMoveFrom == name;
-      lastMoveToThis = (context.read<GuestBloc>().state as GuestFocusedState).lastMoveTo == name;
+      _lastMoveFromThis = (context.read<HostBloc>().state as HostFocusedState).lastMoveFrom == name;
+      _lastMoveToThis = (context.read<HostBloc>().state as HostFocusedState).lastMoveTo == name;
     }
 
     Color darkBg = darkBgColor;
     Color lightBg = lightBgColor;
-    if (attackableToThis) {
+    if (_attackableToThis) {
       darkBg = Colors.red;
       lightBg = Colors.red;
     } else if (inCheck) {
       darkBg = Colors.red;
       lightBg = Colors.red;
-    } else if (moveFrom) {
+    } else if (_moveFrom) {
       darkBg = Colors.green;
       lightBg = Colors.green;
     }
 
     return DragTarget<String>(
       onAccept: (focusCoor) {
-        if (movableToThis || attackableToThis)
-          context.read<GuestBloc>().add(GuestMoveEvent(to: name));
+        if (_movableToThis || _attackableToThis)
+          context.read<HostBloc>().add(HostMoveEvent(to: name));
         else
-          context.read<GuestBloc>().add(GuestMoveEvent());
+          context.read<HostBloc>().add(HostMoveEvent());
       },
       builder: (_, list1, list2) {
         return Draggable<String>(
-          data: name,
+          data: name, 
           onDragStarted: () {
-            context.read<GuestBloc>().add(GuestFocusEvent(focusCoor: name));
+            context.read<HostBloc>().add(HostFocusEvent(focusCoor: name));
           },
-          maxSimultaneousDrags: movable ? null : 0,
+          maxSimultaneousDrags: _movable ? null : 0,
           childWhenDragging: _container(darkBg, lightBg, null),
           feedback: _pieceImage(),
           child: _allOfSquare(context, darkBg, lightBg),
@@ -202,15 +206,15 @@ class SquareOnTheBoard extends StatelessWidget {
   Widget _allOfSquare(BuildContext context, Color darkBg, Color lightBg) {
     return GestureDetector(
       onTap: () {
-        if (context.read<GuestBloc>().state is GuestLoadedState) {
-          if (movable) {
-            context.read<GuestBloc>().add(GuestFocusEvent(focusCoor: name));
+        if (context.read<HostBloc>().state is HostLoadedState) {
+          if (_movable) {
+            context.read<HostBloc>().add(HostFocusEvent(focusCoor: name));
           }
-        } else if (context.read<GuestBloc>().state is GuestFocusedState) {
-          if (movableToThis || attackableToThis|| moveFrom) {
-            context.read<GuestBloc>().add(GuestMoveEvent(to: name));
+        } else if (context.read<HostBloc>().state is HostFocusedState) {
+          if (_movableToThis || _attackableToThis|| _moveFrom) {
+            context.read<HostBloc>().add(HostMoveEvent(to: name));
           } else {
-            context.read<GuestBloc>().add(GuestMoveEvent());
+            context.read<HostBloc>().add(HostMoveEvent());
           }
         }
       },
@@ -235,7 +239,7 @@ class SquareOnTheBoard extends StatelessWidget {
   }
 
   Widget _moveDots() {
-    if (movableToThis) {
+    if (_movableToThis) {
       return Container(
         alignment: Alignment.center,
         child: Container(
@@ -247,7 +251,7 @@ class SquareOnTheBoard extends StatelessWidget {
           ),
         ),
       );
-    } else if (attackableToThis && (lastMoveToThis || lastMoveFromThis)) {
+    } else if (_attackableToThis && (_lastMoveToThis || _lastMoveFromThis)) {
       return Container(
         alignment: Alignment.center,
         child: Stack(
@@ -271,7 +275,7 @@ class SquareOnTheBoard extends StatelessWidget {
           ],
         ),
       );
-    } else if (attackableToThis || moveFrom) {
+    } else if (_attackableToThis || _moveFrom) {
       return Container(
         alignment: Alignment.center,
         child: Container(
@@ -307,14 +311,13 @@ class SquareOnTheBoard extends StatelessWidget {
     );
   }
 
-  static final Color lastMoveEffect = Colors.blue.withOpacity(0.5);
   Widget _lastMoveImage() {
-    if (attackableToThis) {
+    if (_attackableToThis) {
       return Container();
-    } else if (lastMoveFromThis) return Container(
+    } else if (_lastMoveFromThis) return Container(
       color: lastMoveEffect,
     );
-    else if (lastMoveToThis) return Container(
+    else if (_lastMoveToThis) return Container(
       color: lastMoveEffect,
     );
     return Container();
@@ -338,6 +341,4 @@ class SquareOnTheBoard extends StatelessWidget {
     'pawn': 0.55,
     null: 0.8,
   };
-  static const double PI = 3.1415926535;
-  static const double ninetyDegree = PI / 2;
 }

@@ -5,7 +5,7 @@ import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
 
 import 'board_bloc.dart';
 import 'board_event.dart';
-import 'chess_table.dart';
+import 'local_board.dart';
 import 'turn_cubit.dart';
 
 class ScreenLocalGame extends StatefulWidget {
@@ -80,7 +80,7 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            ChessTable(
+            LocalBoard(
               size: width,
             ),
             Container(

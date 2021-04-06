@@ -7,7 +7,7 @@ import 'host_bloc.dart';
 import 'host_redoable_cubit.dart';
 import 'host_turn_cubit.dart';
 import 'host_event.dart';
-import 'single_player_chess_table.dart';
+import 'host_board.dart';
 
 class ScreenHostGame extends StatefulWidget {
   @override
@@ -68,7 +68,7 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
         ),
         body: Column(
           children: [
-            SinglePlayerChessTable(size: width,),
+            HostBoard(size: width,),
             BlocBuilder<HostTurnCubit, TurnModel>(
               builder: (_, TurnModel turnModel) {
                 final bool isWhiteTurn = turnModel.isWhiteTurn;
