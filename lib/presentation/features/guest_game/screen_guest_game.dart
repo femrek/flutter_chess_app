@@ -7,10 +7,10 @@ import 'guest_board.dart';
 
 class ScreenGuestGame extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _ScreenlocalNetGuestState();
+  State<StatefulWidget> createState() => _ScreenGuestGameState();
 }
 
-class _ScreenlocalNetGuestState extends State<ScreenGuestGame> {
+class _ScreenGuestGameState extends State<ScreenGuestGame> {
 
   GuestBloc guestBloc;
 
@@ -41,7 +41,7 @@ class _ScreenlocalNetGuestState extends State<ScreenGuestGame> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('disconnent'),
+            child: Text('disconnect'),
           ),
           RaisedButton(
             onPressed: () {

@@ -34,14 +34,14 @@ class GuestDisconnectEvent extends GuestEvent {}
 class GuestRefreshEvent extends GuestEvent {}
 
 class GuestFocusEvent extends GuestEvent {
-  final String focusCoor;
+  final String focusCoordinate;
 
   GuestFocusEvent({
-    this.focusCoor,
+    this.focusCoordinate,
   });
 
   @override
-  List<Object> get props => [focusCoor];
+  List<Object> get props => [focusCoordinate];
 }
 
 class GuestMoveEvent extends GuestEvent {

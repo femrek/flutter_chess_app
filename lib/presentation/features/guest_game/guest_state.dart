@@ -33,7 +33,7 @@ class GuestLoadedState extends GuestState {
 
 class GuestFocusedState extends GuestState {
   final List<List<ch.Piece>> board;
-  final String focusedCoor;
+  final String focusedCoordinate;
   final Set<String> movableCoors;
   final bool isWhiteTurn;
   final bool inCheck;
@@ -43,7 +43,7 @@ class GuestFocusedState extends GuestState {
 
   GuestFocusedState({
     this.board,
-    this.focusedCoor,
+    this.focusedCoordinate,
     this.movableCoors,
     this.isWhiteTurn,
     this.inCheck,

@@ -34,7 +34,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         StorageManager().setBoardStateHistory(List());
         chess = ch.Chess();
         undoStateHistory.clear();
-        redoableCubit.nonredoable();
+        redoableCubit.nonRedoable();
       } else {
         chess = ch.Chess.fromFEN(await StorageManager().lastGameFen);
         lastMove = (await StorageManager().lastGameLastMove);
@@ -59,14 +59,14 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
       final Set<String> movableCoors = Set();
       for (ch.Move move in chess.generate_moves()) {
         //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
-        if (move.fromAlgebraic == event.focusCoor) {
+        if (move.fromAlgebraic == event.focusCoordinate) {
           movableCoors.add(move.toAlgebraic);
         }
       }
       turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
       yield BoardFocusedState(
         board: pieceBoard,
-        focusedCoor: event.focusCoor,
+        focusedCoordinate: event.focusCoordinate,
         movableCoors: movableCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         lastMoveFrom: lastMove.from,
@@ -80,10 +80,10 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
       ch.Move thisMove;
-      if (!(event.to == null || event.to == (state as BoardFocusedState).focusedCoor)) {
+      if (!(event.to == null || event.to == (state as BoardFocusedState).focusedCoordinate)) {
         for (ch.Move move in chess.generate_moves()) {
           if (
-            move.fromAlgebraic == (state as BoardFocusedState).focusedCoor
+            move.fromAlgebraic == (state as BoardFocusedState).focusedCoordinate
             && move.toAlgebraic == (event.to)
           ) {
             thisMove = move;
@@ -101,7 +101,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         print('stateBundle: $stateBundle');
         StorageManager().addBoardStateHistory(stateBundle);
         undoStateHistory.clear();
-        redoableCubit.nonredoable();
+        redoableCubit.nonRedoable();
       }
 
       turnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
@@ -153,7 +153,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         final String lastUndoState = undoStateHistory.removeLast();
         final String fen = getFenFromBundleString(lastUndoState);
         chess.load(fen);
-        if (undoStateHistory.length == 0) redoableCubit.nonredoable();
+        if (undoStateHistory.length == 0) redoableCubit.nonRedoable();
         lastMove = getLastMoveFromBundleString(lastUndoState);
         StorageManager().setLastGameLastMove(lastMove);
         StorageManager().setLastGameFen(fen);

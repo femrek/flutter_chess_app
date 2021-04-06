@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:mychess/data/model/last_move_model.dart';
 
 /// param fen: board state in fen format.

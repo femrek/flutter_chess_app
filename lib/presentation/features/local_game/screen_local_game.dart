@@ -18,7 +18,7 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
   static const int _MENU_UNDO = 0x01;
   static const int _MENU_REDO = 0x02;
 
-  void _onMenuItemSeleced(int choice) {
+  void _onMenuItemSelected(int choice) {
     switch (choice) {
       case _MENU_RESTART:
         _showSureDialog(context, 'Are you sure to restart game', null, () {
@@ -46,7 +46,7 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
           BlocBuilder<RedoableCubit, bool>(
             builder: (BuildContext _, bool redoable) {
               return PopupMenuButton<int>(
-                onSelected: _onMenuItemSeleced,
+                onSelected: _onMenuItemSelected,
                 itemBuilder: (_) {
                   return <PopupMenuEntry<int>>[
                     PopupMenuItem(

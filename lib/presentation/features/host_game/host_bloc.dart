@@ -44,7 +44,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         StorageManager().setLastHostGameLastMove(lastMove);
         chess = ch.Chess();
         undoHistory.clear();
-        hostRedoableCubit.nonredoable();
+        hostRedoableCubit.nonRedoable();
       } else {
         chess = ch.Chess.fromFEN(await StorageManager().lastHostGameFen);
         lastMove = (await StorageManager().lastHostGameLastMove);
@@ -120,21 +120,21 @@ class HostBloc extends Bloc<HostEvent, HostState> {
       serverSocket = null;
       if (clientSocket != null) clientSocket.destroy();
       clientSocket = null;
-      print('server stoped');
+      print('server stopped');
     }
 
     else if (event is HostFocusEvent) {
       final Set<String> movableCoors = Set();
       for (ch.Move move in chess.generate_moves()) {
         //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
-        if (move.fromAlgebraic == event.focusCoor) {
+        if (move.fromAlgebraic == event.focusCoordinate) {
           movableCoors.add(move.toAlgebraic);
         }
       }
       hostTurnCubit.changeState(chess.turn == ch.Color.WHITE, chess.in_checkmate);
       yield HostFocusedState(
         board: pieceBoard,
-        focusedCoor: event.focusCoor,
+        focusedCoordinate: event.focusCoordinate,
         movableCoors: movableCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
@@ -149,7 +149,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
 
-      final String from = event.from == '' ? (state as HostFocusedState).focusedCoor : event.from;
+      final String from = event.from == '' ? (state as HostFocusedState).focusedCoordinate : event.from;
       final String to = event.to;
 
       final bool moving = !(to == null || to == from);
@@ -164,7 +164,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         print('stateBundle: $stateBundle');
         StorageManager().addHostBoardStateHistory(stateBundle);
         undoHistory.clear();
-        hostRedoableCubit.nonredoable();
+        hostRedoableCubit.nonRedoable();
         if (clientSocket != null) clientSocket.write('${chess.fen}#$lastMove');
       }
 
@@ -223,7 +223,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         if (clientSocket != null) clientSocket.write('${chess.fen}#$lastMove');
 
         if (undoStateHistory.length == 0) {
-          hostRedoableCubit.nonredoable();
+          hostRedoableCubit.nonRedoable();
         }
         lastMove = getLastMoveFromBundleString(lastUndoState);
         StorageManager().setLastHostGameLastMove(lastMove);

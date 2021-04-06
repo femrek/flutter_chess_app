@@ -15,12 +15,12 @@ class BoardLoadEvent extends BoardEvent {
 }
 
 class BoardFocusEvent extends BoardEvent {
-  final String focusCoor;
+  final String focusCoordinate;
 
-  BoardFocusEvent({this.focusCoor});
+  BoardFocusEvent({this.focusCoordinate});
 
   @override
-  List<Object> get props => [focusCoor];
+  List<Object> get props => [focusCoordinate];
 }
 
 class BoardMoveEvent extends BoardEvent {

@@ -28,12 +28,12 @@ class HostStartEvent extends HostEvent {
 class HostStopEvent extends HostEvent {}
 
 class HostFocusEvent extends HostEvent {
-  final String focusCoor;
+  final String focusCoordinate;
 
-  HostFocusEvent({this.focusCoor});
+  HostFocusEvent({this.focusCoordinate});
 
   @override
-  List<Object> get props => [focusCoor];
+  List<Object> get props => [focusCoordinate];
 }
 
 class HostMoveEvent extends HostEvent {

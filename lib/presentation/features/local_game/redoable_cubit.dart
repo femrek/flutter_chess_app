@@ -4,5 +4,5 @@ class RedoableCubit extends Cubit<bool> {
   RedoableCubit() : super(false);
 
   void redoable() => emit(true);
-  void nonredoable() => emit(false);
+  void nonRedoable() => emit(false);
 }

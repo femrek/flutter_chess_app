@@ -35,7 +35,7 @@ class BoardLoadedState extends BoardState {
 
 class BoardFocusedState extends BoardState {
   final List<List<ch.Piece>> board;
-  final String focusedCoor;
+  final String focusedCoordinate;
   final Set<String> movableCoors;
   final bool isWhiteTurn;
   final bool inCheck;
@@ -44,7 +44,7 @@ class BoardFocusedState extends BoardState {
 
   BoardFocusedState({
     this.board,
-    this.focusedCoor,
+    this.focusedCoordinate,
     this.movableCoors,
     this.isWhiteTurn,
     this.inCheck,

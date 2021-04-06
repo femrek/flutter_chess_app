@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mychess/data/app_theme.dart';
 import 'package:chess/chess.dart' as ch;
-import 'package:mychess/utils.dart';
-
 
 import 'host_bloc.dart';
 import 'host_state.dart';
@@ -161,7 +159,7 @@ class _SquareOnTheBoard extends StatelessWidget {
         _attackableToThis = true;
         _movableToThis = false;
       }
-      if ((context.read<HostBloc>().state as HostFocusedState).focusedCoor == name) {
+      if ((context.read<HostBloc>().state as HostFocusedState).focusedCoordinate == name) {
         _moveFrom = true;
       }
       _lastMoveFromThis = (context.read<HostBloc>().state as HostFocusedState).lastMoveFrom == name;
@@ -192,7 +190,7 @@ class _SquareOnTheBoard extends StatelessWidget {
         return Draggable<String>(
           data: name, 
           onDragStarted: () {
-            context.read<HostBloc>().add(HostFocusEvent(focusCoor: name));
+            context.read<HostBloc>().add(HostFocusEvent(focusCoordinate: name));
           },
           maxSimultaneousDrags: _movable ? null : 0,
           childWhenDragging: _container(darkBg, lightBg, null),
@@ -208,7 +206,7 @@ class _SquareOnTheBoard extends StatelessWidget {
       onTap: () {
         if (context.read<HostBloc>().state is HostLoadedState) {
           if (_movable) {
-            context.read<HostBloc>().add(HostFocusEvent(focusCoor: name));
+            context.read<HostBloc>().add(HostFocusEvent(focusCoordinate: name));
           }
         } else if (context.read<HostBloc>().state is HostFocusedState) {
           if (_movableToThis || _attackableToThis|| _moveFrom) {

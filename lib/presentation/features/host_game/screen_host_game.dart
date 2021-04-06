@@ -41,7 +41,7 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
             BlocBuilder<HostRedoableCubit, bool>(
               builder: (_, bool redoable) {
                 return PopupMenuButton<int>(
-                  onSelected: _onMenuItemSeleced,
+                  onSelected: _onMenuItemSelected,
                   itemBuilder: (_) {
                     return <PopupMenuEntry<int>>[
                       PopupMenuItem(
@@ -108,7 +108,7 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
     );
   }
 
-  void _onMenuItemSeleced(int choice) {
+  void _onMenuItemSelected(int choice) {
     switch (choice) {
       case _MENU_RESTART:
         _showSureDialog(context, 'Are you sure to restart game', null, () {

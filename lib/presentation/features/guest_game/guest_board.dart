@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mychess/data/app_theme.dart';
 import 'package:chess/chess.dart' as ch;
-import 'package:mychess/utils.dart';
 
 import 'guest_bloc.dart';
 import 'guest_state.dart';
@@ -16,8 +15,6 @@ class GuestBoard extends StatelessWidget {
   GuestBoard({this.size = 200, Key key}) : super(key: key);
 
   final List<_SquareOnTheBoard> squares = List();
-
-  static const double ninetyDegres = 3.1415926435 / 2;
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +115,7 @@ class GuestBoard extends StatelessWidget {
 
 }
 
+// ignore: must_be_immutable
 class _SquareOnTheBoard extends StatelessWidget {
   final double size;
   final int positionX;
@@ -156,7 +154,7 @@ class _SquareOnTheBoard extends StatelessWidget {
         _attackableToThis = true;
         _movableToThis = false;
       }
-      if ((context.read<GuestBloc>().state as GuestFocusedState).focusedCoor == name) {
+      if ((context.read<GuestBloc>().state as GuestFocusedState).focusedCoordinate == name) {
         _moveFrom = true;
       }
       _lastMoveFromThis = (context.read<GuestBloc>().state as GuestFocusedState).lastMoveFrom == name;
@@ -177,7 +175,7 @@ class _SquareOnTheBoard extends StatelessWidget {
     }
 
     return DragTarget<String>(
-      onAccept: (focusCoor) {
+      onAccept: (focusCoordinate) {
         if (_movableToThis || _attackableToThis)
           context.read<GuestBloc>().add(GuestMoveEvent(to: name));
         else
@@ -187,7 +185,7 @@ class _SquareOnTheBoard extends StatelessWidget {
         return Draggable<String>(
           data: name,
           onDragStarted: () {
-            context.read<GuestBloc>().add(GuestFocusEvent(focusCoor: name));
+            context.read<GuestBloc>().add(GuestFocusEvent(focusCoordinate: name));
           },
           maxSimultaneousDrags: _movable ? null : 0,
           childWhenDragging: _container(darkBg, lightBg, null),
@@ -203,7 +201,7 @@ class _SquareOnTheBoard extends StatelessWidget {
       onTap: () {
         if (context.read<GuestBloc>().state is GuestLoadedState) {
           if (_movable) {
-            context.read<GuestBloc>().add(GuestFocusEvent(focusCoor: name));
+            context.read<GuestBloc>().add(GuestFocusEvent(focusCoordinate: name));
           }
         } else if (context.read<GuestBloc>().state is GuestFocusedState) {
           if (_movableToThis || _attackableToThis|| _moveFrom) {

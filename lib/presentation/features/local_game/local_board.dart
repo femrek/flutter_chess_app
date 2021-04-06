@@ -16,9 +16,6 @@ class LocalBoard extends StatelessWidget {
 
   final List<_SquareOnTheBoard> squares = List();
 
-
-  static const double ninetyDegres = 3.1415926435 / 2;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -107,7 +104,7 @@ class LocalBoard extends StatelessWidget {
       height: size / (!horizontalSide ? 9 : 18),
       alignment: Alignment.center,
       child: Transform.rotate(
-        angle: turnRight ? ninetyDegres : -ninetyDegres,
+        angle: turnRight ? ninetyDegree : -ninetyDegree,
         child: Text(
           content,
           style: TextStyle(
@@ -121,6 +118,7 @@ class LocalBoard extends StatelessWidget {
 }
 
 
+// ignore: must_be_immutable
 class _SquareOnTheBoard extends StatelessWidget {
   final double size;
   final int positionX;
@@ -159,7 +157,7 @@ class _SquareOnTheBoard extends StatelessWidget {
         _attackableToThis = true;
         _movableToThis = false;
       }
-      if ((context.read<BoardBloc>().state as BoardFocusedState).focusedCoor == name) {
+      if ((context.read<BoardBloc>().state as BoardFocusedState).focusedCoordinate == name) {
         _moveFrom = true;
       }
       _lastMoveFromThis = (context.read<BoardBloc>().state as BoardFocusedState).lastMoveFrom == name;
@@ -180,7 +178,7 @@ class _SquareOnTheBoard extends StatelessWidget {
     }
 
     return DragTarget<String>(
-      onAccept: (focusCoor) {
+      onAccept: (focusCoordinate) {
         if (_movableToThis || _attackableToThis)
           context.read<BoardBloc>().add(BoardMoveEvent(to: name));
         else {
@@ -191,7 +189,7 @@ class _SquareOnTheBoard extends StatelessWidget {
         return Draggable<String>(
           data: name,
           onDragStarted: () {
-            context.read<BoardBloc>().add(BoardFocusEvent(focusCoor: name));
+            context.read<BoardBloc>().add(BoardFocusEvent(focusCoordinate: name));
           },
           maxSimultaneousDrags: _movable ? null : 0,
           childWhenDragging: _container(darkBg, lightBg, null),
@@ -207,7 +205,7 @@ class _SquareOnTheBoard extends StatelessWidget {
       onTap: () {
         if (context.read<BoardBloc>().state is BoardLoadedState) {
           if (_movable) {
-            context.read<BoardBloc>().add(BoardFocusEvent(focusCoor: name));
+            context.read<BoardBloc>().add(BoardFocusEvent(focusCoordinate: name));
           }
         } else if (context.read<BoardBloc>().state is BoardFocusedState) {
           if (_movableToThis || _attackableToThis|| _moveFrom) {

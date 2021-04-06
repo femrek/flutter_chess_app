@@ -83,13 +83,13 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       final Set<String> movableCoors = Set();
       for (ch.Move move in chess.generate_moves()) {
         //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
-        if (move.fromAlgebraic == event.focusCoor) {
+        if (move.fromAlgebraic == event.focusCoordinate) {
           movableCoors.add(move.toAlgebraic);
         }
       }
       yield GuestFocusedState(
         board: pieceBoard,
-        focusedCoor: event.focusCoor,
+        focusedCoordinate: event.focusCoordinate,
         movableCoors: movableCoors,
         isWhiteTurn: chess.turn == ch.Color.WHITE,
         inCheck: chess.in_check,
@@ -104,7 +104,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
 
-      final String from = (state as GuestFocusedState).focusedCoor;
+      final String from = (state as GuestFocusedState).focusedCoordinate;
       final String to = event.to;
       bool whiteTurn = false;
 
