@@ -166,14 +166,14 @@ class _SquareOnTheBoard extends StatelessWidget {
     Color darkBg = darkBgColor;
     Color lightBg = lightBgColor;
     if (_attackableToThis) {
-      darkBg = Colors.red;
-      lightBg = Colors.red;
+      darkBg = attackableToThisBg;
+      lightBg = attackableToThisBg;
     } else if (inCheck) {
-      darkBg = Colors.red;
-      lightBg = Colors.red;
+      darkBg = inCheckBg;
+      lightBg = inCheckBg;
     } else if (_moveFrom) {
-      darkBg = Colors.green;
-      lightBg = Colors.green;
+      darkBg = moveFromBg;
+      lightBg = moveFromBg;
     }
 
     return DragTarget<String>(
@@ -242,7 +242,7 @@ class _SquareOnTheBoard extends StatelessWidget {
           width: size*0.4,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(9999),
-            color: Colors.green,
+            color: moveDotsColor,
           ),
         ),
       );
