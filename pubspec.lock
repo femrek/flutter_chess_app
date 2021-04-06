@@ -64,13 +64,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
-  crypto:
-    dependency: transitive
-    description:
-      name: crypto
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.1.5"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -135,20 +128,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  http:
-    dependency: "direct main"
-    description:
-      name: http
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.12.2"
-  http_parser:
-    dependency: transitive
-    description:
-      name: http_parser
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.1.4"
   intl:
     dependency: transitive
     description:
@@ -219,13 +198,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.4+3"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.9.2"
   petitparser:
     dependency: transitive
     description:
@@ -364,13 +336,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0-nullsafety.3"
-  web_socket_channel:
-    dependency: "direct main"
-    description:
-      name: web_socket_channel
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
   win32:
     dependency: transitive
     description:
@@ -393,5 +358,5 @@ packages:
     source: hosted
     version: "4.5.1"
 sdks:
-  dart: ">=2.10.0 <2.11.0"
+  dart: ">=2.10.0-110 <2.11.0"
   flutter: ">=1.18.0-6.0.pre <2.0.0"
