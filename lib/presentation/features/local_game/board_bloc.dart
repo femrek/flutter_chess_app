@@ -1,10 +1,10 @@
 import 'package:chess/chess.dart' as ch;
 import 'package:bloc/bloc.dart';
-import 'package:mychess/data/model/last_move_model.dart';
-import 'package:mychess/data/storage_manager.dart';
-import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
-import 'package:mychess/presentation/features/local_game/turn_cubit.dart';
-import 'package:mychess/utils.dart';
+import 'package:localchess/data/model/last_move_model.dart';
+import 'package:localchess/data/storage_manager.dart';
+import 'package:localchess/presentation/features/local_game/redoable_cubit.dart';
+import 'package:localchess/presentation/features/local_game/turn_cubit.dart';
+import 'package:localchess/utils.dart';
 
 import 'board_event.dart';
 import 'board_state.dart';
@@ -19,9 +19,9 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
 
   ch.Chess chess;
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
-  Set<String> movablePiecesCoors = Set();
+  Set<String> movablePiecesCoors = {};
   LastMoveModel lastMove;
-  List<String> undoStateHistory = List();
+  List<String> undoStateHistory = [];
 
   @override
   Stream<BoardState> mapEventToState(BoardEvent event) async* {
@@ -31,7 +31,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         await StorageManager().setLastGameFen(null);
         lastMove = LastMoveModel(from: '', to: '');
         StorageManager().setLastGameLastMove(lastMove);
-        StorageManager().setBoardStateHistory(List());
+        StorageManager().setBoardStateHistory([]);
         chess = ch.Chess();
         undoStateHistory.clear();
         redoableCubit.nonRedoable();
@@ -56,7 +56,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     }
 
     else if (event is BoardFocusEvent) {
-      final Set<String> movableCoors = Set();
+      final Set<String> movableCoors = {};
       for (ch.Move move in chess.generate_moves()) {
         //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
         if (move.fromAlgebraic == event.focusCoordinate) {
@@ -147,13 +147,13 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     }
 
     else if (event is BoardRedoEvent) {
-      if (undoStateHistory.length == 0) {
+      if (undoStateHistory.isEmpty) {
         print('no undo');
       } else {
         final String lastUndoState = undoStateHistory.removeLast();
         final String fen = getFenFromBundleString(lastUndoState);
         chess.load(fen);
-        if (undoStateHistory.length == 0) redoableCubit.nonRedoable();
+        if (undoStateHistory.isEmpty) redoableCubit.nonRedoable();
         lastMove = getLastMoveFromBundleString(lastUndoState);
         StorageManager().setLastGameLastMove(lastMove);
         StorageManager().setLastGameFen(fen);
@@ -190,7 +190,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     for (ch.Move move in moves) {
       movablePiecesCoors.add(move.fromAlgebraic);
     }
-    print('movablePiecesCoors: $movablePiecesCoors');
+    //print('movablePiecesCoors: $movablePiecesCoors');
   }
 }
 

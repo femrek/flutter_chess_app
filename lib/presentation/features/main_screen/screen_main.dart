@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:mychess/data/storage_manager.dart';
-import 'package:mychess/routes.dart';
+import 'package:localchess/data/storage_manager.dart';
+import 'package:localchess/routes.dart';
 
 class ScreenMain extends StatefulWidget {
+  const ScreenMain({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _ScreenMainState();
 }
 
 class _ScreenMainState extends State<ScreenMain> {
-  TextEditingController _hostTextController = TextEditingController();
-  TextEditingController _portTextController = TextEditingController();
+  final TextEditingController _hostTextController = TextEditingController();
+  final TextEditingController _portTextController = TextEditingController();
 
   Future setFieldsValues() async {
     _hostTextController.text = await StorageManager().lastConnectedHost;
-    _portTextController.text = (await StorageManager().lastConnectedPort).toString();
+    _portTextController.text = (await StorageManager().lastConnectedPort)?.toString() ?? '';
   }
 
   @override
@@ -26,7 +28,7 @@ class _ScreenMainState extends State<ScreenMain> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CHESS'),
+        title: const Text('CHESS'),
         centerTitle: true,
       ),
       body: Center(
@@ -53,17 +55,17 @@ class _ScreenMainState extends State<ScreenMain> {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.all(12),
-        child: Text(
-          content,
-          style: TextStyle(
-            color: Colors.white,
-          ), 
-        ),
+        padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.all(12),
         decoration: BoxDecoration( 
           color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(999),
+        ),
+        child: Text(
+          content,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -79,8 +81,8 @@ class _ScreenMainState extends State<ScreenMain> {
 
   Widget _joinGameCard(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(12),
-      padding: EdgeInsets.all(12),
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColorLight,
         borderRadius: BorderRadius.circular(16),
@@ -94,7 +96,7 @@ class _ScreenMainState extends State<ScreenMain> {
                 child: TextField(
                   controller: _hostTextController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'IP address',
                     labelText: 'IP address',
                     prefixIcon: Icon(Icons.support),
@@ -104,15 +106,15 @@ class _ScreenMainState extends State<ScreenMain> {
                   ),
                 ),
               ),
-              SizedBox(width: 4,),
-              Text(':'),
-              SizedBox(width: 4,),
+              const SizedBox(width: 4,),
+              const Text(':'),
+              const SizedBox(width: 4,),
               Expanded(
                 flex: 2,
                 child: TextField(
                   controller: _portTextController,
                   keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'port number',
                     labelText: 'port number',
                     border: OutlineInputBorder(

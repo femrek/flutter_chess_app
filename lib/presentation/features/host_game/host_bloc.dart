@@ -3,10 +3,10 @@ import 'dart:typed_data';
 
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/data/model/last_move_model.dart';
-import 'package:mychess/data/storage_manager.dart';
-import 'package:mychess/presentation/features/host_game/find_ip_cubit.dart';
-import 'package:mychess/utils.dart';
+import 'package:localchess/data/model/last_move_model.dart';
+import 'package:localchess/data/storage_manager.dart';
+import 'package:localchess/presentation/features/host_game/find_ip_cubit.dart';
+import 'package:localchess/utils.dart';
 
 import 'host_redoable_cubit.dart';
 import 'host_turn_cubit.dart';
@@ -296,7 +296,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
     for (ch.Move move in moves) {
       movablePiecesCoors.add(move.fromAlgebraic);
     }
-    print('movablePiecesCoors: $movablePiecesCoors');
+    //print('movablePiecesCoors: $movablePiecesCoors');
   }
 
 }

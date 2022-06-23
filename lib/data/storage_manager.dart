@@ -1,4 +1,4 @@
-import 'package:mychess/data/model/last_move_model.dart';
+import 'package:localchess/data/model/last_move_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageManager {

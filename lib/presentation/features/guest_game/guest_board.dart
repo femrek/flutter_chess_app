@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mychess/data/app_theme.dart';
+import 'package:localchess/data/app_theme.dart';
 import 'package:chess/chess.dart' as ch;
 
 import 'guest_bloc.dart';
@@ -287,7 +287,7 @@ class _SquareOnTheBoard extends StatelessWidget {
   Widget _pieceImage() {
     if (piece == null) return Container();
     final String pieceName = pieceNameToAssetName[piece?.type?.name];
-    final bool isBlack = piece.color.value == 1;
+    final bool isBlack = piece.color == ch.Color.BLACK;
     return Container(
       width: size,
       height: size,

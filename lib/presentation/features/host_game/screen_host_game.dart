@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/data/model/turn_model.dart';
-import 'package:mychess/presentation/features/host_game/find_ip_cubit.dart';
+import 'package:localchess/data/model/turn_model.dart';
+import 'package:localchess/presentation/features/host_game/find_ip_cubit.dart';
 
 import 'host_bloc.dart';
 import 'host_redoable_cubit.dart';

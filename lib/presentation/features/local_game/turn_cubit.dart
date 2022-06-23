@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/data/model/turn_model.dart';
+import 'package:localchess/data/model/turn_model.dart';
 
 class TurnCubit extends Cubit<TurnModel> {
   TurnCubit() : super(TurnModel());

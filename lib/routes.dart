@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/presentation/features/host_game/find_ip_cubit.dart';
+import 'package:localchess/presentation/features/host_game/find_ip_cubit.dart';
 
 import 'presentation/features/host_game/screen_host_game.dart';
 import 'presentation/features/local_game/screen_local_game.dart';

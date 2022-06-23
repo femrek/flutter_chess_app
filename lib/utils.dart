@@ -1,4 +1,4 @@
-import 'package:mychess/data/model/last_move_model.dart';
+import 'package:localchess/data/model/last_move_model.dart';
 
 /// param fen: board state in fen format.
 /// param lastMove: last move coordinate. Like "a1/a5".

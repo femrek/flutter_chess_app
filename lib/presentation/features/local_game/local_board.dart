@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mychess/utils.dart';
+import 'package:localchess/utils.dart';
 
 import 'board_bloc.dart';
 import 'board_event.dart';
 import 'board_state.dart';
-import 'package:mychess/data/app_theme.dart';
+import 'package:localchess/data/app_theme.dart';
 
 class LocalBoard extends StatelessWidget {
   final double size;
@@ -291,7 +291,7 @@ class _SquareOnTheBoard extends StatelessWidget {
   Widget _pieceImage() {
     if (piece == null) return Container();
     final String pieceName = pieceNameToAssetName[piece?.type?.name];
-    final bool isBlack = piece.color.value == 1;
+    final bool isBlack = piece.color == ch.Color.BLACK;
     return Transform.rotate(
       angle: isBlack ? -ninetyDegree : ninetyDegree,
       child: Container(

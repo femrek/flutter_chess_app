@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/data/model/turn_model.dart';
-import 'package:mychess/presentation/features/local_game/redoable_cubit.dart';
+import 'package:localchess/data/model/turn_model.dart';
+import 'package:localchess/presentation/features/local_game/redoable_cubit.dart';
 
 import 'board_bloc.dart';
 import 'board_event.dart';

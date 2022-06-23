@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mychess/data/model/last_move_model.dart';
-import 'package:mychess/utils.dart';
+import 'package:localchess/data/model/last_move_model.dart';
+import 'package:localchess/utils.dart';
 
 import 'guest_event.dart';
 import 'guest_state.dart';
@@ -18,10 +18,10 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
   Socket socket;
 
   ch.Chess chess;
-  List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
-  Set<String> movablePiecesCoors = Set();
+  List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => <ch.Piece>[], growable: false);
+  Set<String> movablePiecesCoors = {};
   LastMoveModel lastMove;
-  List<ch.Move> undoHistory = List();
+  List<ch.Move> undoHistory = [];
 
   @override
   Stream<GuestState> mapEventToState(GuestEvent event) async* {
@@ -42,22 +42,22 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
     }
 
     else if (event is GuestConnectEvent) {
-      print('connecting');
+      //print('connecting');
       host = event.host;
       port = event.port;
 
       yield GuestInitialState();
 
       socket = await Socket.connect(InternetAddress.tryParse(host), port);
-      print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
+      //print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
       socket.listen((Uint8List dataAsByte) {
         final String data = String.fromCharCodes(dataAsByte);
         final String fenData = getFenFromBundleString(data);
-        print('data: $data');
-        print('fenData: $fenData');
+        //print('data: $data');
+        //print('fenData: $fenData');
         if (ch.Chess.validate_fen(fenData)['valid']) {
           lastMove = getLastMoveFromBundleString(data);
-          print('last move from host: $lastMove');
+          //print('last move from host: $lastMove');
           add(GuestLoadEvent(fen: fenData));
         } else {
           add(GuestRefreshEvent());
@@ -80,7 +80,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
     }
 
     else if (event is GuestFocusEvent) {
-      final Set<String> movableCoors = Set();
+      final Set<String> movableCoors = {};
       for (ch.Move move in chess.generate_moves()) {
         //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
         if (move.fromAlgebraic == event.focusCoordinate) {
@@ -100,7 +100,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
     }
 
     else if (event is GuestMoveEvent) {
-      if (!(state is GuestFocusedState)) {
+      if (state is! GuestFocusedState) {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
 
@@ -113,6 +113,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         whiteTurn = true;
       }
       
+      // ignore: curly_braces_in_flow_control_structures
       else yield GuestLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -144,7 +145,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
     for (ch.Move move in moves) {
       movablePiecesCoors.add(move.fromAlgebraic);
     }
-    print('movablePiecesCoors: $movablePiecesCoors');
+    //print('movablePiecesCoors: $movablePiecesCoors');
   }
 
 }
