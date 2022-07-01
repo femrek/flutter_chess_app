@@ -1,6 +1,6 @@
 Play chess with friend. (same device or same local network and two device)
 
-Download application: <a href="https://github.com/femrek/flutter_chess_app/raw/master/apks/pre-release-0.1.0.apk">pre-release-0.1.0.apk</a>
+<a href="https://play.google.com/store/apps/details?id=dev.faruke.chess.localchess">Download application</a>
 
 <table>
   <tr>
