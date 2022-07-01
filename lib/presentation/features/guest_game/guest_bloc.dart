@@ -18,7 +18,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
   Socket socket;
 
   ch.Chess chess;
-  List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => <ch.Piece>[], growable: false);
+  List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = {};
   LastMoveModel lastMove;
   List<ch.Move> undoHistory = [];
