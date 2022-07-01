@@ -2,6 +2,7 @@ import 'package:chess/chess.dart' as ch;
 import 'package:bloc/bloc.dart';
 import 'package:localchess/data/model/last_move_model.dart';
 import 'package:localchess/data/storage_manager.dart';
+import 'package:localchess/presentation/dialogs/choose_promotion_dialog.dart';
 import 'package:localchess/presentation/features/local_game/redoable_cubit.dart';
 import 'package:localchess/presentation/features/local_game/turn_cubit.dart';
 import 'package:localchess/utils.dart';
@@ -80,15 +81,37 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
       ch.Move thisMove;
+      Set<ch.Move> possiblyMoves = {};
+      List<String> promotions = [];
       if (!(event.to == null || event.to == (state as BoardFocusedState).focusedCoordinate)) {
         for (ch.Move move in chess.generate_moves()) {
           if (
             move.fromAlgebraic == (state as BoardFocusedState).focusedCoordinate
             && move.toAlgebraic == (event.to)
           ) {
-            thisMove = move;
-            break;
+            possiblyMoves.add(move);
           }
+        }
+        for (ch.Move move in possiblyMoves) {
+          if (move.promotion != null) {
+            promotions.add(move.promotion.name);
+          }
+        }
+        if (promotions.isNotEmpty) {
+          final String selectedPieceCode = await showPromotionDialog(event.context, promotions);
+          for (ch.Move move in possiblyMoves) {
+            if (move.promotion.name == selectedPieceCode) {
+              thisMove = move;
+              break;
+            }
+          }
+          if (thisMove == null) {
+            return;
+          }
+        } else if (possiblyMoves.length == 1) {
+          thisMove = possiblyMoves.elementAt(0);
+        } else {
+          throw Exception('unexpected state when move');
         }
         if (thisMove == null) throw Exception('unknown move');
         chess.move(thisMove);
@@ -98,7 +121,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
         lastMove = LastMoveModel(from: thisMove.fromAlgebraic, to: thisMove.toAlgebraic);
         StorageManager().setLastGameLastMove(lastMove);
         final String stateBundle = fenAndLastMoveToBundleString(chess.fen, lastMove.toString());
-        print('stateBundle: $stateBundle');
+        //print('stateBundle: $stateBundle');
         StorageManager().addBoardStateHistory(stateBundle);
         undoStateHistory.clear();
         redoableCubit.nonRedoable();

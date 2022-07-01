@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 class BoardEvent extends Equatable {
   @override
@@ -25,8 +26,10 @@ class BoardFocusEvent extends BoardEvent {
 
 class BoardMoveEvent extends BoardEvent {
   final String to;
+  final BuildContext context;
 
   BoardMoveEvent({
+    this.context,
     this.to,
   });
 
