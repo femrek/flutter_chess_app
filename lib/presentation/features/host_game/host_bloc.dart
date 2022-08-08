@@ -69,7 +69,12 @@ class HostBloc extends Bloc<HostEvent, HostState> {
     }
 
     else if (event is HostStartEvent) {
-      serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, 0);
+      for (int portNumber in _portListWithPriority) {
+        try {
+          await startSocketServerOn(portNumber);
+          break;
+        } on SocketException {}
+      }
       print('LocalHostConnectEvent event, ip: ${serverSocket.address.toString()}:${serverSocket.port.toString()}');
       findIpCubit.defineIpAndPortNum(serverSocket.port);
       serverSocket.listen((Socket socket) {
@@ -248,6 +253,10 @@ class HostBloc extends Bloc<HostEvent, HostState> {
 
   }
 
+  List<int> _portListWithPriority = [5600, 5601, 5602, 6600, 6601, 6602, 0];
+  startSocketServerOn(int portNumber) async {
+    serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, portNumber);
+  }
   
   Map<String, String> queryToMap(String query) {
     int keyStartIndex = query.indexOf('?') + 1;
