@@ -1,6 +1,9 @@
-Play chess with friend. (same device or same local network and two device)
+An usual chess game.
+This application allows playing on a device or two device in the same local network.
+Only runs on android.
 
-<a href="https://play.google.com/store/apps/details?id=dev.faruke.chess.localchess">Download application</a>
+
+<a href="https://play.google.com/store/apps/details?id=dev.faruke.chess.localchess">Download application for android</a>
 
 <table>
   <tr>
