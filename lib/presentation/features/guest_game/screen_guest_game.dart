@@ -37,13 +37,13 @@ class _ScreenGuestGameState extends State<ScreenGuestGame> {
       body: Column(
         children: [
           GuestBoard(size: width),
-          RaisedButton(
+          ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
             },
             child: Text('disconnect'),
           ),
-          RaisedButton(
+          ElevatedButton(
             onPressed: () {
               context.read<GuestBloc>().add(GuestRefreshEvent());
             },

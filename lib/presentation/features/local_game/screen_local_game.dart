@@ -142,14 +142,14 @@ class _ScreenLocalGameState extends State<ScreenLocalGame> {
           title: title == null ? null : Text(title),
           content: content == null ? null : Text(content),
           actions: [
-            FlatButton(
+            TextButton(
               onPressed: () {
                 action();
                 Navigator.pop(_);
               },
               child: Text('yes'),
             ),
-            FlatButton(
+            TextButton(
               onPressed: () {
                 Navigator.pop(_);
               },
