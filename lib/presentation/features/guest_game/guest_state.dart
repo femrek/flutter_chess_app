@@ -25,7 +25,7 @@ class GuestLoadedState extends GuestState {
     this.lastMoveFrom,
     this.lastMoveTo,
     this.fen,
-  }):super();
+  }) : super();
 
   @override
   List<Object> get props => [fen];
@@ -50,7 +50,7 @@ class GuestFocusedState extends GuestState {
     this.lastMoveFrom,
     this.lastMoveTo,
     this.fen,
-  }):super();
+  }) : super();
 
   @override
   List<Object> get props => [fen];

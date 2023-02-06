@@ -29,11 +29,12 @@ class HostBloc extends Bloc<HostEvent, HostState> {
   Socket clientSocket;
 
   ch.Chess chess;
+  // ignore: deprecated_member_use
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = Set();
   LastMoveModel lastMove;
-  List<ch.Move> undoHistory = List();
-  List<String> undoStateHistory = List();
+  List<ch.Move> undoHistory = [];
+  List<String> undoStateHistory = [];
 
   @override
   Stream<HostState> mapEventToState(HostEvent event) async* {

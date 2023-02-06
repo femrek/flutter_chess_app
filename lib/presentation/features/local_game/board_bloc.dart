@@ -10,8 +10,6 @@ import 'package:localchess/utils.dart';
 import 'board_event.dart';
 import 'board_state.dart';
 
-
-
 class BoardBloc extends Bloc<BoardEvent, BoardState> {
   BoardBloc(this.redoableCubit, this.turnCubit) : super(BoardInitialState());
 
@@ -19,6 +17,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
   final TurnCubit turnCubit;
 
   ch.Chess chess;
+  // ignore: deprecated_member_use
   List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
   Set<String> movablePiecesCoors = {};
   LastMoveModel lastMove;

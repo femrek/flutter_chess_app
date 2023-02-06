@@ -30,7 +30,7 @@ class BoardLoadedState extends BoardState {
     this.lastMoveTo,
     this.lastMoveFrom,
     String fen,
-  }):super(fen: fen);
+  }) : super(fen: fen);
 }
 
 class BoardFocusedState extends BoardState {
@@ -51,5 +51,5 @@ class BoardFocusedState extends BoardState {
     this.lastMoveTo,
     this.lastMoveFrom,
     String fen,
-  }):super(fen: fen);
+  }) : super(fen: fen);
 }

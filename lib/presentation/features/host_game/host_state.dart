@@ -25,7 +25,7 @@ class HostLoadedState extends HostState {
     this.lastMoveFrom,
     this.lastMoveTo,
     this.fen,
-  }):super();
+  }) : super();
 
   @override
   List<Object> get props => [fen];

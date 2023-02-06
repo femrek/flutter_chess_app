@@ -31,8 +31,6 @@ HostTurnCubit _hostTurnCubit = HostTurnCubit();
 HostBloc _localHostBloc = HostBloc(_hostRedoableCubit, _findIpCubit, _hostTurnCubit);
 GuestBloc _guestBloc = GuestBloc();
 
-
-
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {

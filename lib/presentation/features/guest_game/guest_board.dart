@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localchess/data/app_theme.dart';
@@ -14,7 +13,7 @@ class GuestBoard extends StatelessWidget {
 
   GuestBoard({this.size = 200, Key key}) : super(key: key);
 
-  final List<_SquareOnTheBoard> squares = List();
+  final List<_SquareOnTheBoard> squares = [];
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +128,7 @@ class _SquareOnTheBoard extends StatelessWidget {
     this.positionY,
     this.piece,
     this.inCheck = false,
-    Key key}):super(key: key);
+    Key key}) : super(key: key);
 
   String get name => '${String.fromCharCode(97+positionX)}${positionY+1}';
   bool get isDark => (positionX + positionY) % 2 == 0;

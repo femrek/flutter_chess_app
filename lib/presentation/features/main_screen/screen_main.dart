@@ -127,10 +127,7 @@ class _ScreenMainState extends State<ScreenMain> {
           ),
           _mainScreenButton(context, 'Join local network game', () {
             final String host = _hostTextController.text;
-            final int port = int.parse(_portTextController.text, onError: (String error) {
-              print('unvalid port number: $error');
-              return 0;
-            });
+            final int port = int.tryParse(_portTextController.text) ?? 0;
             print('port input is $port');
             StorageManager().setLastConnectedHost(host);
             StorageManager().setLastConnectedPort(port);

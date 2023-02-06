@@ -81,7 +81,7 @@ class StorageManager {
     if (_boardStateHistory != null) return _boardStateHistory;
     await _setSharedPreferences();
     _boardStateHistory =
-        _sharedPreferences.getStringList(GAME_STATE_HISTORY) ?? List();
+        _sharedPreferences.getStringList(GAME_STATE_HISTORY) ?? [];
     return _boardStateHistory;
   }
   /// param bundleString: Bundle string is the data type sent
@@ -155,7 +155,7 @@ class StorageManager {
   Future<List<String>> get hostBoardStateHistory async {
     if (_hostBoardStateHistory != null) return _hostBoardStateHistory;
     await _setSharedPreferences();
-    _hostBoardStateHistory = _sharedPreferences.getStringList(HOST_GAME_STATE_HISTORY) ?? List();
+    _hostBoardStateHistory = _sharedPreferences.getStringList(HOST_GAME_STATE_HISTORY) ?? [];
     return _hostBoardStateHistory;
   }
   /// param bundleString: Bundle string is the data type sent
