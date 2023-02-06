@@ -1,6 +1,8 @@
 import 'package:localchess/data/model/last_move_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'config.dart';
+
 class StorageManager {
 
   static const String LAST_GAME_FEN = 'lastGameFen';
@@ -203,7 +205,10 @@ class StorageManager {
   Future<int> get lastConnectedPort async {
     if (_lastConnectedPort != null) return _lastConnectedPort;
     await _setSharedPreferences();
-    _lastConnectedPort = _sharedPreferences.getInt(LAST_CONNECTED_PORT);
+    _lastConnectedPort = _sharedPreferences.getInt(LAST_CONNECTED_PORT) ?? 0;
+    if (_lastConnectedPort == 0) {
+      _lastConnectedPort = portsWithPriority[0];
+    }
     return _lastConnectedPort;
   }
 

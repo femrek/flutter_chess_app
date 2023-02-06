@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localchess/data/config.dart';
 import 'package:localchess/data/model/last_move_model.dart';
 import 'package:localchess/data/storage_manager.dart';
 import 'package:localchess/presentation/features/host_game/find_ip_cubit.dart';
@@ -69,7 +70,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
     }
 
     else if (event is HostStartEvent) {
-      for (int portNumber in _portListWithPriority) {
+      for (int portNumber in portsWithPriority) {
         try {
           await startSocketServerOn(portNumber);
           break;
@@ -253,7 +254,6 @@ class HostBloc extends Bloc<HostEvent, HostState> {
 
   }
 
-  List<int> _portListWithPriority = [5600, 5601, 5602, 6600, 6601, 6602, 0];
   startSocketServerOn(int portNumber) async {
     serverSocket = await ServerSocket.bind(InternetAddress.anyIPv4, portNumber);
   }
