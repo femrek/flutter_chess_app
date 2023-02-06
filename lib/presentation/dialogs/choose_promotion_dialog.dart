@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:localchess/utils.dart';
 
-Future<String> showPromotionDialog(BuildContext context, List<String> options) async {
-  String selectedPiece;
+Future<String?> showPromotionDialog(BuildContext context, List<String> options) async {
+  String? selectedPiece;
   await showDialog(
     context: context,
     builder: (_) {
@@ -39,7 +39,7 @@ Future<String> showPromotionDialog(BuildContext context, List<String> options) a
                         ),
                         Container(
                           child: Text(
-                            pieceCodeToAssetName[options[index]],
+                            pieceCodeToAssetName[options[index]] ?? 'name could not found',
                             style: TextStyle(
                               fontSize: 22
                             ),

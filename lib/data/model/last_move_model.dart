@@ -3,8 +3,8 @@ class LastMoveModel {
   final String to;
 
   LastMoveModel({
-    this.from,
-    this.to,
+    required this.from,
+    required this.to,
   });
 
  @override

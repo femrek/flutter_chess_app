@@ -9,7 +9,7 @@ class GuestLoadEvent extends GuestEvent {
   final String fen;
 
   GuestLoadEvent({
-    this.fen,
+    required this.fen,
   });
 
   @override
@@ -21,8 +21,8 @@ class GuestConnectEvent extends GuestEvent {
   final int port;
 
   GuestConnectEvent({
-    this.host,
-    this.port,
+    required this.host,
+    required this.port,
   });
 
   @override
@@ -37,18 +37,20 @@ class GuestFocusEvent extends GuestEvent {
   final String focusCoordinate;
 
   GuestFocusEvent({
-    this.focusCoordinate,
+    required this.focusCoordinate,
   });
 
   @override
   List<Object> get props => [focusCoordinate];
 }
 
+class GuestRemoveTheFocusEvent extends GuestEvent {}
+
 class GuestMoveEvent extends GuestEvent {
   final String to;
 
   GuestMoveEvent({
-    this.to,
+    required this.to,
   });
 
   @override

@@ -12,7 +12,7 @@ class ScreenGuestGame extends StatefulWidget {
 
 class _ScreenGuestGameState extends State<ScreenGuestGame> {
 
-  GuestBloc guestBloc;
+  GuestBloc? guestBloc;
 
   @override
   void initState() {
@@ -22,7 +22,7 @@ class _ScreenGuestGameState extends State<ScreenGuestGame> {
 
   @override
   void dispose() {
-    guestBloc.add(GuestDisconnectEvent());
+    guestBloc?.add(GuestDisconnectEvent());
     super.dispose();
   }
 

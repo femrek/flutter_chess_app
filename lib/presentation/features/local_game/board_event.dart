@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class BoardEvent extends Equatable {
   @override
@@ -18,7 +18,7 @@ class BoardLoadEvent extends BoardEvent {
 class BoardFocusEvent extends BoardEvent {
   final String focusCoordinate;
 
-  BoardFocusEvent({this.focusCoordinate});
+  BoardFocusEvent({required this.focusCoordinate});
 
   @override
   List<Object> get props => [focusCoordinate];
@@ -29,13 +29,15 @@ class BoardMoveEvent extends BoardEvent {
   final BuildContext context;
 
   BoardMoveEvent({
-    this.context,
-    this.to,
+    required this.context,
+    required this.to,
   });
 
   @override
   List<Object> get props => [to];
 }
+
+class BoardRemoveTheFocusEvent extends BoardEvent {}
 
 class BoardUndoEvent extends BoardEvent {}
 

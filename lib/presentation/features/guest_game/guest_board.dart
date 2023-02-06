@@ -11,7 +11,7 @@ import 'guest_event.dart';
 class GuestBoard extends StatelessWidget {
   final double size;
 
-  GuestBoard({this.size = 200, Key key}) : super(key: key);
+  GuestBoard({this.size = 200, Key? key}) : super(key: key);
 
   final List<_SquareOnTheBoard> squares = [];
 
@@ -62,8 +62,8 @@ class GuestBoard extends StatelessWidget {
             positionX: x,
             positionY: y,
             piece: state.board[x][y],
-            inCheck: (state.inCheck ?? false) 
-              && (state.board[x][y]?.type?.name?.toLowerCase() ?? '') == 'k'
+            inCheck: state.inCheck
+              && (state.board[x][y]?.type.name.toLowerCase() ?? '') == 'k'
               && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
           );
         }
@@ -74,8 +74,8 @@ class GuestBoard extends StatelessWidget {
             positionX: x,
             positionY: y,
             piece: state.board[x][y],
-            inCheck:  (state.inCheck ?? false) 
-              && (state.board[x][y]?.type?.name?.toLowerCase() ?? '') == 'k'
+            inCheck: state.inCheck
+              && (state.board[x][y]?.type.name.toLowerCase() ?? '') == 'k'
               && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
           );
         }
@@ -119,16 +119,17 @@ class _SquareOnTheBoard extends StatelessWidget {
   final double size;
   final int positionX;
   final int positionY;
-  final ch.Piece piece;
+  final ch.Piece? piece;
   final bool inCheck;
 
   _SquareOnTheBoard({
-    this.size,
-    this.positionX,
-    this.positionY,
+    required this.size,
+    required this.positionX,
+    required this.positionY,
     this.piece,
     this.inCheck = false,
-    Key key}) : super(key: key);
+    Key? key
+  }) : super(key: key);
 
   String get name => '${String.fromCharCode(97+positionX)}${positionY+1}';
   bool get isDark => (positionX + positionY) % 2 == 0;
@@ -178,7 +179,7 @@ class _SquareOnTheBoard extends StatelessWidget {
         if (_movableToThis || _attackableToThis)
           context.read<GuestBloc>().add(GuestMoveEvent(to: name));
         else
-          context.read<GuestBloc>().add(GuestMoveEvent());
+          context.read<GuestBloc>().add(GuestRemoveTheFocusEvent());
       },
       builder: (_, list1, list2) {
         return Draggable<String>(
@@ -206,7 +207,7 @@ class _SquareOnTheBoard extends StatelessWidget {
           if (_movableToThis || _attackableToThis|| _moveFrom) {
             context.read<GuestBloc>().add(GuestMoveEvent(to: name));
           } else {
-            context.read<GuestBloc>().add(GuestMoveEvent());
+            context.read<GuestBloc>().add(GuestRemoveTheFocusEvent());
           }
         }
       },
@@ -220,7 +221,7 @@ class _SquareOnTheBoard extends StatelessWidget {
     );
   }
 
-  Widget _container(Color darkBg, Color lightBg, Widget child) {
+  Widget _container(Color darkBg, Color lightBg, Widget? child) {
     return Container(
         width: size,
         height: size,
@@ -285,15 +286,15 @@ class _SquareOnTheBoard extends StatelessWidget {
 
   Widget _pieceImage() {
     if (piece == null) return Container();
-    final String pieceName = pieceNameToAssetName[piece?.type?.name];
-    final bool isBlack = piece.color == ch.Color.BLACK;
+    final String? pieceName = pieceNameToAssetName[piece?.type.name];
+    final bool isBlack = piece == null || piece?.color == ch.Color.BLACK;
     return Container(
       width: size,
       height: size,
       alignment: Alignment.center,
       child: SizedBox(
-        height: size*pieceNameToScale[pieceName],
-        width: size*pieceNameToScale[pieceName],
+        height: size * pieceNameToScale[pieceName]!,
+        width: size * pieceNameToScale[pieceName]!,
         child: (pieceName != null) ?
           SvgPicture.asset(
             'assets/images/$pieceName.svg',
@@ -315,7 +316,7 @@ class _SquareOnTheBoard extends StatelessWidget {
     return Container();
   }
 
-  static const Map<String, String> pieceNameToAssetName = {
+  static const Map<String?, String?> pieceNameToAssetName = {
     'r': 'rok',
     'n': 'knight',
     'b': 'bishop',
@@ -324,7 +325,7 @@ class _SquareOnTheBoard extends StatelessWidget {
     'p': 'pawn',
     null: null,
   };
-  static const Map<String, double> pieceNameToScale = {
+  static const Map<String?, double> pieceNameToScale = {
     'rok': 0.68,
     'knight': 0.68,
     'bishop': 0.7,

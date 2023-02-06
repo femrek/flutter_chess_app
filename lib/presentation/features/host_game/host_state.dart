@@ -9,22 +9,22 @@ class HostState extends Equatable {
 class HostInitialState extends HostState {}
 
 class HostLoadedState extends HostState {
-  final List<List<ch.Piece>> board;
+  final List<List<ch.Piece?>> board;
   final Set<String> movablePiecesCoors;
   final bool isWhiteTurn;
   final bool inCheck;
-  final String lastMoveFrom;
-  final String lastMoveTo;
+  final String? lastMoveFrom;
+  final String? lastMoveTo;
   final String fen;
 
   HostLoadedState({
-    this.board,
-    this.movablePiecesCoors,
-    this.isWhiteTurn,
-    this.inCheck,
+    this.board = const [],
+    this.movablePiecesCoors = const {},
+    required this.isWhiteTurn,
+    required this.inCheck,
     this.lastMoveFrom,
     this.lastMoveTo,
-    this.fen,
+    required this.fen,
   }) : super();
 
   @override
@@ -32,24 +32,24 @@ class HostLoadedState extends HostState {
 }
 
 class HostFocusedState extends HostState {
-  final List<List<ch.Piece>> board;
+  final List<List<ch.Piece?>> board;
   final String focusedCoordinate;
   final Set<String> movableCoors;
   final bool isWhiteTurn;
   final bool inCheck;
-  final String lastMoveFrom;
-  final String lastMoveTo;
+  final String? lastMoveFrom;
+  final String? lastMoveTo;
   final String fen;
 
   HostFocusedState({
-    this.board,
-    this.focusedCoordinate,
-    this.movableCoors,
-    this.isWhiteTurn,
-    this.inCheck,
+    this.board = const [],
+    required this.focusedCoordinate,
+    this.movableCoors = const {},
+    required this.isWhiteTurn,
+    required this.inCheck,
     this.lastMoveFrom,
     this.lastMoveTo,
-    this.fen,
+    required this.fen,
   });
 
   @override

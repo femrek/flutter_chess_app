@@ -3,7 +3,7 @@ import 'package:localchess/data/storage_manager.dart';
 import 'package:localchess/routes.dart';
 
 class ScreenMain extends StatefulWidget {
-  const ScreenMain({Key key}) : super(key: key);
+  const ScreenMain({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ScreenMainState();
@@ -14,8 +14,8 @@ class _ScreenMainState extends State<ScreenMain> {
   final TextEditingController _portTextController = TextEditingController();
 
   Future setFieldsValues() async {
-    _hostTextController.text = await StorageManager().lastConnectedHost;
-    _portTextController.text = (await StorageManager().lastConnectedPort)?.toString() ?? '';
+    _hostTextController.text = await StorageManager().lastConnectedHost ?? '';
+    _portTextController.text = (await StorageManager().lastConnectedPort).toString();
   }
 
   @override
@@ -53,7 +53,7 @@ class _ScreenMainState extends State<ScreenMain> {
 
   Widget _mainScreenButton(BuildContext context, String content, Function onPressed) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () => onPressed(),
       child: Container(
         padding: const EdgeInsets.all(12),
         margin: const EdgeInsets.all(12),

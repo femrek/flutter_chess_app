@@ -16,25 +16,20 @@ class HostLoadEvent extends HostEvent {
   List<Object> get props => [restart];
 }
 
-class HostStartEvent extends HostEvent {
-  final String ipAddress;
-
-  HostStartEvent({this.ipAddress});
-
-  @override
-  List<Object> get props => [ipAddress];
-}
+class HostStartEvent extends HostEvent {}
 
 class HostStopEvent extends HostEvent {}
 
 class HostFocusEvent extends HostEvent {
   final String focusCoordinate;
 
-  HostFocusEvent({this.focusCoordinate});
+  HostFocusEvent({required this.focusCoordinate});
 
   @override
   List<Object> get props => [focusCoordinate];
 }
+
+class HostRemoveTheFocusEvent extends HostEvent {}
 
 class HostMoveEvent extends HostEvent {
   final String from;
@@ -42,7 +37,7 @@ class HostMoveEvent extends HostEvent {
 
   HostMoveEvent({
     this.from = '',
-    this.to,
+    required this.to,
   });
 
   @override

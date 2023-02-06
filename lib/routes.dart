@@ -70,7 +70,7 @@ class Routes {
           child: ScreenHostGame(),
         ));
       case screenGuestGame:
-        final List arg = settings.arguments; // [String host, int port]
+        final List arg = settings.arguments as List; // [String host, int port]
         _guestBloc.add(GuestConnectEvent(
           host: arg[0],
           port: arg[1],

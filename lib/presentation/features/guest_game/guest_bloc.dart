@@ -10,18 +10,25 @@ import 'guest_event.dart';
 import 'guest_state.dart';
 
 class GuestBloc extends Bloc<GuestEvent, GuestState> {
-  GuestBloc() : super(GuestInitialState());
+  GuestBloc() : super(GuestInitialState()) {
+    for (int i = 0; i < 8; i++) {
+      pieceBoard.add([]);
+      for (int j = 0; j < 8; j++) {
+        pieceBoard[i].add(ch.Piece(ch.PieceType.PAWN, ch.Color.WHITE));
+      }
+    }
+  }
 
   String host = '';
-  int port;
+  int? port;
 
-  Socket socket;
+  // ignore: close_sinks
+  Socket? socket;
 
-  ch.Chess chess;
-  // ignore: deprecated_member_use
-  List<List<ch.Piece>> pieceBoard = List.generate(8, (index) => List<ch.Piece>(8), growable: false);
+  ch.Chess? chess;
+  List<List<ch.Piece?>> pieceBoard = [];
   Set<String> movablePiecesCoors = {};
-  LastMoveModel lastMove;
+  LastMoveModel? lastMove;
   List<ch.Move> undoHistory = [];
 
   @override
@@ -34,11 +41,11 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       yield GuestLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
-        isWhiteTurn: chess.turn == ch.Color.WHITE,
-        inCheck: chess.in_check,
-        lastMoveFrom: lastMove.from,
-        lastMoveTo: lastMove.to,
-        fen: chess.fen,
+        isWhiteTurn: chess!.turn == ch.Color.WHITE,
+        inCheck: chess!.in_check,
+        lastMoveFrom: lastMove?.from,
+        lastMoveTo: lastMove?.to,
+        fen: chess!.fen,
       );
     }
 
@@ -49,9 +56,9 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
 
       yield GuestInitialState();
 
-      socket = await Socket.connect(InternetAddress.tryParse(host), port);
+      socket = await Socket.connect(InternetAddress.tryParse(host), port!);
       //print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
-      socket.listen((Uint8List dataAsByte) {
+      socket!.listen((Uint8List dataAsByte) {
         final String data = String.fromCharCodes(dataAsByte);
         final String fenData = getFenFromBundleString(data);
         //print('data: $data');
@@ -68,21 +75,22 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
 
     else if (event is GuestDisconnectEvent) {
       if (socket != null) {
-        socket.write('?action=disconnect');
-        socket.destroy();
+        socket!.write('?action=disconnect');
+        socket!.destroy();
       }
       socket = null;
     }
 
     else if (event is GuestRefreshEvent) {
       if (socket != null) {
-        socket.write('?action=fen');
+        socket!.write('?action=fen');
       }
     }
 
     else if (event is GuestFocusEvent) {
+      if (chess == null) throw 'chess is not initialized';
       final Set<String> movableCoors = {};
-      for (ch.Move move in chess.generate_moves()) {
+      for (ch.Move move in chess!.generate_moves()) {
         //print('from: ${move.from} | fromAlgebraic: ${move.fromAlgebraic} | to: ${move.to} | toAlgebraic: ${move.toAlgebraic} | color: ${move.color} | piece: ${move.piece} | flags: ${move.flags} | promotion: ${move.promotion} | captured: ${move.captured}');
         if (move.fromAlgebraic == event.focusCoordinate) {
           movableCoors.add(move.toAlgebraic);
@@ -92,11 +100,23 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         board: pieceBoard,
         focusedCoordinate: event.focusCoordinate,
         movableCoors: movableCoors,
-        isWhiteTurn: chess.turn == ch.Color.WHITE,
-        inCheck: chess.in_check,
-        lastMoveFrom: lastMove.from,
-        lastMoveTo: lastMove.to,
-        fen: chess.fen,
+        isWhiteTurn: chess!.turn == ch.Color.WHITE,
+        inCheck: chess!.in_check,
+        lastMoveFrom: lastMove?.from,
+        lastMoveTo: lastMove?.to,
+        fen: chess!.fen,
+      );
+    }
+
+    if (event is GuestRemoveTheFocusEvent) {
+      yield GuestLoadedState(
+        board: pieceBoard,
+        movablePiecesCoors: movablePiecesCoors,
+        isWhiteTurn: false,
+        inCheck: chess!.in_check,
+        lastMoveFrom: lastMove?.from,
+        lastMoveTo: lastMove?.to,
+        fen: chess!.fen,
       );
     }
 
@@ -104,44 +124,46 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       if (state is! GuestFocusedState) {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
+      if (socket == null) throw 'no connection when move on guest';
 
       final String from = (state as GuestFocusedState).focusedCoordinate;
       final String to = event.to;
       bool whiteTurn = false;
 
-      if (!(to == null || to == from)) {
-        socket.write('?action=move&move_from=$from&move_to=$to');
+      if (to != from) {
+        socket!.write('?action=move&move_from=$from&move_to=$to');
         whiteTurn = true;
       }
       
-      // ignore: curly_braces_in_flow_control_structures
       else yield GuestLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
         isWhiteTurn: whiteTurn,
-        inCheck: chess.in_check,
-        lastMoveFrom: lastMove.from,
-        lastMoveTo: lastMove.to,
-        fen: chess.fen,
+        inCheck: chess!.in_check,
+        lastMoveFrom: lastMove?.from,
+        lastMoveTo: lastMove?.to,
+        fen: chess!.fen,
       );
     }
 
   }
 
   void convertToPieceBoard() {
+    if (chess == null) throw 'chess is not initialized';
     for(int x = 0; x < 8; x++) {
       for (int y = 0; y < 8; y++) {
-        pieceBoard[x][y] = chess.board[(x + (7-y)*16)];
+        pieceBoard[x][y] = chess!.board[(x + (7-y)*16)];
       }
     }
   }
 
   void findMovablePiecesCoors() {
-    if (chess.turn == ch.Color.WHITE) {
+    if (chess == null) throw 'chess is no initialized';
+    if (chess!.turn == ch.Color.WHITE) {
       movablePiecesCoors.clear();
       return;
     }
-    List moves = chess.generate_moves();
+    List moves = chess!.generate_moves();
     movablePiecesCoors.clear();
     for (ch.Move move in moves) {
       movablePiecesCoors.add(move.fromAlgebraic);

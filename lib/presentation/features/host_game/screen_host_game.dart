@@ -111,7 +111,7 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
   void _onMenuItemSelected(int choice) {
     switch (choice) {
       case _MENU_RESTART:
-        _showSureDialog(context, 'Are you sure to restart game', null, () {
+        _showSureDialog(context, 'Are you sure to restart game', '', () {
           context.read<HostBloc>().add(HostLoadEvent(restart: true));
         });
         break;
@@ -131,8 +131,8 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
       barrierDismissible: true,
       builder: (_) {
         return AlertDialog(
-          title: title == null ? null : Text(title),
-          content: content == null ? null : Text(content),
+          title: title == '' ? null : Text(title),
+          content: content == '' ? null : Text(content),
           actions: [
             TextButton(
               onPressed: () {
