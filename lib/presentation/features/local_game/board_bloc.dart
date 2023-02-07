@@ -35,6 +35,7 @@ class BoardBloc extends Bloc<BoardEvent, BoardState> {
     if (event is BoardLoadEvent) {
       if (event.restart || (await StorageManager().lastGameFen) == null) {
         await StorageManager().setLastGameFen(null);
+        await StorageManager().setBoardStateHistory([]);
         lastMove = LastMoveModel(from: '', to: '');
         StorageManager().setLastGameLastMove(lastMove);
         StorageManager().setBoardStateHistory([]);

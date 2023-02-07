@@ -40,7 +40,6 @@ class HostBloc extends Bloc<HostEvent, HostState> {
   List<List<ch.Piece?>> pieceBoard = [];
   Set<String> movablePiecesCoors = Set();
   LastMoveModel? lastMove;
-  List<ch.Move> undoHistory = [];
   List<String> undoStateHistory = [];
 
   @override
@@ -49,10 +48,11 @@ class HostBloc extends Bloc<HostEvent, HostState> {
     if (event is HostLoadEvent) {
       if (event.restart || (await StorageManager().lastHostGameFen) == null) {
         await StorageManager().setLastHostGameFen(null);
+        await StorageManager().setHostBoardStateHistory([]);
         lastMove = LastMoveModel(from: '', to: '');
         StorageManager().setLastHostGameLastMove(lastMove);
         chess = ch.Chess();
-        undoHistory.clear();
+        undoStateHistory.clear();
         hostRedoableCubit.nonRedoable();
       } else {
         chess = ch.Chess.fromFEN((await StorageManager().lastHostGameFen)!);
@@ -196,7 +196,6 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         final String stateBundle = fenAndLastMoveToBundleString(chess!.fen, lastMove.toString());
         print('stateBundle: $stateBundle');
         StorageManager().addHostBoardStateHistory(stateBundle);
-        undoHistory.clear();
         hostRedoableCubit.nonRedoable();
         if (clientSocket != null) {
           sendBoard(clientSocket!, chess!.fen, lastMove?.from, lastMove?.to);
@@ -217,7 +216,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
  
     else if (event is HostUndoEvent) {
       if (chess == null) throw 'chess is not initialized';
-      if (move != null) {
+      if ((await StorageManager().hostBoardStateHistory).length > 0) {
         undoStateHistory.add(await StorageManager().removeLastFromHostBoardStateHistory());
         String currentState;
         try {
