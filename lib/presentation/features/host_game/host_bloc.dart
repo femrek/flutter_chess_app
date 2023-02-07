@@ -7,6 +7,7 @@ import 'package:localchess/data/config.dart';
 import 'package:localchess/data/model/last_move_model.dart';
 import 'package:localchess/data/storage_manager.dart';
 import 'package:localchess/presentation/features/host_game/find_ip_cubit.dart';
+import 'package:localchess/provider/socket_communicator.dart';
 import 'package:localchess/utils.dart';
 
 import 'host_redoable_cubit.dart';
@@ -58,7 +59,9 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         lastMove = (await StorageManager().lastHostGameLastMove)!;
       }
       if (chess == null) throw 'chess is not initialized';
-      if (clientSocket != null) clientSocket!.write('${chess!.fen}#$lastMove');
+      if (clientSocket != null){
+        sendBoard(clientSocket!, chess!.fen, lastMove?.from, lastMove?.to);
+      }
 
       findMovablePiecesCoors();
 
@@ -88,7 +91,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
       print('LocalHostConnectEvent event, ip: ${serverSocket?.address.toString()}:${serverSocket?.port.toString()}');
       findIpCubit.defineIpAndPortNum(serverSocket!.port);
       serverSocket!.listen((Socket socket) {
-        socket.write('${chess!.fen}#$lastMove');
+        sendBoard(socket, chess!.fen, lastMove?.from, lastMove?.to);
         print('new connection');
         if (clientSocket == null) {
           print('first client socket is setting');
@@ -104,27 +107,23 @@ class HostBloc extends Bloc<HostEvent, HostState> {
             query = s;
           }
           print(query);
-          final Map<String, String> params = queryToMap(query);
-          print('$params');
-          if (params.length == 0) return; 
-          final String? action = params['action'];
-          if (action == 'fen') {
-            socket.write('${chess!.fen}#$lastMove');
-            print('sending ${chess!.fen}');
-          } else if (action == 'move') {
-            final String from = params['move_from']!;
-            final String to = params['move_to']!;
+          ActionType action = decodeRawData(query);
+          if (action is RequestBoard) {
+            sendBoard(socket, chess!.fen, lastMove?.from, lastMove?.to);
+          } else if (action is SendMove) {
+            final String from = action.from;
+            final String to = action.to;
             if (chess!.turn == ch.Color.BLACK && movablePiecesCoors.contains(from)) {
               add(HostMoveEvent(from: from, to: to));
             }
-            socket.write('${chess!.fen}#$lastMove');
-          } else if (action == 'disconnect') {
+            sendBoard(socket, chess!.fen, lastMove?.from, lastMove?.to);
+          } else if (action is SendDisconnectSignal) {
             if (socket == clientSocket) {
               if (clientSocket != null) clientSocket!.destroy();
               clientSocket = null;
             }
           } else {
-            socket.write('unknown action');
+            throw 'undefined action';
           }
         });
       });
@@ -199,7 +198,9 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         StorageManager().addHostBoardStateHistory(stateBundle);
         undoHistory.clear();
         hostRedoableCubit.nonRedoable();
-        if (clientSocket != null) clientSocket!.write('${chess!.fen}#$lastMove');
+        if (clientSocket != null) {
+          sendBoard(clientSocket!, chess!.fen, lastMove?.from, lastMove?.to);
+        }
       }
 
       hostTurnCubit.changeState(chess!.turn == ch.Color.WHITE, chess!.in_checkmate);
@@ -231,7 +232,9 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         StorageManager().setLastHostGameFen(chess!.fen);
         chess!.load(fen);
       }
-      if (clientSocket != null) clientSocket!.write('${chess!.fen}#$lastMove');
+      if (clientSocket != null) {
+        sendBoard(clientSocket!, chess!.fen, lastMove?.from, lastMove?.to);
+      }
       findMovablePiecesCoors();
       convertToPieceBoard();
 
@@ -256,7 +259,9 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         final String fen = getFenFromBundleString(lastUndoState);
         chess!.load(fen);
 
-        if (clientSocket != null) clientSocket!.write('${chess!.fen}#$lastMove');
+        if (clientSocket != null) {
+          sendBoard(clientSocket!, chess!.fen, lastMove?.from, lastMove?.to);
+        }
 
         if (undoStateHistory.length == 0) {
           hostRedoableCubit.nonRedoable();

@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:chess/chess.dart' as ch;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/data/model/last_move_model.dart';
-import 'package:localchess/utils.dart';
+import 'package:localchess/provider/socket_communicator.dart';
 
 import 'guest_event.dart';
 import 'guest_state.dart';
@@ -60,22 +60,22 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       //print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
       socket!.listen((Uint8List dataAsByte) {
         final String data = String.fromCharCodes(dataAsByte);
-        final String fenData = getFenFromBundleString(data);
-        //print('data: $data');
-        //print('fenData: $fenData');
-        if (ch.Chess.validate_fen(fenData)['valid']) {
-          lastMove = getLastMoveFromBundleString(data);
-          //print('last move from host: $lastMove');
-          add(GuestLoadEvent(fen: fenData));
-        } else {
-          add(GuestRefreshEvent());
+        ActionType action = decodeRawData(data);
+        if (action is SendBoard) {
+          if (ch.Chess.validate_fen(action.fen)['valid']) {
+            lastMove = LastMoveModel(from: action.lastMoveFrom, to: action.lastMoveTo);
+            add(GuestLoadEvent(fen: action.fen));
+          } else {
+            add(GuestRefreshEvent());
+            throw 'invalid fen from host';
+          }
         }
       });
     }
 
     else if (event is GuestDisconnectEvent) {
       if (socket != null) {
-        socket!.write('?action=disconnect');
+        socket!.write('?action=disconnect'); //todo
         socket!.destroy();
       }
       socket = null;
@@ -83,7 +83,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
 
     else if (event is GuestRefreshEvent) {
       if (socket != null) {
-        socket!.write('?action=fen');
+        requestBoard(socket!);
       }
     }
 
@@ -131,7 +131,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       bool whiteTurn = false;
 
       if (to != from) {
-        socket!.write('?action=move&move_from=$from&move_to=$to');
+        sendMove(socket!, from, to);
         whiteTurn = true;
       }
       
