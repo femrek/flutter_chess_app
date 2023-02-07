@@ -60,7 +60,11 @@ class HostBloc extends Bloc<HostEvent, HostState> {
       }
       if (chess == null) throw 'chess is not initialized';
       if (clientSocket != null){
-        sendBoard(clientSocket!, chess!.fen, lastMove?.from, lastMove?.to);
+        sendBoard(clientSocket!, SendBoard(
+          fen: chess!.fen,
+          lastMoveFrom: lastMove?.from ?? '',
+          lastMoveTo: lastMove?.to ?? '',
+        ));
       }
 
       findMovablePiecesCoors();
@@ -91,7 +95,11 @@ class HostBloc extends Bloc<HostEvent, HostState> {
       print('LocalHostConnectEvent event, ip: ${serverSocket?.address.toString()}:${serverSocket?.port.toString()}');
       findIpCubit.defineIpAndPortNum(serverSocket!.port);
       serverSocket!.listen((Socket socket) {
-        sendBoard(socket, chess!.fen, lastMove?.from, lastMove?.to);
+        sendBoard(socket, SendBoard(
+          fen: chess!.fen,
+          lastMoveFrom: lastMove?.from ?? '',
+          lastMoveTo: lastMove?.to ?? '',
+        ));
         print('new connection');
         if (clientSocket == null) {
           print('first client socket is setting');
@@ -109,14 +117,22 @@ class HostBloc extends Bloc<HostEvent, HostState> {
           print(query);
           ActionType action = decodeRawData(query);
           if (action is RequestBoard) {
-            sendBoard(socket, chess!.fen, lastMove?.from, lastMove?.to);
+            sendBoard(socket, SendBoard(
+              fen: chess!.fen,
+              lastMoveFrom: lastMove?.from ?? '',
+              lastMoveTo: lastMove?.to ?? '',
+            ));
           } else if (action is SendMove) {
             final String from = action.from;
             final String to = action.to;
             if (chess!.turn == ch.Color.BLACK && movablePiecesCoors.contains(from)) {
               add(HostMoveEvent(from: from, to: to));
             }
-            sendBoard(socket, chess!.fen, lastMove?.from, lastMove?.to);
+            sendBoard(socket, SendBoard(
+              fen: chess!.fen,
+              lastMoveFrom: lastMove?.from ?? '',
+              lastMoveTo: lastMove?.to ?? '',
+            ));
           } else if (action is SendDisconnectSignal) {
             if (socket == clientSocket) {
               if (clientSocket != null) clientSocket!.destroy();
@@ -198,7 +214,11 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         StorageManager().addHostBoardStateHistory(stateBundle);
         hostRedoableCubit.nonRedoable();
         if (clientSocket != null) {
-          sendBoard(clientSocket!, chess!.fen, lastMove?.from, lastMove?.to);
+          sendBoard(clientSocket!, SendBoard(
+            fen: chess!.fen,
+            lastMoveFrom: lastMove?.from ?? '',
+            lastMoveTo: lastMove?.to ?? '',
+          ));
         }
       }
 
@@ -232,7 +252,11 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         chess!.load(fen);
       }
       if (clientSocket != null) {
-        sendBoard(clientSocket!, chess!.fen, lastMove?.from, lastMove?.to);
+        sendBoard(clientSocket!, SendBoard(
+          fen: chess!.fen,
+          lastMoveFrom: lastMove?.from ?? '',
+          lastMoveTo: lastMove?.to ?? '',
+        ));
       }
       findMovablePiecesCoors();
       convertToPieceBoard();
@@ -259,7 +283,11 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         chess!.load(fen);
 
         if (clientSocket != null) {
-          sendBoard(clientSocket!, chess!.fen, lastMove?.from, lastMove?.to);
+          sendBoard(clientSocket!, SendBoard(
+            fen: chess!.fen,
+            lastMoveFrom: lastMove?.from ?? '',
+            lastMoveTo: lastMove?.to ?? '',
+          ));
         }
 
         if (undoStateHistory.length == 0) {

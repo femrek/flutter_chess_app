@@ -9,6 +9,7 @@ class ConvertException extends Error {
 abstract class ActionType {}
 
 abstract class HostSideActionType extends ActionType {}
+
 class SendBoard extends HostSideActionType {
   final String fen;
   final String lastMoveFrom;
@@ -21,12 +22,12 @@ class SendBoard extends HostSideActionType {
   });
 
   factory SendBoard.fromJson(String json) {
-    Map mapData = jsonDecode(json);
-    if (mapData[actionKey] == sendBoardId) {
+    Map map = jsonDecode(json);
+    if (map[actionKey] == sendBoardId) {
       return SendBoard(
-        fen: mapData[fenKey],
-        lastMoveFrom: mapData[lastMoveFromKey],
-        lastMoveTo: mapData[lastMoveToKey],
+        fen: map[fenKey],
+        lastMoveFrom: map[lastMoveFromKey],
+        lastMoveTo: map[lastMoveToKey],
       );
     } else {
       throw ConvertException('$json is not a SendBoard action');
@@ -34,19 +35,73 @@ class SendBoard extends HostSideActionType {
   }
 
   String toJson() {
-    String dataJson = jsonEncode({
+    String json = jsonEncode({
       actionKey: sendBoardId,
       fenKey: fen,
       lastMoveFromKey: lastMoveFrom,
       lastMoveToKey: lastMoveTo,
     });
-    return dataJson;
+    return json;
+  }
+
+  @override
+  String toString() {
+    return toJson();
   }
 }
 
 abstract class ClientSideActionType extends ActionType {}
-class CheckConnectivity extends ClientSideActionType {}
-class RequestConnection extends ClientSideActionType {}
+
+class CheckConnectivity extends ClientSideActionType {
+  CheckConnectivity();
+
+  factory CheckConnectivity.fromJson(String json) {
+    Map map = jsonDecode(json);
+    if (map[actionKey] == checkConnectivityId){
+      return CheckConnectivity();
+    } else {
+      throw ConvertException('$json is not a checkConnectivity action');
+    }
+  }
+
+  String toJson() {
+    String json = jsonEncode({
+      actionKey: checkConnectivityId,
+    });
+    return json;
+  }
+
+  @override
+  String toString() {
+    return toJson();
+  }
+}
+
+class RequestConnection extends ClientSideActionType {
+  RequestConnection();
+
+  factory RequestConnection.fromJson(String json) {
+    Map map = jsonDecode(json);
+    if (map[actionKey] == requestConnectionId) {
+      return RequestConnection();
+    } else {
+      throw ConvertException('$json is not a requestConnection action');
+    }
+  }
+
+  String toJson() {
+    String json = jsonEncode({
+      actionKey: requestConnectionId,
+    });
+    return json;
+  }
+
+  @override
+  String toString() {
+    return toJson();
+  }
+}
+
 class SendMove extends ClientSideActionType {
   final String from;
   final String to;
@@ -57,11 +112,11 @@ class SendMove extends ClientSideActionType {
   });
 
   factory SendMove.fromJson(String json) {
-    Map mapData = jsonDecode(json);
-    if (mapData[actionKey] == sendMoveId) {
+    Map map = jsonDecode(json);
+    if (map[actionKey] == sendMoveId) {
       return SendMove(
-        from: mapData[moveFromKey],
-        to: mapData[moveToKey],
+        from: map[moveFromKey],
+        to: map[moveToKey],
       );
     } else {
       throw ConvertException('$json is not a sendMove action');
@@ -69,34 +124,69 @@ class SendMove extends ClientSideActionType {
   }
 
   String toJson() {
-    String dataJson = jsonEncode({
+    String json = jsonEncode({
       actionKey: sendMoveId,
       moveFromKey: from,
       moveToKey: to,
     });
-    return dataJson;
+    return json;
+  }
+
+  @override
+  String toString() {
+    return toJson();
   }
 }
+
 class RequestBoard extends ClientSideActionType {
   RequestBoard();
 
   factory RequestBoard.fromJson(String json) {
-    Map mapData = jsonDecode(json);
-    if (mapData[actionKey] == requestBoardId) {
+    Map map = jsonDecode(json);
+    if (map[actionKey] == requestBoardId) {
       return RequestBoard();
     } else {
-      throw ConvertException('$json is not a sendMove action');
+      throw ConvertException('$json is not a requestBoard action');
     }
   }
 
   String toJson() {
-    String dataJson = jsonEncode({
-      actionKey: RequestBoard,
+    String json = jsonEncode({
+      actionKey: requestBoardId,
     });
-    return dataJson;
+    return json;
+  }
+
+  @override
+  String toString() {
+    return toJson();
   }
 }
-class SendDisconnectSignal extends ClientSideActionType {}
+
+class SendDisconnectSignal extends ClientSideActionType {
+  SendDisconnectSignal();
+
+  factory SendDisconnectSignal.fromJson(String json) {
+    Map map = jsonDecode(json);
+    if (map[actionKey] == sendDisconnectSignalId) {
+      return SendDisconnectSignal();
+    } else {
+      throw ConvertException('$json is not a sendDisconnectSignal action');
+    }
+  }
+
+  String toJson() {
+    String json = jsonEncode({
+      actionKey: sendDisconnectSignalId,
+    });
+    return json;
+  }
+  
+  @override
+  String toString() {
+    return toJson();
+  } 
+}
 
 const String sendBoardId = 'SendBoard';
 const String checkConnectivityId = 'CheckConnectivity';
@@ -133,43 +223,32 @@ ActionType decodeRawData(String dataJson) {
   }
 }
 
-sendBoard(Socket socket, String fen, String? lastMoveFrom, String? lastMoveTo) {
-  String dataJson = jsonEncode({
-    actionKey: sendBoardId,
-    fenKey: fen,
-    lastMoveFromKey: lastMoveFrom,
-    lastMoveToKey: lastMoveTo,
-  });
-  socket.write(dataJson);
-  print('sending $dataJson');
+sendBoard(Socket socket, SendBoard data) {
+  socket.write(data.toJson());
+  print('sending $data');
 }
 
-checkConnectivity() async {
-
+checkConnectivity(Socket socket, CheckConnectivity data) async {
+  socket.write(data.toJson());
+  print('connectivity check');
 }
 
-requestConnection() async {
-
+requestConnection(Socket socket, RequestConnection data) async {
+  socket.write(data.toJson());
+  print('connection request');
 }
 
-sendMove(Socket socket, String moveFrom, String moveTo) async {
-  String dataJson = jsonEncode({
-    actionKey: sendMoveId,
-    moveFromKey: moveFrom,
-    moveToKey: moveTo,
-  });
-  socket.write(dataJson);
-  print('sending $dataJson');
+sendMove(Socket socket, SendMove data) async {
+  socket.write(data.toJson());
+  print('sending $data');
 }
 
-requestBoard(Socket socket) async {
-  String dataJson = jsonEncode({
-    actionKey: requestBoardId,
-  });
-  socket.write(dataJson);
+requestBoard(Socket socket, RequestBoard data) async {
+  socket.write(data.toJson());
   print('board requested');
 }
 
-sendDisconnectSignal() async {
-
+sendDisconnectSignal(Socket socket, SendDisconnectSignal data) async {
+  socket.write(data.toJson());
+  print('sent disconnect signal');
 }

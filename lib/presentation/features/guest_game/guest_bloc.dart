@@ -75,7 +75,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
 
     else if (event is GuestDisconnectEvent) {
       if (socket != null) {
-        socket!.write('?action=disconnect'); //todo
+        sendDisconnectSignal(socket!, SendDisconnectSignal());
         socket!.destroy();
       }
       socket = null;
@@ -83,7 +83,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
 
     else if (event is GuestRefreshEvent) {
       if (socket != null) {
-        requestBoard(socket!);
+        requestBoard(socket!, RequestBoard());
       }
     }
 
@@ -131,7 +131,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       bool whiteTurn = false;
 
       if (to != from) {
-        sendMove(socket!, from, to);
+        sendMove(socket!, SendMove(from: from, to: to));
         whiteTurn = true;
       }
       
