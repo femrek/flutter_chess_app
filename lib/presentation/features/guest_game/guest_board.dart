@@ -68,18 +68,6 @@ class GuestBoard extends StatelessWidget {
           );
         }
 
-        else if (state is GuestFocusedState) {
-          return _SquareOnTheBoard(
-            size: squareSize,
-            positionX: x,
-            positionY: y,
-            piece: state.board[x][y],
-            inCheck: state.inCheck
-              && (state.board[x][y]?.type.name.toLowerCase() ?? '') == 'k'
-              && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
-          );
-        }
-
         return SizedBox(
           height: squareSize,
           width: squareSize,
@@ -145,20 +133,20 @@ class _SquareOnTheBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (context.read<GuestBloc>().state is GuestLoadedState) {
-      _movable = (context.read<GuestBloc>().state as GuestLoadedState).movablePiecesCoors.contains(name);
+      if (!context.read<GuestBloc>().isFocused) {
+        _movable = (context.read<GuestBloc>().state as GuestLoadedState).movablePiecesCoors.contains(name);
+      } else {
+        _movableToThis = (context.read<GuestBloc>().state as GuestLoadedState).movableCoors.contains(name);
+        if (piece != null && _movableToThis) {
+          _attackableToThis = true;
+          _movableToThis = false;
+        }
+        if ((context.read<GuestBloc>().state as GuestLoadedState).focusedCoordinate == name) {
+          _moveFrom = true;
+        }
+      }
       _lastMoveFromThis = (context.read<GuestBloc>().state as GuestLoadedState).lastMoveFrom == name;
       _lastMoveToThis = (context.read<GuestBloc>().state as GuestLoadedState).lastMoveTo == name;
-    } else if (context.read<GuestBloc>().state is GuestFocusedState) {
-      _movableToThis = (context.read<GuestBloc>().state as GuestFocusedState).movableCoors.contains(name);
-      if (piece != null && _movableToThis) {
-        _attackableToThis = true;
-        _movableToThis = false;
-      }
-      if ((context.read<GuestBloc>().state as GuestFocusedState).focusedCoordinate == name) {
-        _moveFrom = true;
-      }
-      _lastMoveFromThis = (context.read<GuestBloc>().state as GuestFocusedState).lastMoveFrom == name;
-      _lastMoveToThis = (context.read<GuestBloc>().state as GuestFocusedState).lastMoveTo == name;
     }
 
     Color darkBg = darkBgColor;
@@ -200,14 +188,16 @@ class _SquareOnTheBoard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (context.read<GuestBloc>().state is GuestLoadedState) {
-          if (_movable) {
-            context.read<GuestBloc>().add(GuestFocusEvent(focusCoordinate: name));
-          }
-        } else if (context.read<GuestBloc>().state is GuestFocusedState) {
-          if (_movableToThis || _attackableToThis|| _moveFrom) {
-            context.read<GuestBloc>().add(GuestMoveEvent(to: name));
+          if (!context.read<GuestBloc>().isFocused) {
+            if (_movable) {
+              context.read<GuestBloc>().add(GuestFocusEvent(focusCoordinate: name));
+            }
           } else {
-            context.read<GuestBloc>().add(GuestRemoveTheFocusEvent());
+            if (_movableToThis || _attackableToThis|| _moveFrom) {
+              context.read<GuestBloc>().add(GuestMoveEvent(to: name));
+            } else {
+              context.read<GuestBloc>().add(GuestRemoveTheFocusEvent());
+            }
           }
         }
       },

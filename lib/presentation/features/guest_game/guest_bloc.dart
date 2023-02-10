@@ -31,6 +31,27 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
   LastMoveModel? lastMove;
   List<ch.Move> undoHistory = [];
 
+  bool get isFocused {
+    return state is GuestLoadedState && (state as GuestLoadedState).focusedCoordinate != null;
+  }
+
+  GuestLoadedState _loadedState({
+    String? focusedCoordinate,
+    Set<String>? movableCoors,
+  }) {
+    return GuestLoadedState(
+      board: pieceBoard,
+      movablePiecesCoors: movablePiecesCoors,
+      isWhiteTurn: chess!.turn == ch.Color.WHITE,
+      inCheck: chess!.in_check,
+      lastMoveFrom: lastMove?.from,
+      lastMoveTo: lastMove?.to,
+      fen: chess!.fen,
+      focusedCoordinate: focusedCoordinate,
+      movableCoors: movableCoors ?? const {},
+    );
+  }
+
   @override
   Stream<GuestState> mapEventToState(GuestEvent event) async* {
 
@@ -38,15 +59,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       chess = ch.Chess.fromFEN(event.fen);
       findMovablePiecesCoors();
       convertToPieceBoard();
-      yield GuestLoadedState(
-        board: pieceBoard,
-        movablePiecesCoors: movablePiecesCoors,
-        isWhiteTurn: chess!.turn == ch.Color.WHITE,
-        inCheck: chess!.in_check,
-        lastMoveFrom: lastMove?.from,
-        lastMoveTo: lastMove?.to,
-        fen: chess!.fen,
-      );
+      yield _loadedState();
     }
 
     else if (event is GuestConnectEvent) {
@@ -108,54 +121,32 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
           movableCoors.add(move.toAlgebraic);
         }
       }
-      yield GuestFocusedState(
-        board: pieceBoard,
+      yield _loadedState(
         focusedCoordinate: event.focusCoordinate,
-        movableCoors: movableCoors,
-        isWhiteTurn: chess!.turn == ch.Color.WHITE,
-        inCheck: chess!.in_check,
-        lastMoveFrom: lastMove?.from,
-        lastMoveTo: lastMove?.to,
-        fen: chess!.fen,
+        movableCoors: movableCoors
       );
     }
 
     else if (event is GuestRemoveTheFocusEvent) {
-      yield GuestLoadedState(
-        board: pieceBoard,
-        movablePiecesCoors: movablePiecesCoors,
-        isWhiteTurn: false,
-        inCheck: chess!.in_check,
-        lastMoveFrom: lastMove?.from,
-        lastMoveTo: lastMove?.to,
-        fen: chess!.fen,
-      );
+      yield _loadedState();
     }
 
     else if (event is GuestMoveEvent) {
-      if (state is! GuestFocusedState) {
+      if (!isFocused) {
         throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
       }
       if (socket == null) throw 'no connection when move on guest';
 
-      final String from = (state as GuestFocusedState).focusedCoordinate;
+      final String from = (state as GuestLoadedState).focusedCoordinate!;
       final String to = event.to;
-      bool whiteTurn = false;
 
       if (to != from) {
         sendMove(socket!, SendMove(from: from, to: to));
-        whiteTurn = true;
+        move(from, to);
+        convertToPieceBoard();
+        findMovablePiecesCoors();
       }
-      
-      else yield GuestLoadedState(
-        board: pieceBoard,
-        movablePiecesCoors: movablePiecesCoors,
-        isWhiteTurn: whiteTurn,
-        inCheck: chess!.in_check,
-        lastMoveFrom: lastMove?.from,
-        lastMoveTo: lastMove?.to,
-        fen: chess!.fen,
-      );
+      yield _loadedState();
     }
 
     else if (event is GuestShowErrorEvent) {
@@ -166,6 +157,23 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       throw 'undefined event: $event';
     }
   }
+
+  void move(String from, String to) {
+    if (chess == null) throw 'chess is not initialized';
+    ch.Move? thisMove;
+    for (ch.Move move in chess!.generate_moves()) {
+      if (
+      move.fromAlgebraic == from
+          && move.toAlgebraic == to
+      ) {
+        thisMove = move;
+        break;
+      }
+    }
+    if (thisMove == null) throw Exception('unknown move');
+    chess!.move(thisMove);
+  }
+
 
   void convertToPieceBoard() {
     if (chess == null) throw 'chess is not initialized';

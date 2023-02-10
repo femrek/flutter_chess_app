@@ -1,10 +1,6 @@
-import 'package:equatable/equatable.dart';
 import 'package:chess/chess.dart' as ch;
 
-class GuestState extends Equatable {
-  @override
-  List<Object> get props => []; 
-}
+class GuestState {}
 
 class GuestInitialState extends GuestState {}
 
@@ -16,6 +12,8 @@ class GuestLoadedState extends GuestState {
   final String? lastMoveFrom;
   final String? lastMoveTo;
   final String fen;
+  final String? focusedCoordinate;
+  final Set<String> movableCoors;
 
   GuestLoadedState({
     this.board = const [],
@@ -25,35 +23,9 @@ class GuestLoadedState extends GuestState {
     this.lastMoveFrom,
     this.lastMoveTo,
     required this.fen,
-  }) : super();
-
-  @override
-  List<Object> get props => [fen];
-}
-
-class GuestFocusedState extends GuestState {
-  final List<List<ch.Piece?>> board;
-  final String focusedCoordinate;
-  final Set<String> movableCoors;
-  final bool isWhiteTurn;
-  final bool inCheck;
-  final String? lastMoveFrom;
-  final String? lastMoveTo;
-  final String fen;
-
-  GuestFocusedState({
-    this.board = const [],
-    required this.focusedCoordinate,
+    this.focusedCoordinate,
     this.movableCoors = const {},
-    required this.isWhiteTurn,
-    required this.inCheck,
-    this.lastMoveFrom,
-    this.lastMoveTo,
-    required this.fen,
   }) : super();
-
-  @override
-  List<Object> get props => [fen];
 }
 
 class GuestErrorState extends GuestState {
@@ -62,7 +34,4 @@ class GuestErrorState extends GuestState {
   GuestErrorState({
     required this.errorMessage,
   });
-
-  @override
-  List<Object> get props => [errorMessage];
 }
