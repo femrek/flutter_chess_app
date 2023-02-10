@@ -286,6 +286,15 @@ class HostBloc extends Bloc<HostEvent, HostState> {
       }
     }
 
+    else if (event is HostKickGuestEvent) {
+      if (clientSocket != null) {
+        sendKick(clientSocket!, SendKick());
+        clientSocket!.close();
+        clientSocket = null;
+        yield _state();
+      }
+    }
+
   }
 
   startSocketServerOn(int portNumber) async {

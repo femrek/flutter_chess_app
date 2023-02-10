@@ -96,6 +96,8 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
               errorMessage: 'The host is not able to connect. Another client has connected to this host',
             ));
           }
+        } else if (action is SendKick) {
+          add(GuestShowErrorEvent(errorMessage: 'Kicked by host'));
         } else {
           throw 'undefined action';
         }

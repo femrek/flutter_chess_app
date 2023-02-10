@@ -39,3 +39,5 @@ class HostMoveEvent extends HostEvent {
 class HostUndoEvent extends HostEvent {}
 
 class HostRedoEvent extends HostEvent {}
+
+class HostKickGuestEvent extends HostEvent {}

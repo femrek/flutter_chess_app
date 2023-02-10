@@ -82,6 +82,31 @@ class SendConnectivityState extends HostSideActionType {
   }
 }
 
+class SendKick extends HostSideActionType {
+  SendKick();
+
+  factory SendKick.fromJson(String json) {
+    Map map = jsonDecode(json);
+    if (map[actionKey] == sendKickId){
+      return SendKick();
+    } else {
+      throw ConvertException('$json is not a sendKick action');
+    }
+  }
+
+  String toJson() {
+    String json = jsonEncode({
+      actionKey: sendKickId,
+    });
+    return json;
+  }
+
+  @override
+  String toString() {
+    return toJson();
+  }
+}
+
 abstract class ClientSideActionType extends ActionType {}
 
 class CheckConnectivity extends ClientSideActionType {
@@ -226,6 +251,7 @@ class SendDisconnectSignal extends ClientSideActionType {
 
 const String sendBoardId = 'SendBoard';
 const String sendConnectivityStateId = 'SendConnectivityState';
+const String sendKickId = 'SendKick';
 const String checkConnectivityId = 'CheckConnectivity';
 const String requestConnectionId = 'RequestConnection';
 const String sendMoveId = 'SendMove';
@@ -249,6 +275,8 @@ ActionType decodeRawData(String json) {
       return SendBoard.fromJson(json);
     case sendConnectivityStateId:
       return SendConnectivityState.fromJson(json);
+    case sendKickId:
+      return SendKick.fromJson(json);
     case checkConnectivityId:
       return CheckConnectivity.fromJson(json);
     case requestConnectionId:
@@ -270,6 +298,11 @@ void sendBoard(Socket socket, SendBoard data) {
 }
 
 void sendConnectivityStatus(Socket socket, SendConnectivityState data) {
+  socket.write(data.toJson());
+  print('sending $data');
+}
+
+void sendKick(Socket socket, SendKick data) {
   socket.write(data.toJson());
   print('sending $data');
 }

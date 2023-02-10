@@ -106,6 +106,12 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
                 }
               },
             ),
+            ElevatedButton(
+              onPressed: () {
+                context.read<HostBloc>().add(HostKickGuestEvent());
+              },
+              child: Text('Kick guest'),
+            ),
           ],
         ),
         backgroundColor: Colors.black45,
