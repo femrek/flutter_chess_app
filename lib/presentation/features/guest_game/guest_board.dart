@@ -165,7 +165,10 @@ class _SquareOnTheBoard extends StatelessWidget {
     return DragTarget<String>(
       onAccept: (focusCoordinate) {
         if (_movableToThis || _attackableToThis)
-          context.read<GuestBloc>().add(GuestMoveEvent(to: name));
+          context.read<GuestBloc>().add(GuestMoveEvent(
+            context: context,
+            to: name,
+          ));
         else
           context.read<GuestBloc>().add(GuestRemoveTheFocusEvent());
       },
@@ -194,7 +197,10 @@ class _SquareOnTheBoard extends StatelessWidget {
             }
           } else {
             if (_movableToThis || _attackableToThis|| _moveFrom) {
-              context.read<GuestBloc>().add(GuestMoveEvent(to: name));
+              context.read<GuestBloc>().add(GuestMoveEvent(
+                context: context,
+                to: name,
+              ));
             } else {
               context.read<GuestBloc>().add(GuestRemoveTheFocusEvent());
             }

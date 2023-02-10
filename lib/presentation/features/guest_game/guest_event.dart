@@ -1,9 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
-class GuestEvent extends Equatable {
-  @override
-  List<Object> get props => []; 
-}
+class GuestEvent {}
 
 class GuestLoadEvent extends GuestEvent {
   final String fen;
@@ -11,9 +8,6 @@ class GuestLoadEvent extends GuestEvent {
   GuestLoadEvent({
     required this.fen,
   });
-
-  @override
-  List<Object> get props => [fen];
 }
 
 class GuestConnectEvent extends GuestEvent {
@@ -24,9 +18,6 @@ class GuestConnectEvent extends GuestEvent {
     required this.host,
     required this.port,
   });
-
-  @override
-  List<Object> get props => [host, port];
 }
 
 class GuestDisconnectEvent extends GuestEvent {}
@@ -39,22 +30,18 @@ class GuestFocusEvent extends GuestEvent {
   GuestFocusEvent({
     required this.focusCoordinate,
   });
-
-  @override
-  List<Object> get props => [focusCoordinate];
 }
 
 class GuestRemoveTheFocusEvent extends GuestEvent {}
 
 class GuestMoveEvent extends GuestEvent {
+  final BuildContext context;
   final String to;
 
   GuestMoveEvent({
+    required this.context,
     required this.to,
   });
-
-  @override
-  List<Object> get props => [to];
 }
 
 class GuestShowErrorEvent extends GuestEvent {
@@ -63,7 +50,4 @@ class GuestShowErrorEvent extends GuestEvent {
   GuestShowErrorEvent({
     required this.errorMessage,
   });
-
-  @override
-  List<Object> get props => [errorMessage];
 }

@@ -21,12 +21,6 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
   static const int _MENU_REDO = 0x102;
 
   @override
-  void initState() {
-    context.read<HostBloc>().add(HostStartEvent());
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return WillPopScope(

@@ -2,10 +2,12 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:chess/chess.dart' as ch;
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/data/config.dart';
 import 'package:localchess/data/model/last_move_model.dart';
 import 'package:localchess/data/storage_manager.dart';
+import 'package:localchess/presentation/dialogs/choose_promotion_dialog.dart';
 import 'package:localchess/presentation/features/host_game/find_ip_cubit.dart';
 import 'package:localchess/provider/socket_communicator.dart';
 import 'package:localchess/utils.dart';
@@ -133,8 +135,13 @@ class HostBloc extends Bloc<HostEvent, HostState> {
             if (socket != clientSocket) return;
             final String from = action.from;
             final String to = action.to;
+            final String? promotion = action.promotion;
             if (chess!.turn == ch.Color.BLACK && movablePiecesCoors.contains(from)) {
-              add(HostMoveEvent(from: from, to: to));
+              add(HostMoveEvent(
+                from: from,
+                to: to,
+                promotion: promotion,
+              ));
             }
           } else if (action is SendDisconnectSignal) {
             socket.destroy();
@@ -194,7 +201,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
 
       final bool moving = to != from;
       if (moving) {
-        move(from, to);
+        await move(event.context, from, to, event.promotion);
         convertToPieceBoard();
         findMovablePiecesCoors();
         StorageManager().setLastHostGameFen(chess!.fen);
@@ -303,17 +310,36 @@ class HostBloc extends Bloc<HostEvent, HostState> {
   }
 
 
-  void move(String from, String to) {
+  Future move(BuildContext? context, String from, String to, String? promotion) async {
     if (chess == null) throw 'chess is not initialized';
-    ch.Move? thisMove; 
+    ch.Move? thisMove;
+    Set<ch.Move> possibleMoves = {};
+    List<String> promotions = [];
     for (ch.Move move in chess!.generate_moves()) {
       if (
         move.fromAlgebraic == from
         && move.toAlgebraic == to
       ) {
-        thisMove = move;
-        break;
+        possibleMoves.add(move);
       }
+    }
+    for (ch.Move move in possibleMoves) {
+      if (move.promotion != null) {
+        promotions.add(move.promotion!.name);
+      }
+    }
+    if (promotions.isNotEmpty) {
+      final String? selectedPieceCode = promotion ?? await showPromotionDialog(context!, promotions);
+      for (ch.Move move in possibleMoves) {
+        if (move.promotion?.name == selectedPieceCode) {
+          thisMove = move;
+          break;
+        }
+      }
+    } else if (possibleMoves.length == 1) {
+      thisMove = possibleMoves.elementAt(0);
+    } else {
+      throw Exception('unexpected state when move');
     }
     if (thisMove == null) throw Exception('unknown move');
     chess!.move(thisMove);

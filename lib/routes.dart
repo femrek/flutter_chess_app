@@ -59,10 +59,12 @@ class Routes {
           child: ScreenLocalGame(),
         ));
       case screenHostGame:
-        return MaterialPageRoute(builder: (_) => MultiBlocProvider(
+        return MaterialPageRoute(builder: (context) => MultiBlocProvider(
           providers: [
             BlocProvider.value(
-              value: _localHostBloc..add(HostLoadEvent()),
+              value: _localHostBloc
+                ..add(HostLoadEvent())
+                ..add(HostStartEvent()),
             ),
             BlocProvider.value(
               value: _hostRedoableCubit,

@@ -2,8 +2,10 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:chess/chess.dart' as ch;
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/data/model/last_move_model.dart';
+import 'package:localchess/presentation/dialogs/choose_promotion_dialog.dart';
 import 'package:localchess/provider/socket_communicator.dart';
 
 import 'guest_event.dart';
@@ -141,8 +143,11 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       final String to = event.to;
 
       if (to != from) {
-        sendMove(socket!, SendMove(from: from, to: to));
-        move(from, to);
+        sendMove(socket!, SendMove(
+          from: from,
+          to: to,
+          promotion: await move(event.context, from, to),
+        ));
         convertToPieceBoard();
         findMovablePiecesCoors();
       }
@@ -158,22 +163,42 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
     }
   }
 
-  void move(String from, String to) {
+  Future<String?> move(BuildContext context, String from, String to) async {
     if (chess == null) throw 'chess is not initialized';
     ch.Move? thisMove;
+    Set<ch.Move> possibleMoves = {};
+    List<String> promotions = [];
+    String? selectedPieceCode;
     for (ch.Move move in chess!.generate_moves()) {
       if (
       move.fromAlgebraic == from
           && move.toAlgebraic == to
       ) {
-        thisMove = move;
-        break;
+        possibleMoves.add(move);
       }
+    }
+    for (ch.Move move in possibleMoves) {
+      if (move.promotion != null) {
+        promotions.add(move.promotion!.name);
+      }
+    }
+    if (promotions.isNotEmpty) {
+      selectedPieceCode = await showPromotionDialog(context, promotions);
+      for (ch.Move move in possibleMoves) {
+        if (move.promotion?.name == selectedPieceCode) {
+          thisMove = move;
+          break;
+        }
+      }
+    } else if (possibleMoves.length == 1) {
+      thisMove = possibleMoves.elementAt(0);
+    } else {
+      throw Exception('unexpected state when move');
     }
     if (thisMove == null) throw Exception('unknown move');
     chess!.move(thisMove);
+    return selectedPieceCode;
   }
-
 
   void convertToPieceBoard() {
     if (chess == null) throw 'chess is not initialized';

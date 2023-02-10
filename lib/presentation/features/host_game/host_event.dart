@@ -1,9 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
-class HostEvent extends Equatable {
-  @override
-  List<Object> get props => [];
-}
+class HostEvent {}
 
 class HostLoadEvent extends HostEvent {
   final bool restart;
@@ -11,9 +8,6 @@ class HostLoadEvent extends HostEvent {
   HostLoadEvent({
     this.restart = false,
   });
-
-  @override
-  List<Object> get props => [restart];
 }
 
 class HostStartEvent extends HostEvent {}
@@ -24,24 +18,22 @@ class HostFocusEvent extends HostEvent {
   final String focusCoordinate;
 
   HostFocusEvent({required this.focusCoordinate});
-
-  @override
-  List<Object> get props => [focusCoordinate];
 }
 
 class HostRemoveTheFocusEvent extends HostEvent {}
 
 class HostMoveEvent extends HostEvent {
+  final BuildContext? context;
   final String from;
   final String to;
+  final String? promotion;
 
   HostMoveEvent({
+    this.context,
     this.from = '',
     required this.to,
+    this.promotion,
   });
-
-  @override
-  List<Object> get props => [to];
 }
 
 class HostUndoEvent extends HostEvent {}

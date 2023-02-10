@@ -137,10 +137,12 @@ class RequestConnection extends ClientSideActionType {
 class SendMove extends ClientSideActionType {
   final String from;
   final String to;
+  final String? promotion;
 
   SendMove({
     required this.from,
     required this.to,
+    this.promotion,
   });
 
   factory SendMove.fromJson(String json) {
@@ -149,6 +151,7 @@ class SendMove extends ClientSideActionType {
       return SendMove(
         from: map[moveFromKey],
         to: map[moveToKey],
+        promotion: map[movePromotionKey]
       );
     } else {
       throw ConvertException('$json is not a sendMove action');
@@ -160,6 +163,7 @@ class SendMove extends ClientSideActionType {
       actionKey: sendMoveId,
       moveFromKey: from,
       moveToKey: to,
+      movePromotionKey: promotion,
     });
     return json;
   }
@@ -234,6 +238,7 @@ const String lastMoveToKey = 'lastMoveTo';
 const String fenKey = 'fen';
 const String moveFromKey = 'moveFrom';
 const String moveToKey = 'moveTo';
+const String movePromotionKey = 'movePromotion';
 const String ableToConnectKey = 'ableToConnect';
 
 ActionType decodeRawData(String json) {
