@@ -74,6 +74,13 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         chess = ch.Chess();
         undoStateHistory.clear();
         hostRedoableCubit.nonRedoable();
+        if (clientSocket != null) {
+          sendBoard(clientSocket!, SendBoard(
+            fen: chess!.fen,
+            lastMoveFrom: lastMove?.from ?? '',
+            lastMoveTo: lastMove?.to ?? '',
+          ));
+        }
       } else {
         chess = ch.Chess.fromFEN((await StorageManager().lastHostGameFen)!);
         lastMove = (await StorageManager().lastHostGameLastMove)!;
