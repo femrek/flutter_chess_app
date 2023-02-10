@@ -90,7 +90,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
           }
         } else if (action is SendConnectivityState) {
           if (action.ableToConnect) {
-            requestConnection(socket!, RequestConnection());
+            send(socket!, RequestConnection());
           } else {
             add(GuestShowErrorEvent(
               errorMessage: 'The host is not able to connect. Another client has connected to this host',
@@ -102,12 +102,12 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
           throw 'undefined action';
         }
       });
-      checkConnectivity(socket!, CheckConnectivity());
+      send(socket!, CheckConnectivity());
     }
 
     else if (event is GuestDisconnectEvent) {
       if (socket != null) {
-        sendDisconnectSignal(socket!, SendDisconnectSignal());
+        send(socket!, SendDisconnectSignal());
         socket!.destroy();
       }
       socket = null;
@@ -115,7 +115,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
 
     else if (event is GuestRefreshEvent) {
       if (socket != null) {
-        requestBoard(socket!, RequestBoard());
+        send(socket!, RequestBoard());
       }
     }
 
@@ -148,7 +148,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       final String to = event.to;
 
       if (to != from) {
-        sendMove(socket!, SendMove(
+        send(socket!, SendMove(
           from: from,
           to: to,
           promotion: await move(event.context, from, to),

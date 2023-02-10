@@ -82,11 +82,11 @@ class GameScanner {
   Future<CheckStatus> _checkIfOpen(AddressAndPort target) async {
     try {
       requests[target] = await Socket.connect(target.address, target.port);
-      checkConnectivity(requests[target]!, CheckConnectivity());
+      send(requests[target]!, CheckConnectivity());
       Uint8List dataAsByte = await requests[target]!.elementAt(0);
       String s = new String.fromCharCodes(dataAsByte);
       ActionType action = decodeRawData(s);
-      sendDisconnectSignal(requests[target]!, SendDisconnectSignal());
+      send(requests[target]!, SendDisconnectSignal());
       requests[target]!.close();
       if (action is SendConnectivityState) {
         if (action.ableToConnect) {

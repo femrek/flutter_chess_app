@@ -77,7 +77,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         undoStateHistory.clear();
         hostRedoableCubit.nonRedoable();
         if (clientSocket != null) {
-          sendBoard(clientSocket!, SendBoard(
+          send(clientSocket!, SendBoard(
             fen: chess!.fen,
             lastMoveFrom: lastMove?.from ?? '',
             lastMoveTo: lastMove?.to ?? '',
@@ -114,19 +114,19 @@ class HostBloc extends Bloc<HostEvent, HostState> {
           print(s);
           ActionType action = decodeRawData(s);
           if (action is CheckConnectivity) {
-            sendConnectivityStatus(socket, SendConnectivityState(ableToConnect: clientSocket == null));
+            send(socket, SendConnectivityState(ableToConnect: clientSocket == null));
           } else if (action is RequestConnection) {
             if (clientSocket == null) {
               clientSocket = socket;
             }
             add(HostLoadEvent());
-            sendBoard(socket, SendBoard(
+            send(socket, SendBoard(
               fen: chess!.fen,
               lastMoveFrom: lastMove?.from ?? '',
               lastMoveTo: lastMove?.to ?? '',
             ));
           } else if (action is RequestBoard) {
-            sendBoard(socket, SendBoard(
+            send(socket, SendBoard(
               fen: chess!.fen,
               lastMoveFrom: lastMove?.from ?? '',
               lastMoveTo: lastMove?.to ?? '',
@@ -211,7 +211,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         StorageManager().addHostBoardStateHistory(stateBundle);
         hostRedoableCubit.nonRedoable();
         if (clientSocket != null) {
-          sendBoard(clientSocket!, SendBoard(
+          send(clientSocket!, SendBoard(
             fen: chess!.fen,
             lastMoveFrom: lastMove?.from ?? '',
             lastMoveTo: lastMove?.to ?? '',
@@ -241,7 +241,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         chess!.load(fen);
       }
       if (clientSocket != null) {
-        sendBoard(clientSocket!, SendBoard(
+        send(clientSocket!, SendBoard(
           fen: chess!.fen,
           lastMoveFrom: lastMove?.from ?? '',
           lastMoveTo: lastMove?.to ?? '',
@@ -264,7 +264,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         chess!.load(fen);
 
         if (clientSocket != null) {
-          sendBoard(clientSocket!, SendBoard(
+          send(clientSocket!, SendBoard(
             fen: chess!.fen,
             lastMoveFrom: lastMove?.from ?? '',
             lastMoveTo: lastMove?.to ?? '',
@@ -288,7 +288,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
 
     else if (event is HostKickGuestEvent) {
       if (clientSocket != null) {
-        sendKick(clientSocket!, SendKick());
+        send(clientSocket!, SendKick());
         clientSocket!.close();
         clientSocket = null;
         yield _state();

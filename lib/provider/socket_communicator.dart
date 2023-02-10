@@ -6,7 +6,9 @@ class ConvertException extends Error {
   ConvertException(this.message);
 }
 
-abstract class ActionType {}
+abstract class ActionType {
+  String toJson();
+}
 
 abstract class HostSideActionType extends ActionType {}
 
@@ -292,42 +294,7 @@ ActionType decodeRawData(String json) {
   }
 }
 
-void sendBoard(Socket socket, SendBoard data) {
-  socket.write(data.toJson());
-  print('sending $data');
-}
-
-void sendConnectivityStatus(Socket socket, SendConnectivityState data) {
-  socket.write(data.toJson());
-  print('sending $data');
-}
-
-void sendKick(Socket socket, SendKick data) {
-  socket.write(data.toJson());
-  print('sending $data');
-}
-
-void checkConnectivity(Socket socket, CheckConnectivity data) {
-  socket.write(data.toJson());
-  print('sending $data');
-}
-
-void requestConnection(Socket socket, RequestConnection data) {
-  socket.write(data.toJson());
-  print('sending $data');
-}
-
-void sendMove(Socket socket, SendMove data) {
-  socket.write(data.toJson());
-  print('sending $data');
-}
-
-void requestBoard(Socket socket, RequestBoard data) {
-  socket.write(data.toJson());
-  print('sending $data');
-}
-
-void sendDisconnectSignal(Socket socket, SendDisconnectSignal data) {
+void send(Socket socket, ActionType data) {
   socket.write(data.toJson());
   print('sending $data');
 }
