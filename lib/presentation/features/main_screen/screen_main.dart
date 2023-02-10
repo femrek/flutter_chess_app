@@ -4,6 +4,7 @@ import 'package:localchess/data/model/game_search_information.dart';
 import 'package:localchess/data/storage_manager.dart';
 import 'package:localchess/presentation/features/main_screen/game_scan_cubit.dart';
 import 'package:localchess/routes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ScreenMain extends StatefulWidget {
   const ScreenMain({Key? key}) : super(key: key);
@@ -33,6 +34,29 @@ class _ScreenMainState extends State<ScreenMain> {
       appBar: AppBar(
         title: const Text('CHESS'),
         centerTitle: true,
+        actions: [
+          PopupMenuButton(
+            onSelected: (value) async {
+              if (value == 1) {
+                launchUrl(
+                  Uri.parse('https://www.freeprivacypolicy.com/live/74fcc445-b75d-4551-8cf1-62d7dcc74120'),
+                  mode: LaunchMode.inAppWebView,
+                );
+              }
+              else {
+                throw 'undefined menu button';
+              }
+            },
+            itemBuilder: (_) {
+              return <PopupMenuEntry<int>>[
+                PopupMenuItem(
+                  child: Text('privacy policy'),
+                  value: 1,
+                ),
+              ];
+            },
+          )
+        ],
       ),
       body: Center(
         child: Column(
