@@ -129,6 +129,7 @@ class _SquareOnTheBoard extends StatelessWidget {
   bool _moveFrom = false;
   bool _lastMoveFromThis = false;
   bool _lastMoveToThis = false;
+  bool _ghostPiece = false;
 
   @override
   Widget build(BuildContext context) {
@@ -147,6 +148,7 @@ class _SquareOnTheBoard extends StatelessWidget {
       }
       _lastMoveFromThis = (context.read<GuestBloc>().state as GuestLoadedState).lastMoveFrom == name;
       _lastMoveToThis = (context.read<GuestBloc>().state as GuestLoadedState).lastMoveTo == name;
+      _ghostPiece = (context.read<GuestBloc>().state as GuestLoadedState).ghostCoordinate == name;
     }
 
     Color darkBg = darkBgColor;
@@ -180,7 +182,7 @@ class _SquareOnTheBoard extends StatelessWidget {
           },
           maxSimultaneousDrags: _movable ? null : 0,
           childWhenDragging: _container(darkBg, lightBg, null),
-          feedback: _pieceImage(),
+          feedback: _pieceImage(context),
           child: _allOfSquare(context, darkBg, lightBg),
         );
       },
@@ -211,7 +213,7 @@ class _SquareOnTheBoard extends StatelessWidget {
         children: [
           _lastMoveImage(),
           _moveDots(),
-          _pieceImage(),
+          _pieceImage(context),
         ],
       )),
     );
@@ -280,7 +282,7 @@ class _SquareOnTheBoard extends StatelessWidget {
     return Container();
   }
 
-  Widget _pieceImage() {
+  Widget _pieceImage(BuildContext context) {
     if (piece == null) return Container();
     final String? pieceName = pieceNameToAssetName[piece?.type.name];
     final bool isBlack = piece == null || piece?.color == ch.Color.BLACK;
@@ -294,7 +296,8 @@ class _SquareOnTheBoard extends StatelessWidget {
         child: (pieceName != null) ?
           SvgPicture.asset(
             'assets/images/$pieceName.svg',
-            color: isBlack ? blackPiecesColor : whitePiecesColor,
+            color: _ghostPiece ? Theme.of(context).disabledColor
+                : isBlack ? blackPiecesColor : whitePiecesColor,
           ) : null,
       ),
     );

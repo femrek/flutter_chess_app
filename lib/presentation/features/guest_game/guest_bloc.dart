@@ -32,6 +32,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
   Set<String> movablePiecesCoors = {};
   LastMoveModel? lastMove;
   List<ch.Move> undoHistory = [];
+  String? ghostCoordinate;
 
   bool get isFocused {
     return state is GuestLoadedState && (state as GuestLoadedState).focusedCoordinate != null;
@@ -49,6 +50,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       lastMoveFrom: lastMove?.from,
       lastMoveTo: lastMove?.to,
       fen: chess!.fen,
+      ghostCoordinate: ghostCoordinate,
       focusedCoordinate: focusedCoordinate,
       movableCoors: movableCoors ?? const {},
     );
@@ -79,6 +81,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
         ActionType action = decodeRawData(data);
         if (action is SendBoard) {
           if (ch.Chess.validate_fen(action.fen)['valid']) {
+            ghostCoordinate = null;
             lastMove = LastMoveModel(from: action.lastMoveFrom, to: action.lastMoveTo);
             add(GuestLoadEvent(fen: action.fen));
           } else {
@@ -148,6 +151,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
           to: to,
           promotion: await move(event.context, from, to),
         ));
+        ghostCoordinate = to;
         convertToPieceBoard();
         findMovablePiecesCoors();
       }

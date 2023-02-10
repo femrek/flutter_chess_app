@@ -12,6 +12,7 @@ class GuestLoadedState extends GuestState {
   final String? lastMoveFrom;
   final String? lastMoveTo;
   final String fen;
+  final String? ghostCoordinate;
   final String? focusedCoordinate;
   final Set<String> movableCoors;
 
@@ -23,6 +24,7 @@ class GuestLoadedState extends GuestState {
     this.lastMoveFrom,
     this.lastMoveTo,
     required this.fen,
+    this.ghostCoordinate,
     this.focusedCoordinate,
     this.movableCoors = const {},
   }) : super();
