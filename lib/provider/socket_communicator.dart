@@ -50,6 +50,38 @@ class SendBoard extends HostSideActionType {
   }
 }
 
+class SendConnectivityState extends HostSideActionType {
+  final bool ableToConnect;
+
+  SendConnectivityState({
+    required this.ableToConnect,
+  });
+
+  factory SendConnectivityState.fromJson(String json) {
+    Map map = jsonDecode(json);
+    if (map[actionKey] == sendConnectivityStateId) {
+      return SendConnectivityState(
+        ableToConnect: map['ableToConnect'],
+      );
+    } else {
+      throw ConvertException('$json is not a SendConnectivityState action');
+    }
+  }
+
+  String toJson() {
+    String json = jsonEncode({
+      actionKey: sendConnectivityStateId,
+      ableToConnectKey: ableToConnect,
+    });
+    return json;
+  }
+
+  @override
+  String toString() {
+    return toJson();
+  }
+}
+
 abstract class ClientSideActionType extends ActionType {}
 
 class CheckConnectivity extends ClientSideActionType {
@@ -189,6 +221,7 @@ class SendDisconnectSignal extends ClientSideActionType {
 }
 
 const String sendBoardId = 'SendBoard';
+const String sendConnectivityStateId = 'SendConnectivityState';
 const String checkConnectivityId = 'CheckConnectivity';
 const String requestConnectionId = 'RequestConnection';
 const String sendMoveId = 'SendMove';
@@ -201,54 +234,62 @@ const String lastMoveToKey = 'lastMoveTo';
 const String fenKey = 'fen';
 const String moveFromKey = 'moveFrom';
 const String moveToKey = 'moveTo';
+const String ableToConnectKey = 'ableToConnect';
 
-ActionType decodeRawData(String dataJson) {
-  Map dataMap = jsonDecode(dataJson);
+ActionType decodeRawData(String json) {
+  Map dataMap = jsonDecode(json);
   final String actionId = dataMap[actionKey];
   switch(actionId) {
     case sendBoardId:
-      return SendBoard.fromJson(dataJson);
+      return SendBoard.fromJson(json);
+    case sendConnectivityStateId:
+      return SendConnectivityState.fromJson(json);
     case checkConnectivityId:
-      return CheckConnectivity();
+      return CheckConnectivity.fromJson(json);
     case requestConnectionId:
-      return RequestConnection();
+      return RequestConnection.fromJson(json);
     case sendMoveId:
-      return SendMove.fromJson(dataJson);
+      return SendMove.fromJson(json);
     case requestBoardId:
-      return RequestBoard.fromJson(dataJson);
+      return RequestBoard.fromJson(json);
     case sendDisconnectSignalId:
-      return SendDisconnectSignal();
+      return SendDisconnectSignal.fromJson(json);
     default:
       throw 'undefined action type';
   }
 }
 
-sendBoard(Socket socket, SendBoard data) {
+void sendBoard(Socket socket, SendBoard data) {
   socket.write(data.toJson());
   print('sending $data');
 }
 
-checkConnectivity(Socket socket, CheckConnectivity data) async {
-  socket.write(data.toJson());
-  print('connectivity check');
-}
-
-requestConnection(Socket socket, RequestConnection data) async {
-  socket.write(data.toJson());
-  print('connection request');
-}
-
-sendMove(Socket socket, SendMove data) async {
+void sendConnectivityStatus(Socket socket, SendConnectivityState data) {
   socket.write(data.toJson());
   print('sending $data');
 }
 
-requestBoard(Socket socket, RequestBoard data) async {
+void checkConnectivity(Socket socket, CheckConnectivity data) {
   socket.write(data.toJson());
-  print('board requested');
+  print('sending $data');
 }
 
-sendDisconnectSignal(Socket socket, SendDisconnectSignal data) async {
+void requestConnection(Socket socket, RequestConnection data) {
   socket.write(data.toJson());
-  print('sent disconnect signal');
+  print('sending $data');
+}
+
+void sendMove(Socket socket, SendMove data) {
+  socket.write(data.toJson());
+  print('sending $data');
+}
+
+void requestBoard(Socket socket, RequestBoard data) {
+  socket.write(data.toJson());
+  print('sending $data');
+}
+
+void sendDisconnectSignal(Socket socket, SendDisconnectSignal data) {
+  socket.write(data.toJson());
+  print('sending $data');
 }

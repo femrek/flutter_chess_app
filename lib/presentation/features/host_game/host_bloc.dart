@@ -41,6 +41,26 @@ class HostBloc extends Bloc<HostEvent, HostState> {
   Set<String> movablePiecesCoors = Set();
   LastMoveModel? lastMove;
   List<String> undoStateHistory = [];
+  
+  HostLoadedState _state({String? focusCoordinate, Set<String>? movableCoors}) {
+    return HostLoadedState(
+      board: pieceBoard,
+      movablePiecesCoors: movablePiecesCoors,
+      isWhiteTurn: chess!.turn == ch.Color.WHITE,
+      inCheck: chess!.in_check,
+      lastMoveFrom: lastMove?.from,
+      lastMoveTo: lastMove?.to,
+      fen: chess!.fen,
+      clientInformation: clientSocket?.remoteAddress.address.toString(),
+      focusedCoordinate: focusCoordinate ?? null,
+      movableCoors: movableCoors ?? const {},
+    );
+  }
+
+  bool get isFocused {
+    return state is HostLoadedState
+        && (state as HostLoadedState).focusedCoordinate != null;
+  }
 
   @override
   Stream<HostState> mapEventToState(HostEvent event) async* {
@@ -59,29 +79,13 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         lastMove = (await StorageManager().lastHostGameLastMove)!;
       }
       if (chess == null) throw 'chess is not initialized';
-      if (clientSocket != null){
-        sendBoard(clientSocket!, SendBoard(
-          fen: chess!.fen,
-          lastMoveFrom: lastMove?.from ?? '',
-          lastMoveTo: lastMove?.to ?? '',
-        ));
-      }
 
       findMovablePiecesCoors();
-
       convertToPieceBoard();
 
       print('new loaded state');
       hostTurnCubit.changeState(chess!.turn == ch.Color.WHITE, chess!.in_checkmate);
-      yield HostLoadedState(
-        board: pieceBoard,
-        movablePiecesCoors: movablePiecesCoors,
-        isWhiteTurn: chess!.turn == ch.Color.WHITE,
-        inCheck: chess!.in_check,
-        lastMoveFrom: lastMove?.from,
-        lastMoveTo: lastMove?.to,
-        fen: chess!.fen,
-      );
+      yield _state();
     }
 
     else if (event is HostStartEvent) {
@@ -95,49 +99,43 @@ class HostBloc extends Bloc<HostEvent, HostState> {
       print('LocalHostConnectEvent event, ip: ${serverSocket?.address.toString()}:${serverSocket?.port.toString()}');
       findIpCubit.defineIpAndPortNum(serverSocket!.port);
       serverSocket!.listen((Socket socket) {
-        sendBoard(socket, SendBoard(
-          fen: chess!.fen,
-          lastMoveFrom: lastMove?.from ?? '',
-          lastMoveTo: lastMove?.to ?? '',
-        ));
         print('new connection');
-        if (clientSocket == null) {
-          print('first client socket is setting');
-          clientSocket = socket;
-        }
         socket.listen((Uint8List dataAsByte) {
           String s = new String.fromCharCodes(dataAsByte);
-          //print(s);
-          String query;
-          try {
-            query = s.substring(s.indexOf(' ')+1, s.indexOf(' ', (s.indexOf(' ')+1)));
-          } on RangeError {
-            query = s;
-          }
-          print(query);
-          ActionType action = decodeRawData(query);
-          if (action is RequestBoard) {
+          print(s);
+          ActionType action = decodeRawData(s);
+          if (action is CheckConnectivity) {
+            sendConnectivityStatus(socket, SendConnectivityState(ableToConnect: clientSocket == null));
+          } else if (action is RequestConnection) {
+            if (clientSocket == null) {
+              clientSocket = socket;
+            }
+            add(HostLoadEvent());
+            sendBoard(socket, SendBoard(
+              fen: chess!.fen,
+              lastMoveFrom: lastMove?.from ?? '',
+              lastMoveTo: lastMove?.to ?? '',
+            ));
+          } else if (action is RequestBoard) {
             sendBoard(socket, SendBoard(
               fen: chess!.fen,
               lastMoveFrom: lastMove?.from ?? '',
               lastMoveTo: lastMove?.to ?? '',
             ));
           } else if (action is SendMove) {
+            if (socket != clientSocket) return;
             final String from = action.from;
             final String to = action.to;
             if (chess!.turn == ch.Color.BLACK && movablePiecesCoors.contains(from)) {
               add(HostMoveEvent(from: from, to: to));
             }
-            sendBoard(socket, SendBoard(
-              fen: chess!.fen,
-              lastMoveFrom: lastMove?.from ?? '',
-              lastMoveTo: lastMove?.to ?? '',
-            ));
           } else if (action is SendDisconnectSignal) {
+            socket.destroy();
             if (socket == clientSocket) {
-              if (clientSocket != null) clientSocket!.destroy();
+              print('guest disconnected');
               clientSocket = null;
             }
+            add(HostLoadEvent());
           } else {
             throw 'undefined action';
           }
@@ -163,42 +161,28 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         }
       }
       hostTurnCubit.changeState(chess!.turn == ch.Color.WHITE, chess!.in_checkmate);
-      yield HostFocusedState(
-        board: pieceBoard,
-        focusedCoordinate: event.focusCoordinate,
+      yield _state(
+        focusCoordinate: event.focusCoordinate,
         movableCoors: movableCoors,
-        isWhiteTurn: chess!.turn == ch.Color.WHITE,
-        inCheck: chess!.in_check,
-        lastMoveFrom: lastMove?.from,
-        lastMoveTo: lastMove?.to,
-        fen: chess!.fen,
       );
     }
     
     else if (event is HostRemoveTheFocusEvent) {
      if (chess == null) throw 'chess is not initialized';
-      if (!(state is HostFocusedState)) {
+      if (!isFocused) {
         throw Exception('trying to remove focus while state is not focused state. (state is ${state.runtimeType}');
       }
 
-      yield HostLoadedState(
-        board: pieceBoard,
-        movablePiecesCoors: movablePiecesCoors,
-        isWhiteTurn: chess!.turn == ch.Color.WHITE,
-        inCheck: chess!.in_check,
-        lastMoveFrom: lastMove?.from,
-        lastMoveTo: lastMove?.to,
-        fen: chess!.fen,
-      ); 
+      yield _state();
     }
 
     else if (event is HostMoveEvent) {
       if (chess == null) throw 'chess is not initialized';
-      if (!(state is HostFocusedState || event.from != '')) {
-        throw Exception('trying move while state is not focused state. (state is ${state.runtimeType}');
+      if (!isFocused && event.from == '') {
+        throw Exception('trying move from this device while state is not focused state. (state is ${state.runtimeType}');
       }
 
-      final String from = event.from == '' ? (state as HostFocusedState).focusedCoordinate : event.from;
+      final String from = event.from == '' ? (state as HostLoadedState).focusedCoordinate! : event.from;
       final String to = event.to;
 
       final bool moving = to != from;
@@ -210,7 +194,6 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         lastMove = LastMoveModel(from: from, to: to);
         StorageManager().setLastHostGameLastMove(lastMove);
         final String stateBundle = fenAndLastMoveToBundleString(chess!.fen, lastMove.toString());
-        print('stateBundle: $stateBundle');
         StorageManager().addHostBoardStateHistory(stateBundle);
         hostRedoableCubit.nonRedoable();
         if (clientSocket != null) {
@@ -223,15 +206,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
       }
 
       hostTurnCubit.changeState(chess!.turn == ch.Color.WHITE, chess!.in_checkmate);
-      yield HostLoadedState(
-        board: pieceBoard,
-        movablePiecesCoors: movablePiecesCoors,
-        isWhiteTurn: chess!.turn == ch.Color.WHITE,
-        inCheck: chess!.in_check,
-        lastMoveFrom: lastMove?.from,
-        lastMoveTo: lastMove?.to,
-        fen: chess!.fen,
-      );
+      yield _state();
     }
  
     else if (event is HostUndoEvent) {
@@ -262,15 +237,7 @@ class HostBloc extends Bloc<HostEvent, HostState> {
       convertToPieceBoard();
 
       hostTurnCubit.changeState(chess!.turn == ch.Color.WHITE, chess!.in_checkmate);
-      yield HostLoadedState(
-        board: pieceBoard,
-        movablePiecesCoors: movablePiecesCoors,
-        isWhiteTurn: chess!.turn == ch.Color.WHITE,
-        inCheck: chess!.in_check,
-        lastMoveFrom: lastMove?.from,
-        lastMoveTo: lastMove?.to,
-        fen: chess!.fen,
-      );
+      yield _state();
     }
  
     else if (event is HostRedoEvent) {
@@ -301,17 +268,8 @@ class HostBloc extends Bloc<HostEvent, HostState> {
         convertToPieceBoard();
 
         hostTurnCubit.changeState(chess!.turn == ch.Color.WHITE, chess!.in_checkmate);
-        yield HostLoadedState(
-          board: pieceBoard,
-          movablePiecesCoors: movablePiecesCoors,
-          isWhiteTurn: chess!.turn == ch.Color.WHITE,
-          inCheck: chess!.in_check,
-          lastMoveFrom: lastMove?.from,
-          lastMoveTo: lastMove?.to,
-          fen: chess!.fen,
-        );
+        yield _state();
       }
-
     }
 
   }

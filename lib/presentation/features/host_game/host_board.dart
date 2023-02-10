@@ -65,20 +65,8 @@ class HostBoard extends StatelessWidget {
             positionY: y,
             piece: state.board[x][y],
             inCheck: state.inCheck
-              && (state.board[x][y]?.type.name.toLowerCase() ?? '') == 'k'
-              && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
-          );
-        }
-
-        else if (state is HostFocusedState) {
-          return _SquareOnTheBoard(
-            size: squareSize,
-            positionX: x,
-            positionY: y,
-            piece: state.board[x][y],
-            inCheck:  state.inCheck
-              && (state.board[x][y]?.type.name.toLowerCase() ?? '') == 'k'
-              && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
+                && (state.board[x][y]?.type.name.toLowerCase() ?? '') == 'k'
+                && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
           );
         }
 
@@ -150,21 +138,21 @@ class _SquareOnTheBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (context.read<HostBloc>().state is HostLoadedState) {
-      _movable = (context.read<HostBloc>().state as HostLoadedState).isWhiteTurn 
-        && (context.read<HostBloc>().state as HostLoadedState).movablePiecesCoors.contains(name);
+      if (!context.read<HostBloc>().isFocused) {
+        _movable = (context.read<HostBloc>().state as HostLoadedState).isWhiteTurn
+            && (context.read<HostBloc>().state as HostLoadedState).movablePiecesCoors.contains(name);
+      } else {
+        _movableToThis = (context.read<HostBloc>().state as HostLoadedState).movableCoors.contains(name);
+        if (piece != null && _movableToThis) {
+          _attackableToThis = true;
+          _movableToThis = false;
+        }
+        if ((context.read<HostBloc>().state as HostLoadedState).focusedCoordinate == name) {
+          _moveFrom = true;
+        }
+      }
       _lastMoveFromThis = (context.read<HostBloc>().state as HostLoadedState).lastMoveFrom == name;
       _lastMoveToThis = (context.read<HostBloc>().state as HostLoadedState).lastMoveTo == name;
-    } else if (context.read<HostBloc>().state is HostFocusedState) {
-      _movableToThis = (context.read<HostBloc>().state as HostFocusedState).movableCoors.contains(name);
-      if (piece != null && _movableToThis) {
-        _attackableToThis = true;
-        _movableToThis = false;
-      }
-      if ((context.read<HostBloc>().state as HostFocusedState).focusedCoordinate == name) {
-        _moveFrom = true;
-      }
-      _lastMoveFromThis = (context.read<HostBloc>().state as HostFocusedState).lastMoveFrom == name;
-      _lastMoveToThis = (context.read<HostBloc>().state as HostFocusedState).lastMoveTo == name;
     }
 
     Color darkBg = darkBgColor;
@@ -205,11 +193,11 @@ class _SquareOnTheBoard extends StatelessWidget {
   Widget _allOfSquare(BuildContext context, Color darkBg, Color lightBg) {
     return GestureDetector(
       onTap: () {
-        if (context.read<HostBloc>().state is HostLoadedState) {
+        if (context.read<HostBloc>().state is HostLoadedState && !context.read<HostBloc>().isFocused) {
           if (_movable) {
             context.read<HostBloc>().add(HostFocusEvent(focusCoordinate: name));
           }
-        } else if (context.read<HostBloc>().state is HostFocusedState) {
+        } else if (context.read<HostBloc>().state is HostLoadedState && context.read<HostBloc>().isFocused) {
           if (_movableToThis || _attackableToThis|| _moveFrom) {
             context.read<HostBloc>().add(HostMoveEvent(to: name));
           } else {

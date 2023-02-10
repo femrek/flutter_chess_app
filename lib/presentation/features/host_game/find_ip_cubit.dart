@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localchess/provider/platform.dart';
+import 'package:localchess/provider/platform/platform.dart';
 
 class FindIpCubit extends Cubit<String> {
   FindIpCubit() : super("");
@@ -13,7 +13,7 @@ class FindIpCubit extends Cubit<String> {
   Future<String> _getLocalIp() async {
     String localIp;
     try {
-      final String result = await getLocalIp();
+      final String result = (await getLocalIp()).address;
       localIp = result ?? 'ip not found';
     } on PlatformException catch (e) {
       localIp = 'ip not found';

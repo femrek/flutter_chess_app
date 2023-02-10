@@ -57,9 +57,10 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       yield GuestInitialState();
 
       socket = await Socket.connect(InternetAddress.tryParse(host), port!);
-      //print('socket: ${socket.remoteAddress.address}:${socket.remotePort}');
+
       socket!.listen((Uint8List dataAsByte) {
         final String data = String.fromCharCodes(dataAsByte);
+        print(data);
         ActionType action = decodeRawData(data);
         if (action is SendBoard) {
           if (ch.Chess.validate_fen(action.fen)['valid']) {
@@ -69,8 +70,19 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
             add(GuestRefreshEvent());
             throw 'invalid fen from host';
           }
+        } else if (action is SendConnectivityState) {
+          if (action.ableToConnect) {
+            requestConnection(socket!, RequestConnection());
+          } else {
+            add(GuestShowErrorEvent(
+              errorMessage: 'The host is not able to connect. Another client has connected to this host',
+            ));
+          }
+        } else {
+          throw 'undefined action';
         }
       });
+      checkConnectivity(socket!, CheckConnectivity());
     }
 
     else if (event is GuestDisconnectEvent) {
@@ -108,7 +120,7 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       );
     }
 
-    if (event is GuestRemoveTheFocusEvent) {
+    else if (event is GuestRemoveTheFocusEvent) {
       yield GuestLoadedState(
         board: pieceBoard,
         movablePiecesCoors: movablePiecesCoors,
@@ -146,6 +158,13 @@ class GuestBloc extends Bloc<GuestEvent, GuestState> {
       );
     }
 
+    else if (event is GuestShowErrorEvent) {
+      yield GuestErrorState(errorMessage: event.errorMessage);
+    }
+
+    else {
+      throw 'undefined event: $event';
+    }
   }
 
   void convertToPieceBoard() {

@@ -5,6 +5,7 @@ import 'package:localchess/presentation/features/host_game/find_ip_cubit.dart';
 
 import 'host_bloc.dart';
 import 'host_redoable_cubit.dart';
+import 'host_state.dart';
 import 'host_turn_cubit.dart';
 import 'host_event.dart';
 import 'host_board.dart';
@@ -100,10 +101,29 @@ class _ScreenHostGameState extends State<ScreenHostGame> {
                   ),
                 );
               },
-            )
+            ),
+            BlocBuilder<HostBloc, HostState>(
+              builder: (_, state) {
+                if (state is HostLoadedState) {
+                  return _clientInformationText(context, state.clientInformation);
+                }
+                else {
+                  return Container();
+                }
+              },
+            ),
           ],
         ),
         backgroundColor: Colors.black45,
+      ),
+    );
+  }
+
+  Widget _clientInformationText(BuildContext context, String? data) {
+    return Text(
+      data ?? 'no guest connected',
+      style: TextStyle(
+        color: Colors.white,
       ),
     );
   }

@@ -56,3 +56,14 @@ class GuestMoveEvent extends GuestEvent {
   @override
   List<Object> get props => [to];
 }
+
+class GuestShowErrorEvent extends GuestEvent {
+  final String errorMessage;
+
+  GuestShowErrorEvent({
+    required this.errorMessage,
+  });
+
+  @override
+  List<Object> get props => [errorMessage];
+}

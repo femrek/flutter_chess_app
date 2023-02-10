@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/presentation/features/host_game/find_ip_cubit.dart';
+import 'package:localchess/presentation/features/main_screen/game_scan_cubit.dart';
 
 import 'presentation/features/host_game/screen_host_game.dart';
 import 'presentation/features/local_game/screen_local_game.dart';
@@ -30,12 +31,18 @@ FindIpCubit _findIpCubit = FindIpCubit();
 HostTurnCubit _hostTurnCubit = HostTurnCubit();
 HostBloc _localHostBloc = HostBloc(_hostRedoableCubit, _findIpCubit, _hostTurnCubit);
 GuestBloc _guestBloc = GuestBloc();
+GameScanCubit _gameScanCubit = GameScanCubit();
 
 class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case screenMain:
-        return MaterialPageRoute(builder: (_) => ScreenMain());
+        return MaterialPageRoute(builder: (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider.value(value: _gameScanCubit),
+          ],
+          child: ScreenMain(),
+        ));
       case screenLocalGame:
         return MaterialPageRoute(builder: (_) => MultiBlocProvider(
           providers: [

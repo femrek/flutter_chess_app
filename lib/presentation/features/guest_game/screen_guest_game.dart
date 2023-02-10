@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'guest_bloc.dart';
 import 'guest_event.dart';
 import 'guest_board.dart';
+import 'guest_state.dart';
 
 class ScreenGuestGame extends StatefulWidget {
   @override
@@ -34,22 +35,42 @@ class _ScreenGuestGameState extends State<ScreenGuestGame> {
         title: Text('CHESS'),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          GuestBoard(size: width),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text('disconnect'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              context.read<GuestBloc>().add(GuestRefreshEvent());
-            },
-            child: Text('reload from host'),
-          ),
-        ],
+      body: BlocBuilder<GuestBloc, GuestState>(
+        builder: (_, state) {
+          if (state is GuestInitialState) {
+            return CircularProgressIndicator();
+          } else if (state is GuestErrorState) {
+            return Container(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                state.errorMessage,
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.error,
+                  fontWeight: FontWeight.w500
+                ),
+              ),
+            );
+          } else {
+            return Column(
+              children: [
+                GuestBoard(size: width),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('disconnect'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<GuestBloc>().add(GuestRefreshEvent());
+                  },
+                  child: Text('reload from host'),
+                ),
+              ],
+            );
+          }
+        }
       ),
     );
   }

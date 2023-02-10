@@ -55,3 +55,14 @@ class GuestFocusedState extends GuestState {
   @override
   List<Object> get props => [fen];
 }
+
+class GuestErrorState extends GuestState {
+  final String errorMessage;
+
+  GuestErrorState({
+    required this.errorMessage,
+  });
+
+  @override
+  List<Object> get props => [errorMessage];
+}
