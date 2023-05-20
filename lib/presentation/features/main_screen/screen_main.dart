@@ -96,22 +96,25 @@ class _ScreenMainState extends State<ScreenMain> {
                   Container(
                     child: _mainScreenButton(
                       context,
-                      state.searching ? 'searching' : 'Scan Games',
+                      state.searchStatus == SearchStatus.searching
+                          ? 'Searching' : 'Scan Games',
                       () {
                         context.read<GameScanCubit>().startScan();
                       },
-                      !state.searching,
+                      state.searchStatus != SearchStatus.searching,
                     ),
                   ),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       child: Text(
-                        state.searching
-                          ? 'games searching on network'
-                          : state.games.isEmpty
-                            ? 'any game could not found on network'
-                            : 'games on your network'
+                        state.searchStatus == SearchStatus.searching
+                          ? 'Games searching on network'
+                        : state.searchStatus == SearchStatus.init
+                          ? 'Press Scan Games for search games on your network'
+                        : state.games.isEmpty
+                          ? 'Any game could not found on network'
+                          : 'Games on your network'
                       ),
                     ),
                   ),
@@ -119,7 +122,7 @@ class _ScreenMainState extends State<ScreenMain> {
               ),
               Expanded(
                 child: Center(
-                  child: !state.searching ? ListView.builder(
+                  child: state.searchStatus != SearchStatus.searching ? ListView.builder(
                     itemBuilder: (_, index) {
                       return _gameOnTheNetworkElement(context, state.games[index]);
                     },
