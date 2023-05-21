@@ -1,32 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localchess/data/model/game_search_information.dart';
-import 'package:localchess/data/storage_manager.dart';
-import 'package:localchess/presentation/features/main_screen/game_scan_cubit.dart';
 import 'package:localchess/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ScreenMain extends StatefulWidget {
+class ScreenMain extends StatelessWidget {
   const ScreenMain({Key? key}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _ScreenMainState();
-}
-
-class _ScreenMainState extends State<ScreenMain> {
-  final TextEditingController _hostTextController = TextEditingController();
-  final TextEditingController _portTextController = TextEditingController();
-
-  Future setFieldsValues() async {
-    _hostTextController.text = await StorageManager().lastConnectedHost ?? '';
-    _portTextController.text = (await StorageManager().lastConnectedPort).toString();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setFieldsValues();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,130 +35,129 @@ class _ScreenMainState extends State<ScreenMain> {
           )
         ],
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _mainScreenButton(context, 'Play two player', () {
-              Navigator.pushNamed(context, screenLocalGame);
-            },),
-            _divider(context),
-            _mainScreenButton(context, 'Create local network game', () {
-              Navigator.pushNamed(context, screenHostGame);
-            }),
-            _divider(context),
-            _joinGameCard(context),
-            _divider(context),
-            Expanded(child: _gameScanList(context)),
+            const SizedBox(height: 12,),
+            _localGameCard(context),
+            const SizedBox(height: 12,),
+            _networkGameCard(context),
+            const SizedBox(height: 12,),
           ],
         ),
       ),
     );
   }
 
-  Widget _gameScanList(BuildContext context) {
+  Widget _networkGameCard(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColorLight,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: BlocBuilder<GameScanCubit, GameScanState>(
-        builder: (_, state) {
-          return Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    child: _mainScreenButton(
-                      context,
-                      state.searchStatus == SearchStatus.searching
-                          ? 'Searching' : 'Scan Games',
-                      () {
-                        context.read<GameScanCubit>().startScan();
-                      },
-                      state.searchStatus != SearchStatus.searching,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(
-                        state.searchStatus == SearchStatus.searching
-                          ? 'Games searching on network'
-                        : state.searchStatus == SearchStatus.init
-                          ? 'Press Scan Games for search games on your network'
-                        : state.games.isEmpty
-                          ? 'Any game could not found on network'
-                          : 'Games on your network'
-                      ),
-                    ),
-                  ),
-                ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Column(
+          children: [
+            const SizedBox(height: 12,),
+            Text(
+              'Play with two device on the same network',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
               ),
-              Expanded(
-                child: Center(
-                  child: state.searchStatus != SearchStatus.searching ? ListView.builder(
-                    itemBuilder: (_, index) {
-                      return _gameOnTheNetworkElement(context, state.games[index]);
-                    },
-                    itemCount: state.games.length,
-                  ) : CircularProgressIndicator(),
+            ),
+            const SizedBox(height: 12,),
+            _divider(context),
+            const SizedBox(height: 12,),
+            Text(
+              'Create a game in a phone',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 8,),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, screenHostGame);
+              },
+              child: Text(
+                'Create a Game',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
-            ],
-          );
-        }
-      ),
-    );
-  }
-
-  Widget _gameOnTheNetworkElement(BuildContext context, GameSearchInformation data) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, screenGuestGame, arguments: [
-          data.addressAndPort.address,
-          data.addressAndPort.port,
-        ]);
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: data.ableToConnect
-              ? Theme.of(context).primaryColor
-              : Theme.of(context).colorScheme.error,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          data.name,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18
-          ),
+            ),
+            const SizedBox(height: 8,),
+            _divider(context),
+            const SizedBox(height: 12,),
+            Text(
+              'Join the game by the other device',
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 8,),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, screenJoinGame);
+              },
+              child: Text(
+                'Join a Local Game',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8,),
+          ],
         ),
       ),
     );
   }
 
-  Widget _mainScreenButton(BuildContext context, String content, Function onPressed, [bool enabled = true]) {
-    return GestureDetector(
-      onTap: () {
-        if (enabled) onPressed();
-      },
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.all(12),
-        decoration: BoxDecoration( 
-          color: enabled ? Theme.of(context).primaryColor : Theme.of(context).disabledColor,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: Text(
-          content,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
+  Widget _localGameCard(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColorLight,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Column(
+          children: [
+            const SizedBox(height: 12,),
+            Text(
+              'Play chess with only this device',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 12,),
+            _divider(context),
+            const SizedBox(height: 8,),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, screenLocalGame);
+              },
+              child: Text(
+                'Play Two Player',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8,),
+          ],
         ),
       ),
     );
@@ -189,68 +165,9 @@ class _ScreenMainState extends State<ScreenMain> {
 
   Widget _divider(BuildContext context) {
     return Container(
-      height: 2,
+      height: 1,
       width: MediaQuery.of(context).size.width - 24,
-      color: Theme.of(context).primaryColorLight,
-    );
-  }
-
-  Widget _joinGameCard(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColorLight,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: TextField(
-                  controller: _hostTextController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: 'IP address',
-                    labelText: 'IP address',
-                    prefixIcon: Icon(Icons.support),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(999), right: Radius.zero),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 4,),
-              const Text(':'),
-              const SizedBox(width: 4,),
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  controller: _portTextController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    hintText: 'port number',
-                    labelText: 'port number',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(999), left: Radius.zero),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          _mainScreenButton(context, 'Join local network game', () {
-            final String host = _hostTextController.text;
-            final int port = int.tryParse(_portTextController.text) ?? 0;
-            print('port input is $port');
-            StorageManager().setLastConnectedHost(host);
-            StorageManager().setLastConnectedPort(port);
-            Navigator.pushNamed(context, screenGuestGame, arguments: [host, port]);
-          }),
-        ],
-      ),
+      color: Theme.of(context).primaryColor,
     );
   }
 }

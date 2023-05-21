@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/presentation/features/host_game/find_ip_cubit.dart';
-import 'package:localchess/presentation/features/main_screen/game_scan_cubit.dart';
+import 'package:localchess/presentation/features/join_game_screen/game_scan_cubit.dart';
+import 'package:localchess/presentation/features/join_game_screen/screen_join_game.dart';
 
 import 'presentation/features/host_game/screen_host_game.dart';
 import 'presentation/features/local_game/screen_local_game.dart';
@@ -19,6 +20,7 @@ import 'presentation/features/guest_game/screen_guest_game.dart';
 import 'presentation/features/main_screen/screen_main.dart';
 
 const String screenMain = '/';
+const String screenJoinGame = '/join_game';
 const String screenLocalGame = '/local_game';
 const String screenHostGame = '/local_net_game';
 const String screenGuestGame = '/local_guest_game';
@@ -37,12 +39,16 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case screenMain:
-        return MaterialPageRoute(builder: (_) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: _gameScanCubit),
-          ],
-          child: ScreenMain(),
-        ));
+        return MaterialPageRoute(builder: (_) => const ScreenMain());
+      case screenJoinGame:
+        return MaterialPageRoute(
+          builder: (context) {
+            return BlocProvider.value(
+              value: _gameScanCubit,
+              child: ScreenJoinGame(),
+            );
+          }
+        );
       case screenLocalGame:
         return MaterialPageRoute(builder: (_) => MultiBlocProvider(
           providers: [
