@@ -55,7 +55,7 @@ class ScreenMain extends StatelessWidget {
   Widget _networkGameCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColorLight,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
@@ -126,7 +126,7 @@ class ScreenMain extends StatelessWidget {
   Widget _localGameCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColorLight,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
@@ -167,7 +167,7 @@ class ScreenMain extends StatelessWidget {
     return Container(
       height: 1,
       width: MediaQuery.of(context).size.width - 24,
-      color: Theme.of(context).primaryColor,
+      color: Theme.of(context).disabledColor,
     );
   }
 }

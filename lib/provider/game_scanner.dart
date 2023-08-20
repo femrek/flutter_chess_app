@@ -127,6 +127,7 @@ class GameScanner {
     return result;
   }
 
+  // singleton
   static final GameScanner _instance = GameScanner._internal();
 
   GameScanner._internal();

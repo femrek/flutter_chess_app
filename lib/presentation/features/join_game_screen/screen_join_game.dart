@@ -11,14 +11,15 @@ class ScreenJoinGame extends StatelessWidget {
   final TextEditingController _portTextController = TextEditingController();
 
   ScreenJoinGame({
-    Key? key,
-  }) : super(key: key) {
+    super.key,
+  }) {
     setFieldsValues();
   }
 
   Future setFieldsValues() async {
     _hostTextController.text = await StorageManager().lastConnectedHost ?? '';
-    _portTextController.text = (await StorageManager().lastConnectedPort).toString();
+    _portTextController.text =
+        (await StorageManager().lastConnectedPort).toString();
   }
 
   @override
@@ -30,19 +31,20 @@ class ScreenJoinGame extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 12,),
+          const SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: _joinGameCard(context),
           ),
-          const SizedBox(height: 12,),
+          const SizedBox(height: 12),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: _gameScanList(context),
             ),
           ),
-          const SizedBox(height: 12,),
+          const SizedBox(height: 12),
+          SizedBox(height: MediaQuery.of(context).padding.bottom),
         ],
       ),
     );
@@ -52,7 +54,7 @@ class ScreenJoinGame extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColorLight,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: BlocBuilder<GameScanCubit, GameScanState>(
@@ -64,15 +66,16 @@ class ScreenJoinGame extends StatelessWidget {
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 400),
                     child: ElevatedButton(
-                      onPressed: state.searchStatus != SearchStatus.searching ? () {
-                        context.read<GameScanCubit>().startScan();
-                      } : null,
+                      onPressed: state.searchStatus != SearchStatus.searching
+                          ? () => context.read<GameScanCubit>().startScan()
+                          : null,
                       child: Text(
                         state.searchStatus == SearchStatus.searching
-                            ? 'Scanning' : 'Scan',
+                            ? 'Scanning'
+                            : 'Scan',
                         style: TextStyle(
                           fontSize: 18,
-                          color: Theme.of(context).colorScheme.onPrimary
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -80,37 +83,41 @@ class ScreenJoinGame extends StatelessWidget {
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.all(12),
-                      child: Text(
-                          state.searchStatus == SearchStatus.searching
-                              ? 'Games searching on network'
-                              : state.searchStatus == SearchStatus.init
+                      child: Text(state.searchStatus == SearchStatus.searching
+                          ? 'Games searching on network'
+                          : state.searchStatus == SearchStatus.init
                               ? 'Press Scan Games for search games on your network'
                               : state.games.isEmpty
-                              ? 'Any game could not found on network'
-                              : 'Games on your network'
-                      ),
+                                  ? 'Any game could not found on network'
+                                  : 'Games on your network'),
                     ),
                   ),
                 ],
               ),
               Expanded(
                 child: Center(
-                  child: state.searchStatus != SearchStatus.searching ? ListView.builder(
-                    itemBuilder: (_, index) {
-                      return _gameOnTheNetworkElement(context, state.games[index]);
-                    },
-                    itemCount: state.games.length,
-                  ) : CircularProgressIndicator(),
+                  child: state.searchStatus != SearchStatus.searching
+                      ? ListView.builder(
+                          itemBuilder: (_, index) {
+                            return _gameOnTheNetworkElement(
+                              context,
+                              state.games[index],
+                            );
+                          },
+                          itemCount: state.games.length,
+                        )
+                      : CircularProgressIndicator(),
                 ),
               ),
             ],
           );
-        }
+        },
       ),
     );
   }
 
-  Widget _gameOnTheNetworkElement(BuildContext context, GameSearchInformation data) {
+  Widget _gameOnTheNetworkElement(
+      BuildContext context, GameSearchInformation data) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, screenGuestGame, arguments: [
@@ -129,10 +136,7 @@ class ScreenJoinGame extends StatelessWidget {
         ),
         child: Text(
           data.name,
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 18
-          ),
+          style: TextStyle(color: Colors.white, fontSize: 18),
         ),
       ),
     );
@@ -142,12 +146,12 @@ class ScreenJoinGame extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: Theme.of(context).primaryColorLight,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
         children: [
-          const SizedBox(height: 12,),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
@@ -155,19 +159,21 @@ class ScreenJoinGame extends StatelessWidget {
                 child: TextField(
                   controller: _hostTextController,
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'IP address',
                     labelText: 'IP address',
-                    prefixIcon: Icon(Icons.support),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.horizontal(left: Radius.circular(999), right: Radius.zero),
+                      borderRadius: BorderRadius.horizontal(
+                        left: Radius.circular(999),
+                        right: Radius.zero,
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 4,),
+              const SizedBox(width: 4),
               const Text(':'),
-              const SizedBox(width: 4,),
+              const SizedBox(width: 4),
               Expanded(
                 flex: 2,
                 child: TextField(
@@ -177,14 +183,17 @@ class ScreenJoinGame extends StatelessWidget {
                     hintText: 'port number',
                     labelText: 'port number',
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.horizontal(right: Radius.circular(999), left: Radius.zero),
+                      borderRadius: BorderRadius.horizontal(
+                        right: Radius.circular(999),
+                        left: Radius.zero,
+                      ),
                     ),
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12,),
+          const SizedBox(height: 12),
           ElevatedButton(
             onPressed: () {
               final String host = _hostTextController.text;
@@ -192,7 +201,11 @@ class ScreenJoinGame extends StatelessWidget {
               print('port input is $port');
               StorageManager().setLastConnectedHost(host);
               StorageManager().setLastConnectedPort(port);
-              Navigator.pushNamed(context, screenGuestGame, arguments: [host, port]);
+              Navigator.pushNamed(
+                context,
+                screenGuestGame,
+                arguments: [host, port],
+              );
             },
             child: Text(
               'Join',
@@ -202,7 +215,7 @@ class ScreenJoinGame extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 12,),
+          const SizedBox(height: 12),
         ],
       ),
     );
