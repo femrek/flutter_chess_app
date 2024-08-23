@@ -1,0 +1,43 @@
+name: gen
+description: "Auto-generated assets for Flutter project"
+version: 0.0.1
+homepage: 'none'
+
+environment:
+  sdk: ^3.5.1
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  json_annotation: ^4.9.0
+  flutter_svg: ^2.0.10+1
+  envied: ^0.5.4+1
+  equatable: ^2.0.5
+  lottie: ^3.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^6.0.0
+  build_runner: ^2.4.12
+  flutter_gen_runner: ^5.6.0
+  flutter_launcher_icons: ^0.13.1
+  envied_generator: ^0.5.4+1
+  json_serializable: ^6.8.0
+
+flutter_gen:
+  output: lib/src/asset/
+  integrations:
+    lottie: true
+    flutter_svg: true
+  colors:
+    inputs:
+      - asset/color/colors.xml
+
+flutter:
+  assets:
+    - asset/color/
+    - asset/icon/
+    - asset/image/
+    - asset/lottie/

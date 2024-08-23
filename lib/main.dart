@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
 
+/// The main application widget.
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  /// The main application widget.
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
+      home: Scaffold(
         body: Center(
           child: Text('Hello World!'),
         ),

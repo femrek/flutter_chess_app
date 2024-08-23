@@ -4,31 +4,39 @@ publish_to: 'none'
 version: 0.2.1+9
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.4.4 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+
+  # Modules
+  core:
+    path: module/core
+  widgets:
+    path: module/widget
+  gen:
+    path: module/gen
+
+  # Util
   chess: ^0.8.0
-  flutter_bloc: ^7.0.1
   equatable: ^2.0.5
-  flutter_svg: ^1.1.6
-  shared_preferences: ^2.0.17
   url_launcher: ^6.1.9
   network_info_plus: ^4.0.2
 
+  # State Management
+  flutter_bloc: ^7.0.1
+
+  # Navigation
+  auto_route: ^9.2.0
+
+  # UI
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  very_good_analysis: ^6.0.0
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/images/bishop.svg
-    - assets/images/king.svg
-    - assets/images/knight.svg
-    - assets/images/pawn.svg
-    - assets/images/queen.svg
-    - assets/images/rok.svg
