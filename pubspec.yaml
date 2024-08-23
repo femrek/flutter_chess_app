@@ -13,7 +13,7 @@ dependencies:
   # Modules
   core:
     path: module/core
-  widgets:
+  widget:
     path: module/widget
   gen:
     path: module/gen
@@ -37,6 +37,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   very_good_analysis: ^6.0.0
+  auto_route_generator: ^9.0.0
 
 flutter:
   uses-material-design: true
