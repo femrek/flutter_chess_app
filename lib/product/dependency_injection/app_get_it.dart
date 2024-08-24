@@ -1,14 +1,14 @@
 import 'package:core/core.dart';
 import 'package:get_it/get_it.dart';
 
-/// [AppGetIt] is the implementation of [IDependencyInjectionConfiguration] for
+/// [AppGetIt] is the implementation of [IDependencyInjectionConfigurer] for
 /// production.
 abstract class AppGetIt {
-  /// Singleton instance of [IDependencyInjectionConfiguration]
-  static IDependencyInjectionConfiguration I = _AppGetIt();
+  /// Singleton instance of [IDependencyInjectionConfigurer]
+  static IDependencyInjectionConfigurer I = _AppGetIt();
 }
 
-class _AppGetIt implements IDependencyInjectionConfiguration {
+class _AppGetIt implements IDependencyInjectionConfigurer {
   final GetIt _getIt = GetIt.instance;
 
   @override

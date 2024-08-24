@@ -1,1 +1,1 @@
-export 'i_dependency_injection_configuration.dart';
+export 'i_dependency_injection_configurer.dart';
