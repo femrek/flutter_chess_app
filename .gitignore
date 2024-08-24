@@ -48,3 +48,6 @@ app.*.map.json
 
 # jks properties
 /android/key.properties
+
+# auto generated files
+*.g.dart

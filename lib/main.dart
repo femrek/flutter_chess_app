@@ -1,18 +1,30 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:localchess/product/init/app_initializer.dart';
+import 'package:localchess/product/localization/app_localization.dart';
 import 'package:localchess/product/navigation/app_route.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  await AppInitializer.init();
+
+  runApp(AppLocalization(
+    child: const App(),
+  ));
+}
 
 /// The main application widget.
-class MyApp extends StatelessWidget {
+class App extends StatelessWidget {
   /// The main application widget.
-  const MyApp({super.key});
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: AppRoute().config(),
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
     );
   }
 }

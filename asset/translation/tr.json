@@ -1,0 +1,22 @@
+{
+  "screen": {
+    "home": {
+      "title": "Satranç",
+      "playTwoPlayer": {
+        "title": "Sadece bu cihazla satranç oyna",
+        "button": "İki Kişilik Oyna"
+      },
+      "playOverNetwork": {
+        "title": "Aynı ağdaki başka bir cihazla satranç oyna",
+        "CreateGame": {
+          "description": "Oyun Oluştur",
+          "Button": "Oyun Oluştur"
+        },
+        "JoinGame": {
+          "description": "Yerel bir oyuna katıl",
+          "Button": "Oyuna Katıl"
+        }
+      }
+    }
+  }
+}

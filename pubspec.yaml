@@ -23,6 +23,7 @@ dependencies:
   equatable: ^2.0.5
   url_launcher: ^6.1.9
   network_info_plus: ^4.0.2
+  easy_localization: ^3.0.7
 
   # State Management
   flutter_bloc: ^7.0.1

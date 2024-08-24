@@ -1,0 +1,22 @@
+{
+  "screen": {
+    "home": {
+      "title": "Chess",
+      "playTwoPlayer": {
+        "title": "Play chess with only this device",
+        "button": "Play Two Player"
+      },
+      "playOverNetwork": {
+        "title": "Play chess with another device at the same network",
+        "CreateGame": {
+          "description": "Create a Game",
+          "Button": "Create a Game"
+        },
+        "JoinGame": {
+          "description": "Join a Local Game",
+          "Button": "Join a Game"
+        }
+      }
+    }
+  }
+}
