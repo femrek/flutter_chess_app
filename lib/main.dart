@@ -23,11 +23,19 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
+
+      // navigation
       routerConfig: AppRoute().config(),
+
+      // localization
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
+
+      // responsive
       builder: CustomResponsive.builder,
+
+      // theme
       theme: AppLightTheme().theme,
       darkTheme: AppLightTheme().theme,
     );
