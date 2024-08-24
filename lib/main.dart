@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:localchess/product/init/app_initializer.dart';
 import 'package:localchess/product/localization/app_localization.dart';
 import 'package:localchess/product/navigation/app_route.dart';
+import 'package:widget/widget.dart';
 
 void main() async {
   await AppInitializer.init();
@@ -25,6 +26,7 @@ class App extends StatelessWidget {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
+      builder: CustomResponsive.builder,
     );
   }
 }
