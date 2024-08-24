@@ -24,6 +24,7 @@ dependencies:
   url_launcher: ^6.1.9
   network_info_plus: ^4.0.2
   easy_localization: ^3.0.7
+  get_it: 7.7.0
 
   # State Management
   flutter_bloc: ^7.0.1
