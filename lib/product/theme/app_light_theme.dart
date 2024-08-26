@@ -10,5 +10,20 @@ final class AppLightTheme implements AppTheme {
   );
 
   @override
-  ThemeData get theme => _theme;
+  ThemeData get theme => _theme.copyWith(
+        scaffoldBackgroundColor: Colors.white,
+        cardTheme: cardTheme,
+        appBarTheme: appBarTheme,
+      );
+
+  @override
+  CardTheme get cardTheme => _theme.cardTheme.copyWith(
+        color: Colors.teal.shade200,
+      );
+
+  @override
+  AppBarTheme get appBarTheme => _theme.appBarTheme.copyWith(
+        backgroundColor: _theme.primaryColor,
+        foregroundColor: _theme.colorScheme.onPrimary,
+      );
 }

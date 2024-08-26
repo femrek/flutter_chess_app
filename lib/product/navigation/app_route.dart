@@ -11,8 +11,9 @@ class AppRoute extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
         AutoRoute(page: HomeRoute.page, initial: true),
-        AutoRoute(page: JoinRoute.page),
+        AutoRoute(page: SetupJoinRoute.page),
         AutoRoute(page: SetupHostRoute.page),
+        AutoRoute(page: SetupLocalRoute.page),
         AutoRoute(page: HostGameRoute.page),
         AutoRoute(page: GuestGameRoute.page),
         AutoRoute(page: LocalGameRoute.page),

@@ -1,20 +1,28 @@
 {
   "screen": {
     "home": {
-      "title": "Chess",
+      "title": "Local Chess",
       "playTwoPlayer": {
         "title": "Play chess with only this device",
         "button": "Play Two Player"
       },
       "playOverNetwork": {
         "title": "Play chess with another device at the same network",
-        "CreateGame": {
-          "description": "Create a Game",
-          "Button": "Create a Game"
+        "createGame": {
+          "description": "Host a game in this device",
+          "button": "Create a Game"
         },
-        "JoinGame": {
-          "description": "Join a Local Game",
-          "Button": "Join a Game"
+        "joinGame": {
+          "description": "Join a game in the local network",
+          "button": "Join a Game"
+        }
+      },
+      "drawer": {
+        "title": "Local Chess",
+        "toggleTheme": "Change Theme",
+        "privacyPolicy": "Privacy Policy",
+        "language": {
+          "title": "Language"
         }
       }
     }

@@ -9,5 +9,18 @@ enum AppLocale {
 
   const AppLocale(this.locale);
 
+  static AppLocale? fromLocale(Locale locale) {
+    return AppLocale.values.where((e) => e.locale == locale).firstOrNull;
+  }
+
   final Locale locale;
+
+  String get languageName {
+    switch (this) {
+      case AppLocale.en:
+        return 'English';
+      case AppLocale.tr:
+        return 'Türkçe';
+    }
+  }
 }

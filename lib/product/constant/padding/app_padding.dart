@@ -3,6 +3,14 @@ import 'package:localchess/product/constant/padding/app_padding_constant.dart';
 
 /// Standard padding values for the app. Use this class with named constructors.
 class AppPadding extends EdgeInsets {
+  /// Creates a new [AppPadding] with the given values.
+  const AppPadding({
+    double left = 0.0,
+    double top = 0.0,
+    double right = 0.0,
+    double bottom = 0.0,
+  }) : super.fromLTRB(left, top, right, bottom);
+
   /// Default button padding
   const AppPadding.button({double? horizontal, double? vertical})
       : super.symmetric(
@@ -23,4 +31,31 @@ class AppPadding extends EdgeInsets {
           horizontal: horizontal ?? AppPaddingConstant.scrollableHorizontal,
           vertical: vertical ?? AppPaddingConstant.scrollableVertical,
         );
+
+  /// Default card padding
+  const AppPadding.card({double? horizontal, double? vertical})
+      : super.symmetric(
+          horizontal: horizontal ?? AppPaddingConstant.cardHorizontal,
+          vertical: vertical ?? AppPaddingConstant.cardVertical,
+        );
+
+  @override
+  AppPadding operator +(EdgeInsets other) {
+    return AppPadding(
+      left: left + other.left,
+      top: top + other.top,
+      right: right + other.right,
+      bottom: bottom + other.bottom,
+    );
+  }
+
+  @override
+  AppPadding operator -(EdgeInsets other) {
+    return AppPadding(
+      left: left - other.left,
+      top: top - other.top,
+      right: right - other.right,
+      bottom: bottom - other.bottom,
+    );
+  }
 }

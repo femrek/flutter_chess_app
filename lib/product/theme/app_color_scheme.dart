@@ -16,7 +16,7 @@ abstract final class AppColorScheme {
     brightness: Brightness.light,
   );
 
-  static ColorScheme darkColorScheme = ColorScheme(
+  static final ColorScheme darkColorScheme = ColorScheme(
     primary: _primaryDarkColor,
     secondary: _secondaryDarkColor,
     surface: _surfaceDarkColor,
@@ -39,7 +39,7 @@ abstract final class AppColorScheme {
   static const Color _onErrorLightColor = Colors.white;
 
   // Dark theme colors
-  static final Color _primaryDarkColor = Colors.teal.shade800;
+  static final Color _primaryDarkColor = Colors.teal.shade300;
   static final Color _secondaryDarkColor = Colors.teal.shade800;
   static const Color _surfaceDarkColor = Colors.black54;
   static const Color _errorDarkColor = Colors.red;
