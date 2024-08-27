@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:core/src/cache/core/cache_model.dart';
 
 /// Cache operation interface
-abstract interface class CacheOperation<T extends CacheModel> {
+abstract interface class CacheOperator<T extends CacheModel> {
   /// Get the cache
   FutureOr<T?> get(String id);
 

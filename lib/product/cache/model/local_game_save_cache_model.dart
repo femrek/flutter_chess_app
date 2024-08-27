@@ -5,7 +5,10 @@ import 'package:localchess/product/dependency_injection/get.dart';
 /// A cache model for [LocalGameSave]
 final class LocalGameSaveCacheModel implements CacheModel {
   /// Creates a new [LocalGameSaveCacheModel]
-  LocalGameSaveCacheModel({required this.localGameSave});
+  LocalGameSaveCacheModel({
+    required this.localGameSave,
+    this.metaData,
+  });
 
   /// Creates an empty [LocalGameSaveCacheModel]
   LocalGameSaveCacheModel.empty() : localGameSave = LocalGameSave.empty();
@@ -14,7 +17,7 @@ final class LocalGameSaveCacheModel implements CacheModel {
   final LocalGameSave localGameSave;
 
   @override
-  CacheModel fromDynamicJson(dynamic json) {
+  CacheModel fromJson(dynamic json) {
     // log and return empty if json is not valid.
     if (json == null) {
       G.logger.e(
@@ -37,10 +40,34 @@ final class LocalGameSaveCacheModel implements CacheModel {
       );
       return LocalGameSaveCacheModel.empty();
     }
+    final dataJson = json['data'];
+    if (dataJson == null) {
+      G.logger.e(
+        'dataJson is null',
+        stackTrace: StackTrace.current,
+      );
+      return LocalGameSaveCacheModel.empty();
+    }
+    if (dataJson is! Map) {
+      G.logger.e(
+        'dataJson is not a Map',
+        stackTrace: StackTrace.current,
+      );
+      return LocalGameSaveCacheModel.empty();
+    }
+    if (dataJson is! Map<String, dynamic>) {
+      G.logger.e(
+        'dataJson is not a Map<String, dynamic>',
+        stackTrace: StackTrace.current,
+      );
+      return LocalGameSaveCacheModel.empty();
+    }
 
     try {
       return LocalGameSaveCacheModel(
-        localGameSave: LocalGameSave.fromJson(json),
+        localGameSave: LocalGameSave.fromJson(dataJson),
+        metaData: CacheModelMetaData.fromJson(
+            json['metaData'] as Map<String, dynamic>),
       );
     }
     // ignore: avoid_catching_errors
@@ -58,7 +85,14 @@ final class LocalGameSaveCacheModel implements CacheModel {
   String get id => localGameSave.id;
 
   @override
+  CacheModelMetaData? metaData;
+
+  @override
   Map<String, dynamic> toJson() {
-    return localGameSave.toJson();
+    return {
+      'id': id,
+      'metaData': metaData?.toJson(),
+      'data': localGameSave.toJson(),
+    };
   }
 }

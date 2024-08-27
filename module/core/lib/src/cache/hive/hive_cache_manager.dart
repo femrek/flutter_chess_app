@@ -20,7 +20,10 @@ final class HiveCacheManager implements CacheManager {
     Hive.defaultDirectory = dir;
 
     for (final item in items) {
-      Hive.registerAdapter(item.runtimeType.toString(), item.fromDynamicJson);
+      Hive.registerAdapter(
+        item.runtimeType.toString(),
+        item.fromJson,
+      );
     }
   }
 
