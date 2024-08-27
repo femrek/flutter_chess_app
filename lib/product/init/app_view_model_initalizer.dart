@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:localchess/product/state/app_view_model/app_view_model.dart';
+import 'package:localchess/product/dependency_injection/get.dart';
 
 /// Wrap the main app widget with this widget to initialize the app view model.
 class AppViewModelInitializer extends StatelessWidget {
@@ -18,7 +17,7 @@ class AppViewModelInitializer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: GetIt.I<AppViewModel>(),
+      value: G.appViewModel,
       child: child,
     );
   }
