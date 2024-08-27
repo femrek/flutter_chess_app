@@ -1,4 +1,6 @@
+import 'package:core/core.dart';
 import 'package:get_it/get_it.dart';
+import 'package:localchess/product/cache/app_cache.dart';
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
 import 'package:localchess/product/theme/app_dark_theme.dart';
 import 'package:localchess/product/theme/app_light_theme.dart';
@@ -18,6 +20,12 @@ abstract final class AppGetItConfigurer {
 
       // theme
       ..registerLazySingleton<AppDarkTheme>(AppDarkTheme.new)
-      ..registerLazySingleton<AppLightTheme>(AppLightTheme.new);
+      ..registerLazySingleton<AppLightTheme>(AppLightTheme.new)
+
+      // cache
+      ..registerLazySingleton<CacheManager>(HiveCacheManager.new)
+      ..registerLazySingleton<AppCache>(() => AppCache(
+            cacheManager: GetIt.I<CacheManager>(),
+          ));
   }
 }
