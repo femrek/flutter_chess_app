@@ -1,4 +1,4 @@
-import 'package:core/src/cache/core/cache_model.dart';
+import 'package:core/core.dart';
 
 /// Cache manager interface
 abstract interface class CacheManager {

@@ -14,4 +14,9 @@ class AppCache {
       LocalGameSaveCacheModel.empty(),
     ]);
   }
+
+  /// The operator instance for performing cache operations over
+  /// [LocalGameSaveCacheModel].
+  late final CacheOperator<LocalGameSaveCacheModel> localGameSaveOperator =
+      HiveCacheOperator();
 }
