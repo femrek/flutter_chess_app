@@ -29,7 +29,7 @@ final class HiveCacheManager implements CacheManager {
 
   /// Removes the cache.
   @override
-  Future<void> remove() async {
+  void remove() {
     Hive.deleteAllBoxesFromDisk();
   }
 

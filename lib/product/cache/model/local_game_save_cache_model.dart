@@ -7,6 +7,10 @@ final class LocalGameSaveCacheModel implements CacheModel {
   /// Creates a new [LocalGameSaveCacheModel]
   LocalGameSaveCacheModel({
     required this.localGameSave,
+  });
+
+  LocalGameSaveCacheModel._internal({
+    required this.localGameSave,
     this.metaData,
   });
 
@@ -64,7 +68,7 @@ final class LocalGameSaveCacheModel implements CacheModel {
     }
 
     try {
-      return LocalGameSaveCacheModel(
+      return LocalGameSaveCacheModel._internal(
         localGameSave: LocalGameSave.fromJson(dataJson),
         metaData: CacheModelMetaData.fromJson(
             json['metaData'] as Map<String, dynamic>),
