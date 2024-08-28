@@ -27,4 +27,7 @@ class CacheModelMetaData {
       'updatedAt': updateAt.toIso8601String(),
     };
   }
+
+  @override
+  String toString() => 'CacheModelMetaData${toJson()}';
 }

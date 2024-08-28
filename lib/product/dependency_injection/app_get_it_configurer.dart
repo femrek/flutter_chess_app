@@ -24,6 +24,7 @@ abstract final class AppGetItConfigurer {
       ..registerLazySingleton<CacheManager>(HiveCacheManager.new)
       ..registerLazySingleton<AppCache>(() => AppCache(
             cacheManager: GetIt.I<CacheManager>(),
+            logger: GetIt.I<Logger>(),
           ))
 
       // view model

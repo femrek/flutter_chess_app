@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gen/gen.dart';
@@ -10,51 +12,23 @@ import 'package:logger/logger.dart';
 import 'hive_common.dart';
 
 void main() {
-  const sampleModel_1 = LocalGameSave(
-    id: 'id1',
-    name: 'save 1',
-    history: [
-      'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-      'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-      'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-      'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
-    ],
-  );
-  const sampleModel_1_v2 = LocalGameSave(
-    id: 'id1',
-    name: 'save 1',
-    history: [
-      'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-      'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-      'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-      'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
-      'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 3',
-    ],
-  );
-  const sampleModel_2 = LocalGameSave(
-    id: 'id2',
-    name: 'save 2',
-    history: [
-      'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-      'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-      'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-      'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
-    ],
-  );
-
-  Logger logger = Logger();
   setUp(() async {
-    logger.d('setUp');
+    // Setup GetIt
     await GetIt.I.reset();
-    await initTests();
-
+    GetIt.I.registerSingleton<Logger>(Logger());
     GetIt.I.registerSingleton<CacheManager>(
       HiveCacheManager(path: 'test/cache/hive'),
     );
     GetIt.I.registerSingleton<AppCache>(AppCache(
       cacheManager: GetIt.I<CacheManager>(),
+      logger: GetIt.I<Logger>(),
     ));
 
+    // set logging level
+    Logger.level = Level.info;
+
+    // Initialize the cache
+    await initTests();
     await G.appCache.init();
   });
 
@@ -69,12 +43,12 @@ void main() {
 
     test('save two model and read', () async {
       final model = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_1,
+        localGameSave: _sampleModel_1,
       );
       await G.appCache.localGameSaveOperator.save(model);
 
       final secondModel = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_2,
+        localGameSave: _sampleModel_2,
       );
       await G.appCache.localGameSaveOperator.save(secondModel);
 
@@ -84,7 +58,7 @@ void main() {
 
     test('get saved item by id', () async {
       final model = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_1,
+        localGameSave: _sampleModel_1,
       );
       await G.appCache.localGameSaveOperator.save(model);
 
@@ -94,23 +68,23 @@ void main() {
 
     test('remove saved item by id and get null', () async {
       final model = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_1,
+        localGameSave: _sampleModel_1,
       );
       await G.appCache.localGameSaveOperator.save(model);
 
-      await G.appCache.localGameSaveOperator.remove('id');
-      final readModel = await G.appCache.localGameSaveOperator.get('id');
+      await G.appCache.localGameSaveOperator.remove('id1');
+      final readModel = await G.appCache.localGameSaveOperator.get('id1');
       expect(readModel, isNull);
     });
 
     test('remove all saved items', () async {
       final model = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_1,
+        localGameSave: _sampleModel_1,
       );
       await G.appCache.localGameSaveOperator.save(model);
 
       final secondModel = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_2,
+        localGameSave: _sampleModel_2,
       );
       await G.appCache.localGameSaveOperator.save(secondModel);
 
@@ -121,7 +95,7 @@ void main() {
 
     test('save duplicated item', () async {
       final model = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_1,
+        localGameSave: _sampleModel_1,
       );
       await G.appCache.localGameSaveOperator.save(model);
 
@@ -136,7 +110,7 @@ void main() {
     test('keep createdAt field correctly', () async {
       final beforeSave = DateTime.now().microsecondsSinceEpoch;
       final model = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_1,
+        localGameSave: _sampleModel_1,
       );
       await G.appCache.localGameSaveOperator.save(model);
       final afterSave = DateTime.now().microsecondsSinceEpoch;
@@ -156,14 +130,14 @@ void main() {
 
     test('keep updateAt field correctly', () async {
       final model = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_1,
+        localGameSave: _sampleModel_1,
       );
       await G.appCache.localGameSaveOperator.save(model);
       final readModel = await G.appCache.localGameSaveOperator.get('id1');
       final createdAt = readModel!.metaData!.createAt.microsecondsSinceEpoch;
 
       final modelToUpdate = LocalGameSaveCacheModel(
-        localGameSave: sampleModel_1_v2,
+        localGameSave: _sampleModel_1_v2,
       );
       final beforeUpdate = DateTime.now().microsecondsSinceEpoch;
       await G.appCache.localGameSaveOperator.update(modelToUpdate);
@@ -188,3 +162,35 @@ void main() {
     });
   });
 }
+
+const _sampleModel_1 = LocalGameSave(
+  id: 'id1',
+  name: 'save 1',
+  history: [
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+  ],
+);
+const _sampleModel_1_v2 = LocalGameSave(
+  id: 'id1',
+  name: 'save 1',
+  history: [
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 3',
+  ],
+);
+const _sampleModel_2 = LocalGameSave(
+  id: 'id2',
+  name: 'save 2',
+  history: [
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+  ],
+);
