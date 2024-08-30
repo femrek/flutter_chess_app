@@ -26,5 +26,11 @@
         }
       }
     }
+  },
+  "dialog": {
+    "createGameDialog": {
+      "title": "Oyuna Bir İsim Verin",
+      "hint": "Oyun Adı"
+    }
   }
 }

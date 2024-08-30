@@ -26,5 +26,11 @@
         }
       }
     }
+  },
+  "dialog": {
+    "createGameDialog": {
+      "title": "Enter Game Name",
+      "hint": "Game Name"
+    }
   }
 }
