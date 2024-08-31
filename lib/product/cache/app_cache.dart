@@ -7,13 +7,14 @@ class AppCache {
   /// Creates a new instance of [AppCache]
   AppCache({
     required CacheManager cacheManager,
-    required this.logger,
-  }) : _cacheManager = cacheManager;
+    required Logger logger,
+  })  : _cacheManager = cacheManager,
+        _logger = logger;
 
   final CacheManager _cacheManager;
 
   /// The logger instance
-  final Logger logger;
+  final Logger _logger;
 
   /// Initializes the cache
   Future<void> init() async {
@@ -25,5 +26,5 @@ class AppCache {
   /// The operator instance for performing cache operations over
   /// [LocalGameSaveCacheModel].
   late final CacheOperator<LocalGameSaveCacheModel> localGameSaveOperator =
-      HiveCacheOperator(logger: logger);
+      HiveCacheOperator(logger: _logger);
 }

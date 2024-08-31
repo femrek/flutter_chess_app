@@ -25,12 +25,23 @@
           "title": "Language"
         }
       }
+    },
+    "setupLocal": {
+      "newGameButton": "New Game",
+      "savedGamesListTitle": "Saved Games"
     }
   },
   "dialog": {
     "createGameDialog": {
       "title": "Enter Game Name",
-      "hint": "Game Name"
+      "hint": "Game Name",
+      "createButton": "Create",
+      "cancelButton": "Cancel"
+    }
+  },
+  "widget": {
+    "saveListTile": {
+      "lastPlayed": "Last Played: "
     }
   }
 }

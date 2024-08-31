@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:localchess/product/dependency_injection/app_get_it_configurer.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:logger/logger.dart';
 
 /// [AppInitializer] is for performing the processes have to be done before the
 /// app starts.
@@ -20,6 +21,9 @@ abstract final class AppInitializer {
 
     // localization
     await EasyLocalization.ensureInitialized();
+
+    // cache
+    await G.appCache.init();
 
     // error handling
     FlutterError.onError = (details) {
@@ -39,6 +43,7 @@ abstract final class AppInitializer {
       return true;
     };
 
+    Logger.level = Level.trace;
     G.logger.d('App initialized.');
   }
 }

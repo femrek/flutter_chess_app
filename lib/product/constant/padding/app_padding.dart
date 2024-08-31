@@ -39,6 +39,13 @@ class AppPadding extends EdgeInsets {
           vertical: vertical ?? AppPaddingConstant.cardVertical,
         );
 
+  /// Default list tile padding
+  const AppPadding.listTile({double? horizontal, double? vertical})
+      : super.symmetric(
+          horizontal: horizontal ?? AppPaddingConstant.listTileHorizontal,
+          vertical: vertical ?? AppPaddingConstant.listTileVertical,
+        );
+
   @override
   AppPadding operator +(EdgeInsets other) {
     return AppPadding(

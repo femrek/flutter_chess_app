@@ -2,6 +2,7 @@
 
 import 'package:core/core.dart';
 import 'package:get_it/get_it.dart';
+import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
 import 'package:localchess/feature/setup_local/view_model/setup_local_view_model.dart';
 import 'package:localchess/product/cache/app_cache.dart';
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
@@ -27,4 +28,7 @@ abstract final class G {
 
   static SetupLocalViewModel get setupLocalViewModel =>
       _getIt<SetupLocalViewModel>();
+
+  static LocalGameViewModel get localGameViewModel =>
+      _getIt<LocalGameViewModel>();
 }

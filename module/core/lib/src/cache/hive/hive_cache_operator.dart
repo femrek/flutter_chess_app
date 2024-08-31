@@ -6,6 +6,7 @@ import 'package:core/src/cache/core/cache_operator.dart';
 import 'package:core/src/cache/error/element_already_exits_error.dart';
 import 'package:core/src/cache/error/element_does_not_exist_when_update_error.dart';
 import 'package:core/src/cache/error/element_id_duplicated_error.dart';
+import 'package:core/src/cache/sort/get_all_sort_enum.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
@@ -34,11 +35,27 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<List<T>> getAll() {
+  FutureOr<List<T>> getAll({GetAllSortEnum sort = GetAllSortEnum.none}) {
     log.t('Getting all items <$T>');
 
-    final result =
-        _box.getAll(_box.keys).where((e) => e != null).cast<T>().toList();
+    var result = <T>[];
+    if (sort == GetAllSortEnum.none) {
+      result =
+          _box.getAll(_box.keys).where((e) => e != null).cast<T>().toList();
+    } else {
+      outer:
+      for (final key in _box.keys) {
+        final item = _box.get(key)!;
+        for (var i = 0; i < result.length; i++) {
+          final nth = result[i];
+          if (sort.canInsertLeft(checking: item, nthModel: nth)) {
+            result.insert(i, item);
+            continue outer;
+          }
+        }
+        result.add(item);
+      }
+    }
 
     log.t('Found ${result.length} items <$T>');
     return result;
@@ -68,7 +85,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<void> save(T item) {
+  FutureOr<T> save(T item) {
     log.t('Saving item <$T> with id ${item.id}');
 
     // Check if the item already exists
@@ -90,10 +107,12 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
     );
 
     log.t('Item with id ${item.id} saved.');
+
+    return item;
   }
 
   @override
-  FutureOr<void> saveAll(List<T> items) {
+  FutureOr<List<T>> saveAll(List<T> items) {
     log.t('Saving ${items.length} items <$T>');
 
     // validate the items
@@ -121,6 +140,8 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
     _box.putAll(validItems);
 
     log.t('${validItems.length} items <$T> saved.');
+
+    return validItems.values.toList();
   }
 
   @override

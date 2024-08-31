@@ -25,12 +25,23 @@
           "title": "Dil"
         }
       }
+    },
+    "setupLocal": {
+      "newGameButton": "Yeni Oyun Oluştur",
+      "savedGamesListTitle": "Oyun Kayıtları"
     }
   },
   "dialog": {
     "createGameDialog": {
       "title": "Oyuna Bir İsim Verin",
-      "hint": "Oyun Adı"
+      "hint": "Oyun Adı",
+      "createButton": "Oluştur",
+      "cancelButton": "İptal"
+    }
+  },
+  "widget": {
+    "saveListTile": {
+      "lastPlayed": "Son Oynama: "
     }
   }
 }

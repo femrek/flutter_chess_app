@@ -36,7 +36,7 @@ void main() {
     G.appCache.localGameSaveOperator.removeAll();
   });
 
-  group('local game save caching test', () {
+  group('local game save caching test basic crud operations.', () {
     test('operator exist', () {
       expect(G.appCache.localGameSaveOperator, isNotNull);
     });
@@ -106,7 +106,9 @@ void main() {
         throwsA(isA<ElementAlreadyExitsError>()),
       );
     });
+  });
 
+  group('test if metadata is stores correctly', () {
     test('keep createdAt field correctly', () async {
       final beforeSave = DateTime.now().microsecondsSinceEpoch;
       final model = LocalGameSaveCacheModel(
@@ -161,6 +163,240 @@ void main() {
           lessThanOrEqualTo(afterUpdate));
     });
   });
+
+  group('local game save caching test with sort', () {
+    test('sort by createAtAsc with two elements', () async {
+      // Save the first model
+      final model = LocalGameSaveCacheModel(localGameSave: _sampleModel_1);
+      await G.appCache.localGameSaveOperator.save(model);
+
+      // Save the second model
+      final secondModel =
+          LocalGameSaveCacheModel(localGameSave: _sampleModel_2);
+      await G.appCache.localGameSaveOperator.save(secondModel);
+
+      // Get all the models with sort by createAtAsc
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.createAtAsc,
+        );
+        expect(savedModels.length, 2);
+        expect(savedModels[0].id, 'id1');
+        expect(savedModels[1].id, 'id2');
+      }
+    });
+
+    test('sort by createAtDesc with two elements', () async {
+      // Save the first model
+      final model = LocalGameSaveCacheModel(localGameSave: _sampleModel_1);
+      await G.appCache.localGameSaveOperator.save(model);
+
+      // Save the second model
+      final secondModel =
+          LocalGameSaveCacheModel(localGameSave: _sampleModel_2);
+      await G.appCache.localGameSaveOperator.save(secondModel);
+
+      // Get all the models with sort by createAtDesc
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.createAtDesc,
+        );
+        expect(savedModels.length, 2);
+        expect(savedModels[0].id, 'id2');
+        expect(savedModels[1].id, 'id1');
+      }
+    });
+
+    test('sort by updateAtAcs with two elements', () async {
+      // Save the first model
+      final model = LocalGameSaveCacheModel(localGameSave: _sampleModel_1);
+      await G.appCache.localGameSaveOperator.save(model);
+
+      // Save the second model
+      final secondModel =
+          LocalGameSaveCacheModel(localGameSave: _sampleModel_2);
+      await G.appCache.localGameSaveOperator.save(secondModel);
+
+      // Get all the models with sort by updateAtAcs
+      {
+        final firstRead = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.updateAtAcs,
+        );
+        expect(firstRead.length, 2);
+        expect(firstRead[0].id, 'id1');
+        expect(firstRead[1].id, 'id2');
+      }
+
+      // Update the first model
+      await G.appCache.localGameSaveOperator.update(
+        LocalGameSaveCacheModel(localGameSave: _sampleModel_1_v2),
+      );
+
+      // Get all the models with sort by updateAtAcs after update operation.
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.updateAtAcs,
+        );
+        expect(savedModels.length, 2);
+        expect(savedModels[0].id, 'id2');
+        expect(savedModels[1].id, 'id1');
+      }
+    });
+
+    test('sort by updateAtDesc with two elements', () async {
+      // Save the first model
+      final model = LocalGameSaveCacheModel(
+        localGameSave: _sampleModel_1,
+      );
+      await G.appCache.localGameSaveOperator.save(model);
+
+      // Save the second model
+      final secondModel = LocalGameSaveCacheModel(
+        localGameSave: _sampleModel_2,
+      );
+      await G.appCache.localGameSaveOperator.save(secondModel);
+
+      // Get all the models with sort by updateAtDesc
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.updateAtDesc,
+        );
+        expect(savedModels.length, 2);
+        expect(savedModels[0].id, 'id2');
+        expect(savedModels[1].id, 'id1');
+      }
+
+      // Update the first model
+      await G.appCache.localGameSaveOperator.update(
+        LocalGameSaveCacheModel(localGameSave: _sampleModel_1_v2),
+      );
+
+      // Get all the models with sort by updateAtDesc after update operation.
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.updateAtDesc,
+        );
+        expect(savedModels.length, 2);
+        expect(savedModels[0].id, 'id1');
+        expect(savedModels[1].id, 'id2');
+      }
+    });
+
+    test('sort by none with two elements', () async {
+      // Save the first model
+      final model = LocalGameSaveCacheModel(
+        localGameSave: _sampleModel_1,
+      );
+      await G.appCache.localGameSaveOperator.save(model);
+
+      // Save the second model
+      final secondModel = LocalGameSaveCacheModel(
+        localGameSave: _sampleModel_2,
+      );
+      await G.appCache.localGameSaveOperator.save(secondModel);
+
+      // Get all the models with sort by none
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.none,
+        );
+        expect(savedModels.length, 2);
+        expect(savedModels[0].id, 'id1');
+        expect(savedModels[1].id, 'id2');
+      }
+    });
+
+    test('sort with element list', () async {
+      // save all the models
+      await G.appCache.localGameSaveOperator.saveAll(_sampleModels);
+
+      // Get all the models with sort by updateAtDesc
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.updateAtDesc,
+        );
+        expect(savedModels.length, 4);
+        expect(savedModels[0].localGameSave.id, 'id4');
+        expect(savedModels[1].localGameSave.id, 'id3');
+        expect(savedModels[2].localGameSave.id, 'id2');
+        expect(savedModels[3].localGameSave.id, 'id1');
+      }
+
+      // Update the first model
+      await G.appCache.localGameSaveOperator.update(
+        LocalGameSaveCacheModel(localGameSave: _sampleModel_1_v2),
+      );
+
+      // Get all the models with sort by updateAtDesc after update operation.
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.updateAtDesc,
+        );
+        expect(savedModels.length, 4);
+        expect(savedModels[0].localGameSave.id, 'id1');
+        expect(savedModels[1].localGameSave.id, 'id4');
+        expect(savedModels[2].localGameSave.id, 'id3');
+        expect(savedModels[3].localGameSave.id, 'id2');
+      }
+
+      // save fifth model
+      await G.appCache.localGameSaveOperator.save(
+        LocalGameSaveCacheModel(localGameSave: _sampleModel_5),
+      );
+
+      // Get all the models with sort by updateAtDesc after save operation.
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.updateAtDesc,
+        );
+        expect(savedModels.length, 5);
+        expect(savedModels[0].localGameSave.id, 'id5');
+        expect(savedModels[1].localGameSave.id, 'id1');
+        expect(savedModels[2].localGameSave.id, 'id4');
+        expect(savedModels[3].localGameSave.id, 'id3');
+        expect(savedModels[4].localGameSave.id, 'id2');
+      }
+
+      // Get all the models with sort by updateAtAsc after save operation.
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.updateAtAcs,
+        );
+        expect(savedModels.length, 5);
+        expect(savedModels[0].localGameSave.id, 'id2');
+        expect(savedModels[1].localGameSave.id, 'id3');
+        expect(savedModels[2].localGameSave.id, 'id4');
+        expect(savedModels[3].localGameSave.id, 'id1');
+        expect(savedModels[4].localGameSave.id, 'id5');
+      }
+
+      // Get all the models with sort by createAsc after save operation.
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.createAtAsc,
+        );
+        expect(savedModels.length, 5);
+        expect(savedModels[0].localGameSave.id, 'id1');
+        expect(savedModels[1].localGameSave.id, 'id2');
+        expect(savedModels[2].localGameSave.id, 'id3');
+        expect(savedModels[3].localGameSave.id, 'id4');
+        expect(savedModels[4].localGameSave.id, 'id5');
+      }
+
+      // Get all the models with sort by createDesc after save operation.
+      {
+        final savedModels = await G.appCache.localGameSaveOperator.getAll(
+          sort: GetAllSortEnum.createAtDesc,
+        );
+        expect(savedModels.length, 5);
+        expect(savedModels[0].localGameSave.id, 'id5');
+        expect(savedModels[1].localGameSave.id, 'id4');
+        expect(savedModels[2].localGameSave.id, 'id3');
+        expect(savedModels[3].localGameSave.id, 'id2');
+        expect(savedModels[4].localGameSave.id, 'id1');
+      }
+    });
+  });
 }
 
 const _sampleModel_1 = LocalGameSave(
@@ -194,3 +430,40 @@ const _sampleModel_2 = LocalGameSave(
     'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
   ],
 );
+const _sampleModel_3 = LocalGameSave(
+  id: 'id3',
+  name: 'save 3',
+  history: [
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+  ],
+);
+const _sampleModel_4 = LocalGameSave(
+  id: 'id4',
+  name: 'save 4',
+  history: [
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+  ],
+);
+const _sampleModel_5 = LocalGameSave(
+  id: 'id5',
+  name: 'save 5',
+  history: [
+    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
+    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+  ],
+);
+
+List<LocalGameSaveCacheModel> _sampleModels = [
+  LocalGameSaveCacheModel(localGameSave: _sampleModel_1),
+  LocalGameSaveCacheModel(localGameSave: _sampleModel_2),
+  LocalGameSaveCacheModel(localGameSave: _sampleModel_3),
+  LocalGameSaveCacheModel(localGameSave: _sampleModel_4),
+];

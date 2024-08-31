@@ -9,6 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i8;
+import 'package:flutter/material.dart' as _i10;
 import 'package:localchess/feature/guest_game/view/guest_game_screen.dart'
     as _i1;
 import 'package:localchess/feature/home/view/home_screen.dart' as _i2;
@@ -21,6 +22,8 @@ import 'package:localchess/feature/setup_join/view/setup_join_screen.dart'
     as _i6;
 import 'package:localchess/feature/setup_local/view/setup_local_screen.dart'
     as _i7;
+import 'package:localchess/product/cache/model/local_game_save_cache_model.dart'
+    as _i9;
 
 /// generated route for
 /// [_i1.GuestGameScreen]
@@ -81,10 +84,17 @@ class HostGameRoute extends _i8.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.LocalGameScreen]
-class LocalGameRoute extends _i8.PageRouteInfo<void> {
-  const LocalGameRoute({List<_i8.PageRouteInfo>? children})
-      : super(
+class LocalGameRoute extends _i8.PageRouteInfo<LocalGameRouteArgs> {
+  LocalGameRoute({
+    required _i9.LocalGameSaveCacheModel save,
+    _i10.Key? key,
+    List<_i8.PageRouteInfo>? children,
+  }) : super(
           LocalGameRoute.name,
+          args: LocalGameRouteArgs(
+            save: save,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -93,9 +103,29 @@ class LocalGameRoute extends _i8.PageRouteInfo<void> {
   static _i8.PageInfo page = _i8.PageInfo(
     name,
     builder: (data) {
-      return const _i4.LocalGameScreen();
+      final args = data.argsAs<LocalGameRouteArgs>();
+      return _i4.LocalGameScreen(
+        save: args.save,
+        key: args.key,
+      );
     },
   );
+}
+
+class LocalGameRouteArgs {
+  const LocalGameRouteArgs({
+    required this.save,
+    this.key,
+  });
+
+  final _i9.LocalGameSaveCacheModel save;
+
+  final _i10.Key? key;
+
+  @override
+  String toString() {
+    return 'LocalGameRouteArgs{save: $save, key: $key}';
+  }
 }
 
 /// generated route for

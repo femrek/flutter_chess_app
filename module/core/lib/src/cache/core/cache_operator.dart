@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:core/src/cache/core/cache_model.dart';
+import 'package:core/src/cache/sort/get_all_sort_enum.dart';
 
 /// Cache operation interface
 abstract interface class CacheOperator<T extends CacheModel> {
@@ -8,13 +9,13 @@ abstract interface class CacheOperator<T extends CacheModel> {
   FutureOr<T?> get(String id);
 
   /// Get all caches
-  FutureOr<List<T>> getAll();
+  FutureOr<List<T>> getAll({GetAllSortEnum sort});
 
   /// Save the cache
-  FutureOr<void> save(T item);
+  FutureOr<T> save(T item);
 
   /// Save all caches
-  FutureOr<void> saveAll(List<T> items);
+  FutureOr<List<T>> saveAll(List<T> items);
 
   /// Update the cache
   FutureOr<void> update(T item);

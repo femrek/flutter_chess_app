@@ -50,6 +50,7 @@ abstract final class AppColorScheme {
 
   // Chess board colors
   static const Color boardBackgroundColor = Colors.teal;
+  static const Color boardCoordinateTextColor = Colors.white;
   static const Color darkTileColor = Colors.teal;
   static const Color lightTileColor = Colors.white;
   static const Color blackPieceColor = Colors.black;

@@ -26,6 +26,7 @@ dependencies:
   easy_localization: ^3.0.7
   get_it: ^7.7.0
   logger: ^2.4.0
+  uuid: ^4.4.2
 
   # State Management
   flutter_bloc: ^8.1.6

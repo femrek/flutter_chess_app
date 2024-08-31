@@ -44,4 +44,7 @@ class LocalGameSave {
 
   /// Converts the save to a JSON object.
   Map<String, dynamic> toJson() => _$LocalGameSaveToJson(this);
+
+  /// The current state of the game.
+  String? get currentState => history.isNotEmpty ? history.last : null;
 }
