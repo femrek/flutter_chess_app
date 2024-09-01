@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localchess/product/model/square_coordinate.dart';
+import 'package:localchess/product/data/square_coordinate.dart';
 import 'package:localchess/product/widget/board/board_square.dart';
 
 /// The widget that shows the game board only. coordinate indicators are not
