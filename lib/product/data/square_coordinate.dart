@@ -8,14 +8,20 @@ class SquareCoordinate {
 
   /// Creates a square coordinate from a name. e.g. A1, H8
   factory SquareCoordinate.fromName(String name) {
+    // ensure the name is 2 characters long
     assert(name.length == 2, 'Invalid square name. It must be 2 characters');
+
+    // ensure the first character is a letter
+    final isLowerCase = name[0].codeUnitAt(0) >= 'a'.codeUnitAt(0) &&
+        name[0].codeUnitAt(0) <= 'h'.codeUnitAt(0);
+    final isUpperCase = name[0].codeUnitAt(0) >= 'A'.codeUnitAt(0) &&
+        name[0].codeUnitAt(0) <= 'H'.codeUnitAt(0);
     assert(
-      (name[0].codeUnitAt(0) >= 'A'.codeUnitAt(0) &&
-              name[0].codeUnitAt(0) <= 'H'.codeUnitAt(0)) ||
-          (name[0].codeUnitAt(0) >= 'a'.codeUnitAt(0) &&
-              name[0].codeUnitAt(0) <= 'h'.codeUnitAt(0)),
+      isLowerCase || isUpperCase,
       'Invalid colum. It must be between A and H or a and h',
     );
+
+    // ensure the second character is a number between 1 and 8
     assert(
       int.tryParse(name[1]) != null,
       'Invalid row. It must be a number and between 1 and 8',
@@ -24,8 +30,18 @@ class SquareCoordinate {
       int.parse(name[1]) >= 1 && int.parse(name[1]) <= 8,
       'Invalid row. It must be between 1 and 8',
     );
-    final column = name.codeUnitAt(0) - 'A'.codeUnitAt(0);
-    final row = 8 - int.parse(name[1]);
+
+    // create the coordinate
+    late int column;
+    if (isLowerCase) {
+      column = name.codeUnitAt(0) - 'a'.codeUnitAt(0);
+    } else if (isUpperCase) {
+      column = name.codeUnitAt(0) - 'A'.codeUnitAt(0);
+    } else {
+      throw Exception('Invalid column name when creating SquareCoordinate');
+    }
+
+    final row = int.parse(name[1]) - 1;
 
     return SquareCoordinate(column, row);
   }
