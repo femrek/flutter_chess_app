@@ -33,7 +33,7 @@ class AppSaveListTile extends StatelessWidget {
       title: Text(data.localGameSave.name),
       subtitle: Text(
         LocaleKeys.widget_saveListTile_lastPlayed.tr() +
-            (data.metaData?.createAt.toVisualFormat ?? ''),
+            (data.metaData?.updateAt.toVisualFormat ?? ''),
       ),
       onTap: () {
         onSaveSelected(data);
