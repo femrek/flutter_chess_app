@@ -43,5 +43,15 @@
     "saveListTile": {
       "lastPlayed": "Last Played: "
     }
+  },
+  "chessTurn": {
+    "black": "Black Turn",
+    "white": "White Turn",
+    "blackKingCheck": "Black Turn",
+    "whiteKingCheck": "White Turn",
+    "blackKingCheckmate": "White is the Winner",
+    "whiteKingCheckmate": "Black is the Winner",
+    "draw": "Draw",
+    "stalemate": "Stalemate"
   }
 }

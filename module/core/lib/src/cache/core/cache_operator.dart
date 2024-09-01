@@ -18,10 +18,10 @@ abstract interface class CacheOperator<T extends CacheModel> {
   FutureOr<List<T>> saveAll(List<T> items);
 
   /// Update the cache
-  FutureOr<void> update(T item);
+  FutureOr<T> update(T item);
 
   /// Update all caches
-  FutureOr<void> updateAll(List<T> items);
+  FutureOr<List<T>> updateAll(List<T> items);
 
   /// Remove the cache
   FutureOr<bool> remove(String id);

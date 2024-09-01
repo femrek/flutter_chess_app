@@ -46,5 +46,33 @@ class LocalGameSave {
   Map<String, dynamic> toJson() => _$LocalGameSaveToJson(this);
 
   /// The current state of the game.
-  String? get currentState => history.isNotEmpty ? history.last : null;
+  String get currentState => history.last;
+
+  /// Returns a copy of the save with the given fields updated.
+  LocalGameSave copyWith({
+    String? id,
+    String? name,
+    List<String>? history,
+    String? lastMoveFrom,
+    String? lastMoveTo,
+  }) {
+    return LocalGameSave(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      history: history ?? this.history,
+      lastMoveFrom: lastMoveFrom ?? this.lastMoveFrom,
+      lastMoveTo: lastMoveTo ?? this.lastMoveTo,
+    );
+  }
+
+  /// Adds a new state to the history.
+  LocalGameSave addHistory(String stateFEN) {
+    return copyWith(history: [...history, stateFEN]);
+  }
+
+  /// Removes the last state from the history.
+  LocalGameSave popHistory() {
+    if (history.length < 2) throw Exception('Cannot undo the initial state');
+    return copyWith(history: history.sublist(0, history.length - 1));
+  }
 }

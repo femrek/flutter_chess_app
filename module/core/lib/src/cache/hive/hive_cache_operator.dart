@@ -145,7 +145,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<void> update(T item) {
+  FutureOr<T> update(T item) {
     log.t('Updating item <$T> with id ${item.id}');
 
     final savedItem = _box.get(item.id);
@@ -169,10 +169,12 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
     );
 
     log.t('Item with id ${item.id} updated.');
+
+    return item;
   }
 
   @override
-  FutureOr<void> updateAll(List<T> items) {
+  FutureOr<List<T>> updateAll(List<T> items) {
     log.t('Updating ${items.length} items <$T>');
 
     // validate the items
@@ -208,5 +210,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
     _box.putAll(validItems);
 
     log.t('${validItems.length} items <$T> updated.');
+
+    return validItems.values.toList();
   }
 }

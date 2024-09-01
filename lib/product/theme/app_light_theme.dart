@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localchess/product/constant/radius/app_radius_constant.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/theme/app_theme.dart';
 
@@ -14,6 +15,7 @@ final class AppLightTheme implements AppTheme {
         scaffoldBackgroundColor: Colors.white,
         cardTheme: cardTheme,
         appBarTheme: appBarTheme,
+        dialogTheme: dialogTheme,
       );
 
   @override
@@ -25,5 +27,14 @@ final class AppLightTheme implements AppTheme {
   AppBarTheme get appBarTheme => _theme.appBarTheme.copyWith(
         backgroundColor: _theme.primaryColor,
         foregroundColor: _theme.colorScheme.onPrimary,
+      );
+
+  @override
+  DialogTheme get dialogTheme => _theme.dialogTheme.copyWith(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            AppRadiusConstant.dialogCornerRadius,
+          ),
+        ),
       );
 }

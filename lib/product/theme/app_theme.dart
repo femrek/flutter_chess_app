@@ -10,4 +10,7 @@ abstract interface class AppTheme {
 
   /// The app bar theme have to be specified.
   AppBarTheme get appBarTheme;
+
+  /// The dialog theme have to be specified.
+  DialogTheme get dialogTheme;
 }

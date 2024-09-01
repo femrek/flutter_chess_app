@@ -73,9 +73,7 @@ final class LocalGameSaveCacheModel implements CacheModel {
         metaData: CacheModelMetaData.fromJson(
             json['metaData'] as Map<String, dynamic>),
       );
-    }
-    // ignore: avoid_catching_errors
-    on TypeError catch (e) {
+    } on TypeError catch (e) {
       G.logger.e(
         'Error while parsing json',
         error: e,

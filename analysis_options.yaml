@@ -4,3 +4,4 @@ linter:
   rules:
     sort_pub_dependencies: false
     require_trailing_commas: false
+    avoid_catching_errors: false

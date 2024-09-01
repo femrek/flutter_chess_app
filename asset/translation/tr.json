@@ -43,5 +43,15 @@
     "saveListTile": {
       "lastPlayed": "Son Oynama: "
     }
+  },
+  "chessTurn": {
+    "black": "Siyah",
+    "white": "Beyaz",
+    "blackKingCheck": "Siyah",
+    "whiteKingCheck": "Beyaz",
+    "blackKingCheckmate": "Beyaz Kazandı",
+    "whiteKingCheckmate": "Siyah Kazandı",
+    "draw": "Berabere",
+    "stalemate": "Berabere"
   }
 }

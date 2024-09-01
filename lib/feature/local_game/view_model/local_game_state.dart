@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
-import 'package:localchess/product/service/core/i_chess_service.dart';
+import 'package:localchess/product/data/app_piece.dart';
+import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
+import 'package:localchess/product/data/move/app_chess_move.dart';
+import 'package:localchess/product/data/square_coordinate.dart';
 
 abstract class LocalGameState {}
 
@@ -9,12 +11,22 @@ class LocalGameInitialState extends LocalGameState {}
 
 class LocalGameLoadedState extends LocalGameState {
   LocalGameLoadedState({
-    required this.chessService,
+    required this.getPieceAt,
+    required this.movablePiecesCoordinates,
+    required this.checkStatus,
+    this.moves,
+    this.focusedCoordinate,
   });
 
-  /// The chess service.
-  final IChessService chessService;
+  final AppPiece? Function(SquareCoordinate) getPieceAt;
 
-  /// The game save data.
-  LocalGameSaveCacheModel? get save => chessService.save;
+  final List<SquareCoordinate> movablePiecesCoordinates;
+
+  final Map<SquareCoordinate, AppChessMove>? moves;
+
+  final SquareCoordinate? focusedCoordinate;
+
+  final AppChessTurnStatus checkStatus;
+
+  bool get isFocused => focusedCoordinate != null;
 }
