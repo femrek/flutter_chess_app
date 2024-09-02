@@ -21,7 +21,7 @@ class LocalBoard extends StatelessWidget {
     return Container(
       width: size,
       height: size,
-      color: boardBgColor,
+      color: AppTheme().boardBgColor,
       child: Container(
         child: _table(context),
         decoration: BoxDecoration(
@@ -64,7 +64,7 @@ class LocalBoard extends StatelessWidget {
             positionY: y,
             piece: state.board[x][y],
             inCheck: state.inCheck
-              && (state.board[x][y]?.type?.name?.toLowerCase() ?? '') == 'k'
+              && (state.board[x][y]?.type.name.toLowerCase() ?? '') == 'k'
               && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
           );
         }
@@ -75,8 +75,8 @@ class LocalBoard extends StatelessWidget {
             positionX: x,
             positionY: y,
             piece: state.board[x][y],
-            inCheck:  (state.inCheck ?? false) 
-              && (state.board[x][y]?.type?.name?.toLowerCase() ?? '') == 'k'
+            inCheck:  (state.inCheck)
+              && (state.board[x][y]?.type.name.toLowerCase() ?? '') == 'k'
               && state.isWhiteTurn == ((state.board[x][y]?.color ?? -1) == ch.Color.WHITE),
           );
         }
@@ -164,17 +164,17 @@ class _SquareOnTheBoard extends StatelessWidget {
       _lastMoveToThis = (context.read<BoardBloc>().state as BoardFocusedState).lastMoveTo == name;
     }
 
-    Color darkBg = darkBgColor;
-    Color lightBg = lightBgColor;
+    Color darkBg = AppTheme().darkBgColor;
+    Color lightBg = AppTheme().lightBgColor;
     if (_attackableToThis) {
-      darkBg = attackableToThisBg;
-      lightBg = attackableToThisBg;
+      darkBg = AppTheme().attackableToThisBg;
+      lightBg = AppTheme().attackableToThisBg;
     } else if (inCheck) {
-      darkBg = inCheckBg;
-      lightBg = inCheckBg;
+      darkBg = AppTheme().inCheckBg;
+      lightBg = AppTheme().inCheckBg;
     } else if (_moveFrom) {
-      darkBg = moveFromBg;
-      lightBg = moveFromBg;
+      darkBg = AppTheme().moveFromBg;
+      lightBg = AppTheme().moveFromBg;
     }
 
     return DragTarget<String>(
@@ -244,7 +244,7 @@ class _SquareOnTheBoard extends StatelessWidget {
           width: size*0.4,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(9999),
-            color: moveDotsColor,
+            color: AppTheme().moveDotsColor,
           ),
         ),
       );
@@ -258,7 +258,7 @@ class _SquareOnTheBoard extends StatelessWidget {
               width: size*0.9,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(9999),
-                color: isDark ? darkBgColor : lightBgColor,
+                color: isDark ? AppTheme().darkBgColor : AppTheme().lightBgColor,
               ),
             ),
             Container(
@@ -266,7 +266,7 @@ class _SquareOnTheBoard extends StatelessWidget {
               width: size*0.9,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(9999),
-                color: lastMoveEffect,
+                color: AppTheme().lastMoveEffect,
               ),
             ),
           ],
@@ -280,7 +280,7 @@ class _SquareOnTheBoard extends StatelessWidget {
           width: size*0.9,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(9999),
-            color: isDark ? darkBgColor : lightBgColor,
+            color: isDark ? AppTheme().darkBgColor : AppTheme().lightBgColor,
           ),
         ),
       );
@@ -304,7 +304,7 @@ class _SquareOnTheBoard extends StatelessWidget {
           child: (pieceName != null) ?
             SvgPicture.asset(
               'assets/images/$pieceName.svg',
-              color: isBlack ? blackPiecesColor : whitePiecesColor,
+              color: isBlack ? AppTheme().blackPiecesColor : AppTheme().whitePiecesColor,
             ) : null,
         ),
       ),
@@ -315,10 +315,10 @@ class _SquareOnTheBoard extends StatelessWidget {
     if (_attackableToThis) {
       return Container();
     } else if (_lastMoveFromThis) return Container(
-      color: lastMoveEffect,
+      color: AppTheme().lastMoveEffect,
     );
     else if (_lastMoveToThis) return Container(
-      color: lastMoveEffect,
+      color: AppTheme().lastMoveEffect,
     );
     return Container();
   }

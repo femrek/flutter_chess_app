@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'data/app_theme.dart';
 import 'routes.dart';
 
 void main() => runApp(const MyApp());
@@ -12,12 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Chess',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: AppTheme().light,
       onGenerateRoute: Routes.generateRoute,
-      initialRoute: '/',
     );
   }
 }
