@@ -50,5 +50,4 @@ app.*.map.json
 /android/key.properties
 
 # auto generated files
-*.g.dart
 libisar_macos.dylib
