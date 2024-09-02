@@ -30,8 +30,6 @@ class BoardSquare extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: unitSize * 0.8,
-      height: unitSize * 0.8,
       color: coordinate.isDark
           ? AppColorScheme.darkTileColor
           : AppColorScheme.lightTileColor,
