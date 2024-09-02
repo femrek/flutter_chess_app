@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/feature/local_game/view/mixin/local_game_state_mixin.dart';
+import 'package:localchess/feature/local_game/view/widget/local_game_header.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
@@ -41,9 +42,22 @@ class _LocalGameScreenState extends BaseState<LocalGameScreen>
       child: Scaffold(
         body: Column(
           children: [
-            _Board(
-              onFocusTried: onFocusTried,
-              onMoveTried: onMoveTried,
+            ColoredBox(
+              color: AppColorScheme.boardBackgroundColor,
+              child: SafeArea(
+                bottom: false,
+                child: Column(
+                  children: [
+                    LocalGameHeader(
+                      gameName: widget.save.localGameSave.name,
+                    ),
+                    _Board(
+                      onFocusTried: onFocusTried,
+                      onMoveTried: onMoveTried,
+                    ),
+                  ],
+                ),
+              ),
             ),
             if (kDebugMode) _DebugButtons(),
           ],
@@ -107,15 +121,9 @@ class _Board extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: AppColorScheme.boardBackgroundColor,
-      child: SafeArea(
-        bottom: false,
-        child: GameBoardWithFrame(
-          size: MediaQuery.of(context).size.width,
-          squareBuilder: squareBuilder,
-        ),
-      ),
+    return GameBoardWithFrame(
+      size: MediaQuery.of(context).size.width,
+      squareBuilder: squareBuilder,
     );
   }
 
