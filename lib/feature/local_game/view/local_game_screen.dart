@@ -16,7 +16,8 @@ import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
-import 'package:localchess/product/widget/board/painter/piece_background_painter.dart';
+import 'package:localchess/product/widget/board/painter/square_foreground_paint_type.dart';
+import 'package:localchess/product/widget/board/painter/square_foreground_painter.dart';
 import 'package:localchess/product/widget/button/app_button/app_button.dart';
 
 /// Local Game Screen widget
@@ -162,70 +163,45 @@ class _Board extends StatelessWidget {
                 // get piece in this tile if it exists.
                 final piece = state.getPieceAt(coordinate);
 
-                if (state.isFocused && state.focusedCoordinate != coordinate) {
-                  final moves = state.moves;
+                // check if this coordinate contains a piece that can be moved
+                // to.
+                final containsByMoves = state.isMovableTo(coordinate);
 
-                  // log error and show nothing if moves is null.
-                  if (moves == null) {
-                    G.logger.e('moves is null when focused');
-                    return const SizedBox.shrink();
-                  }
+                // configure the painter based on the state.
+                final isThisCheck = state.isCheckOn(piece);
+                final isFocusedOnThis = state.isFocusedOn(coordinate);
+                final isMovableToThis = containsByMoves && piece == null;
+                final canCaptured = containsByMoves && piece != null;
+                final painter = SquareForegroundPainter(paintTypes: [
+                  if (isThisCheck) SquareForegroundPaintType.checkPiece,
+                  if (isFocusedOnThis) SquareForegroundPaintType.focusedPiece,
+                  if (isMovableToThis) SquareForegroundPaintType.movableToThis,
+                  if (canCaptured) SquareForegroundPaintType.capturePiece,
+                ]);
 
-                  // check if can be moved to this coordinate.
-                  if (moves.containsKey(coordinate)) {
-                    // show the move dot if the piece is null.
-                    if (piece == null) {
-                      return Container(
-                        margin: const EdgeInsets.all(14),
-                        decoration: const BoxDecoration(
-                          color: AppColorScheme.moveDotsColor,
-                          shape: BoxShape.circle,
-                        ),
-                      );
-                    }
-
-                    // this piece can be captured.
-                    return CustomPaint(
-                      painter: PieceBackgroundPainter.attackableToThis,
-                      child: piece.asImage(
-                        orientation: BoardOrientationEnum.landscapeLeftBased,
-                      ),
-                    );
-                  }
-                }
-
-                if (piece == null) return const SizedBox.shrink();
-
-                final movable =
-                    state.movablePiecesCoordinates.contains(coordinate);
-
-                return Draggable<SquareCoordinate>(
+                return Draggable(
                   data: coordinate,
                   onDragStarted: () {
                     onFocusTried(coordinate);
                   },
-                  maxSimultaneousDrags: movable ? 1 : 0,
-                  childWhenDragging: const SizedBox.shrink(),
-                  feedback: piece.asImage(
-                    orientation: BoardOrientationEnum.landscapeLeftBased,
+                  childWhenDragging: CustomPaint(
+                    painter: painter,
                   ),
-                  child: coordinate == state.focusedCoordinate
-                      ? CustomPaint(
-                          painter: PieceBackgroundPainter.focused,
-                          child: piece.asImage(
-                            orientation:
-                                BoardOrientationEnum.landscapeLeftBased,
-                          ),
-                        )
-                      : ColoredBox(
-                          color: state.checkStatus.isCheckOn(piece)
-                              ? Colors.red
-                              : Colors.transparent,
-                          child: piece.asImage(
-                            orientation:
-                                BoardOrientationEnum.landscapeLeftBased,
-                          ),
-                        ),
+                  maxSimultaneousDrags:
+                      state.isMovableFrom(coordinate) || isFocusedOnThis
+                          ? 1
+                          : 0,
+                  feedback: piece?.asImage(
+                        orientation: BoardOrientationEnum.landscapeLeftBased,
+                      ) ??
+                      const SizedBox.shrink(),
+                  child: CustomPaint(
+                    painter: painter,
+                    child: piece?.asImage(
+                          orientation: BoardOrientationEnum.landscapeLeftBased,
+                        ) ??
+                        const SizedBox.shrink(),
+                  ),
                 );
               },
             ),

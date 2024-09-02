@@ -29,4 +29,27 @@ class LocalGameLoadedState extends LocalGameState {
   final AppChessTurnStatus checkStatus;
 
   bool get isFocused => focusedCoordinate != null;
+
+  /// return true the focus on the given [coordinate].
+  bool isFocusedOn(SquareCoordinate coordinate) {
+    return focusedCoordinate == coordinate;
+  }
+
+  /// return true if the [piece] is in check.
+  bool isCheckOn(AppPiece? piece) {
+    if (piece == null) return false;
+    return checkStatus.isCheckOn(piece);
+  }
+
+  /// return true if the piece in the [focusedCoordinate] is movable to
+  /// [coordinate].
+  bool isMovableTo(SquareCoordinate coordinate) {
+    if (focusedCoordinate == null) return false;
+    return moves?[coordinate] != null;
+  }
+
+  /// return true if the piece in the [coordinate] has a move in current state.
+  bool isMovableFrom(SquareCoordinate coordinate) {
+    return movablePiecesCoordinates.contains(coordinate);
+  }
 }
