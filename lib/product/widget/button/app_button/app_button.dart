@@ -14,6 +14,7 @@ class AppButton extends StatefulWidget {
   const AppButton({
     required this.onPressed,
     required this.child,
+    this.backgroundColor,
     this.fullWidth = false,
     super.key,
   });
@@ -23,6 +24,9 @@ class AppButton extends StatefulWidget {
 
   /// The callback when the button is pressed
   final FutureVoidCallback onPressed;
+
+  /// The background color of the button
+  final Color? backgroundColor;
 
   /// The child of the button
   final Widget child;
@@ -45,6 +49,7 @@ class _AppButtonState extends BaseState<AppButton> with AppButtonStateMixin {
         },
         style: ElevatedButton.styleFrom(
           padding: const AppPadding.button(),
+          backgroundColor: widget.backgroundColor,
         ),
         child: ValueListenableBuilder<bool>(
           valueListenable: isLoadingNotifier,

@@ -12,7 +12,7 @@ final class AppDarkTheme implements AppTheme {
 
   @override
   ThemeData get theme => _theme.copyWith(
-        scaffoldBackgroundColor: Colors.grey.shade700,
+        scaffoldBackgroundColor: Colors.grey.shade800,
         cardTheme: cardTheme,
         appBarTheme: appBarTheme,
         dialogTheme: dialogTheme,
