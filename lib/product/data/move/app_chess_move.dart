@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:localchess/product/data/square_coordinate.dart';
+import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 
 /// The chess move data.
 @immutable

@@ -1,7 +1,7 @@
 import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
-import 'package:localchess/product/data/square_coordinate.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
 import 'package:localchess/product/service/impl/chess_service.dart';

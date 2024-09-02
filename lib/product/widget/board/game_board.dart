@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:localchess/product/data/square_coordinate.dart';
+import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
+import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/widget/board/board_square.dart';
 
 /// The widget that shows the game board only. coordinate indicators are not
@@ -9,6 +10,7 @@ class GameBoard extends StatelessWidget {
   const GameBoard({
     required this.unitSize,
     required this.squareBuilder,
+    required this.orientation,
     super.key,
   });
 
@@ -17,6 +19,9 @@ class GameBoard extends StatelessWidget {
 
   /// The builder function to build piece on the square
   final BoardSquareBuilder squareBuilder;
+
+  /// The orientation of the board
+  final BoardOrientationEnum orientation;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +34,9 @@ class GameBoard extends StatelessWidget {
       itemBuilder: (context, index) {
         return BoardSquare(
           unitSize: unitSize,
-          coordinate: SquareCoordinate.fromIndexStartWithA8(index),
+          coordinate: orientation == BoardOrientationEnum.portrait
+              ? SquareCoordinate.fromIndexStartWithA8(index)
+              : SquareCoordinate.fromIndexStartWithA1(index),
           builder: squareBuilder,
         );
       },

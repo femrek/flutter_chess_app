@@ -9,7 +9,9 @@ import 'package:localchess/feature/local_game/view_model/local_game_view_model.d
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
-import 'package:localchess/product/data/square_coordinate.dart';
+import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
+import 'package:localchess/product/data/coordinate/square_coordinate.dart';
+import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
@@ -50,6 +52,7 @@ class _LocalGameScreenState extends BaseState<LocalGameScreen>
                   children: [
                     LocalGameHeader(
                       gameName: widget.save.localGameSave.name,
+                      frontColor: AppColorScheme.boardCoordinateTextColor,
                     ),
                     _Board(
                       onFocusTried: onFocusTried,
@@ -121,7 +124,7 @@ class _Board extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GameBoardWithFrame(
+    return GameBoardWithFrame.landscape(
       size: MediaQuery.of(context).size.width,
       squareBuilder: squareBuilder,
     );
@@ -184,7 +187,9 @@ class _Board extends StatelessWidget {
                     // this piece can be captured.
                     return CustomPaint(
                       painter: PieceBackgroundPainter.attackableToThis,
-                      child: piece.asImage,
+                      child: piece.asImage(
+                        orientation: BoardOrientationEnum.landscapeLeftBased,
+                      ),
                     );
                   }
                 }
@@ -201,17 +206,25 @@ class _Board extends StatelessWidget {
                   },
                   maxSimultaneousDrags: movable ? 1 : 0,
                   childWhenDragging: const SizedBox.shrink(),
-                  feedback: piece.asImage,
+                  feedback: piece.asImage(
+                    orientation: BoardOrientationEnum.landscapeLeftBased,
+                  ),
                   child: coordinate == state.focusedCoordinate
                       ? CustomPaint(
                           painter: PieceBackgroundPainter.focused,
-                          child: piece.asImage,
+                          child: piece.asImage(
+                            orientation:
+                                BoardOrientationEnum.landscapeLeftBased,
+                          ),
                         )
                       : ColoredBox(
                           color: state.checkStatus.isCheckOn(piece)
                               ? Colors.red
                               : Colors.transparent,
-                          child: piece.asImage,
+                          child: piece.asImage(
+                            orientation:
+                                BoardOrientationEnum.landscapeLeftBased,
+                          ),
                         ),
                 );
               },

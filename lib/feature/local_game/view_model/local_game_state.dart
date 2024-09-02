@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:localchess/product/data/app_piece.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
+import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
-import 'package:localchess/product/data/square_coordinate.dart';
+import 'package:localchess/product/data/piece/app_piece.dart';
 
 abstract class LocalGameState {}
 

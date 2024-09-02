@@ -1,8 +1,8 @@
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
-import 'package:localchess/product/data/app_piece.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
+import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
-import 'package:localchess/product/data/square_coordinate.dart';
+import 'package:localchess/product/data/piece/app_piece.dart';
 
 /// The service interface for performing chess operations.
 abstract interface class IChessService {

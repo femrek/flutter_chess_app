@@ -1,5 +1,5 @@
-import 'package:localchess/product/data/app_piece.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_winner.dart';
+import 'package:localchess/product/data/piece/app_piece.dart';
 
 /// AppCheckmateStatus enum
 enum AppChessTurnStatus {

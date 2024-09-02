@@ -5,21 +5,29 @@ class LocalGameHeader extends StatelessWidget implements PreferredSizeWidget {
   /// Creates the local game header.
   const LocalGameHeader({
     required this.gameName,
+    required this.frontColor,
     super.key,
   });
 
   /// The name of the game to be displayed.
   final String gameName;
 
+  /// The color of the front elements.
+  final Color frontColor;
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const BackButton(),
+        BackButton(
+          color: frontColor,
+        ),
         Expanded(
           child: Text(
             gameName,
-            style: Theme.of(context).textTheme.headlineMedium,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: frontColor,
+                ),
           ),
         ),
       ],

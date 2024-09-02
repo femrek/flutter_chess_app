@@ -1,8 +1,6 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:flutter/material.dart';
 import 'package:gen/gen.dart';
-import 'package:localchess/product/theme/app_color_scheme.dart';
 
 /// Types of the pieces in the chess game.
 enum AppPiece {
@@ -53,21 +51,6 @@ enum AppPiece {
 
   /// The code of the piece. (e.g. 'p', 'n', 'b', 'r', 'q', 'k')
   final String name;
-
-  Widget get asImage {
-    return Transform.scale(
-      scale: scale,
-      child: image.svg(
-        package: 'gen',
-        colorFilter: ColorFilter.mode(
-          isDark
-              ? AppColorScheme.blackPieceColor
-              : AppColorScheme.whitePieceColor,
-          BlendMode.srcIn,
-        ),
-      ),
-    );
-  }
 
   /// The image of the piece.
   SvgGenImage get image {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/board_square.dart';
@@ -8,17 +9,44 @@ import 'package:localchess/product/widget/board/game_board.dart';
 /// indicators
 class GameBoardWithFrame extends StatefulWidget {
   /// The widget that shows the game board constructor
-  const GameBoardWithFrame({
+  const GameBoardWithFrame._internal({
     required this.size,
     required this.squareBuilder,
-    super.key,
+    required this.orientation,
   });
+
+  /// Creates the game board with frame in landscape mode
+  factory GameBoardWithFrame.portrait({
+    required double size,
+    required BoardSquareBuilder squareBuilder,
+  }) {
+    return GameBoardWithFrame._internal(
+      size: size,
+      squareBuilder: squareBuilder,
+      orientation: BoardOrientationEnum.portrait,
+    );
+  }
+
+  /// Creates the game board with frame in portrait mode
+  factory GameBoardWithFrame.landscape({
+    required double size,
+    required BoardSquareBuilder squareBuilder,
+  }) {
+    return GameBoardWithFrame._internal(
+      size: size,
+      squareBuilder: squareBuilder,
+      orientation: BoardOrientationEnum.landscapeLeftBased,
+    );
+  }
 
   /// The ui size of the game board
   final double size;
 
   /// The chess object to get board state from
   final BoardSquareBuilder squareBuilder;
+
+  /// Creates the game board with frame in landscape mode
+  final BoardOrientationEnum orientation;
 
   @override
   State<GameBoardWithFrame> createState() => _GameBoardWithFrameState();
@@ -39,13 +67,17 @@ class _GameBoardWithFrameState extends BaseState<GameBoardWithFrame> {
           children: [
             _CoordinatorLine(
               unitSize: unitSize,
-              side: _CoordinateLineSide.top,
+              side: widget.orientation == BoardOrientationEnum.portrait
+                  ? _CoordinateLineSide.topP
+                  : _CoordinateLineSide.topL,
             ),
             Row(
               children: [
                 _CoordinatorLine(
                   unitSize: unitSize,
-                  side: _CoordinateLineSide.left,
+                  side: widget.orientation == BoardOrientationEnum.portrait
+                      ? _CoordinateLineSide.leftP
+                      : _CoordinateLineSide.leftL,
                 ),
                 Container(
                   width: unitSize * 8,
@@ -54,18 +86,21 @@ class _GameBoardWithFrameState extends BaseState<GameBoardWithFrame> {
                   child: GameBoard(
                     unitSize: unitSize,
                     squareBuilder: widget.squareBuilder,
+                    orientation: widget.orientation,
                   ),
                 ),
                 _CoordinatorLine(
-                  unitSize: unitSize,
-                  side: _CoordinateLineSide.right,
-                ),
+                    unitSize: unitSize,
+                    side: widget.orientation == BoardOrientationEnum.portrait
+                        ? _CoordinateLineSide.rightP
+                        : _CoordinateLineSide.rightL),
               ],
             ),
             _CoordinatorLine(
-              unitSize: unitSize,
-              side: _CoordinateLineSide.bottom,
-            ),
+                unitSize: unitSize,
+                side: widget.orientation == BoardOrientationEnum.portrait
+                    ? _CoordinateLineSide.bottomP
+                    : _CoordinateLineSide.bottomL),
           ],
         ),
       ),
@@ -84,7 +119,10 @@ class _CoordinatorLine extends StatelessWidget {
 
   String getCharByIndex(int index) {
     if (side.isNumeric) {
-      return '${7 - index + 1}';
+      if (side.reverse) {
+        return '${7 - index + 1}';
+      }
+      return '${index + 1}';
     }
 
     return String.fromCharCode('A'.codeUnitAt(0) + index);
@@ -101,10 +139,13 @@ class _CoordinatorLine extends StatelessWidget {
             width: unitSize * side.cellSizeMultiplier.width,
             height: unitSize * side.cellSizeMultiplier.height,
             alignment: Alignment.center,
-            child: Text(
-              getCharByIndex(i),
-              textScaler: TextScaler.noScaling,
-              style: _textStyle,
+            child: Transform.rotate(
+              angle: side.angel,
+              child: Text(
+                getCharByIndex(i),
+                textScaler: TextScaler.noScaling,
+                style: _textStyle,
+              ),
             ),
           ),
         SizedBox(width: unitSize / 2),
@@ -125,19 +166,78 @@ class _CoordinatorLine extends StatelessWidget {
 }
 
 enum _CoordinateLineSide {
-  left(cellSizeMultiplier: Size(0.5, 1), isNumeric: true, isVertical: true),
-  right(cellSizeMultiplier: Size(0.5, 1), isNumeric: true, isVertical: true),
-  top(cellSizeMultiplier: Size(1, 0.5), isNumeric: false, isVertical: false),
-  bottom(cellSizeMultiplier: Size(1, 0.5), isNumeric: false, isVertical: false),
+  // portrait
+  leftP(
+    cellSizeMultiplier: Size(0.5, 1),
+    isNumeric: true,
+    isVertical: true,
+    angel: 0,
+    reverse: true,
+  ),
+  rightP(
+    cellSizeMultiplier: Size(0.5, 1),
+    isNumeric: true,
+    isVertical: true,
+    angel: 0,
+    reverse: true,
+  ),
+  topP(
+    cellSizeMultiplier: Size(1, 0.5),
+    isNumeric: false,
+    isVertical: false,
+    angel: 0,
+    reverse: false,
+  ),
+  bottomP(
+    cellSizeMultiplier: Size(1, 0.5),
+    isNumeric: false,
+    isVertical: false,
+    angel: 0,
+    reverse: false,
+  ),
+
+  // landscape
+  leftL(
+    cellSizeMultiplier: Size(0.5, 1),
+    isNumeric: false,
+    isVertical: true,
+    angel: 90 * 3.1415926535 / 180,
+    reverse: false,
+  ),
+  rightL(
+    cellSizeMultiplier: Size(0.5, 1),
+    isNumeric: false,
+    isVertical: true,
+    angel: -90 * 3.1415926535 / 180,
+    reverse: false,
+  ),
+  topL(
+    cellSizeMultiplier: Size(1, 0.5),
+    isNumeric: true,
+    isVertical: false,
+    angel: 90 * 3.1415926535 / 180,
+    reverse: false,
+  ),
+  bottomL(
+    cellSizeMultiplier: Size(1, 0.5),
+    isNumeric: true,
+    isVertical: false,
+    angel: -90 * 3.1415926535 / 180,
+    reverse: false,
+  ),
   ;
 
   const _CoordinateLineSide({
     required this.cellSizeMultiplier,
     required this.isNumeric,
     required this.isVertical,
+    required this.angel,
+    required this.reverse,
   });
 
   final Size cellSizeMultiplier;
   final bool isNumeric;
   final bool isVertical;
+  final double angel;
+  final bool reverse;
 }

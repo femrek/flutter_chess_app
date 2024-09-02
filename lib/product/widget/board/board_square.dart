@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localchess/product/data/square_coordinate.dart';
+import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 
 /// The builder function to build piece on the square

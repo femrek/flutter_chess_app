@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:localchess/product/data/square_coordinate.dart';
+import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 
 void main() {
   group('create a coordinate object with default constructor', () {

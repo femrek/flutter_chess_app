@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:localchess/product/constant/radius/app_radius_constant.dart';
-import 'package:localchess/product/data/app_piece.dart';
+import 'package:localchess/product/data/piece/app_piece.dart';
+import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
 
 /// Dialog for picking a promotion piece. The dialog returns the selected piece
 /// code name when pop. [q, r, b, n]
@@ -53,7 +54,7 @@ class PickAPromotionDialog extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).pop(piece.name);
                 },
-                child: piece.asImage,
+                child: piece.asImage(),
               );
             },
           ),
