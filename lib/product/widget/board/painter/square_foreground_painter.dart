@@ -122,6 +122,21 @@ class SquareForegroundPainter extends CustomPainter {
           canvas,
           size,
         );
+        return;
+      case SquareForegroundPaintType.movedFrom:
+        _fillSquare(
+          AppColorScheme.lastMoveEffectColor,
+          canvas,
+          size,
+        );
+        return;
+      case SquareForegroundPaintType.movedTo:
+        _fillSquare(
+          AppColorScheme.lastMoveEffectColor,
+          canvas,
+          size,
+        );
+        return;
     }
   }
 

@@ -10,10 +10,11 @@ LocalGameSave _$LocalGameSaveFromJson(Map<String, dynamic> json) =>
     LocalGameSave(
       id: json['id'] as String,
       name: json['name'] as String,
-      history:
-          (json['history'] as List<dynamic>).map((e) => e as String).toList(),
-      lastMoveFrom: json['lastMoveFrom'] as String?,
-      lastMoveTo: json['lastMoveTo'] as String?,
+      history: (json['history'] as List<dynamic>)
+          .map(
+              (e) => BoardStatusAndLastMove.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      defaultPosition: json['defaultPosition'] as String,
     );
 
 Map<String, dynamic> _$LocalGameSaveToJson(LocalGameSave instance) =>
@@ -21,6 +22,5 @@ Map<String, dynamic> _$LocalGameSaveToJson(LocalGameSave instance) =>
       'id': instance.id,
       'name': instance.name,
       'history': instance.history,
-      'lastMoveFrom': instance.lastMoveFrom,
-      'lastMoveTo': instance.lastMoveTo,
+      'defaultPosition': instance.defaultPosition,
     };

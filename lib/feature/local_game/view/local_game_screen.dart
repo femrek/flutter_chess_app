@@ -169,11 +169,15 @@ class _Board extends StatelessWidget {
 
                 // configure the painter based on the state.
                 final isThisCheck = state.isCheckOn(piece);
+                final isLastMoveFromThis = state.isLastMoveFrom(coordinate);
+                final isLastMoveToThis = state.isLastMoveTo(coordinate);
                 final isFocusedOnThis = state.isFocusedOn(coordinate);
                 final isMovableToThis = containsByMoves && piece == null;
                 final canCaptured = containsByMoves && piece != null;
                 final painter = SquareForegroundPainter(paintTypes: [
                   if (isThisCheck) SquareForegroundPaintType.checkPiece,
+                  if (isLastMoveFromThis) SquareForegroundPaintType.movedFrom,
+                  if (isLastMoveToThis) SquareForegroundPaintType.movedTo,
                   if (isFocusedOnThis) SquareForegroundPaintType.focusedPiece,
                   if (isMovableToThis) SquareForegroundPaintType.movableToThis,
                   if (canCaptured) SquareForegroundPaintType.capturePiece,

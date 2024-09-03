@@ -402,62 +402,138 @@ void main() {
 const _sampleModel_1 = LocalGameSave(
   id: 'id1',
   name: 'save 1',
+  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
   history: [
-    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      lastMoveFrom: 'e2',
+      lastMoveTo: 'e4',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      lastMoveFrom: 'e7',
+      lastMoveTo: 'e5',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      lastMoveFrom: 'f1',
+      lastMoveTo: 'c4',
+    ),
   ],
 );
 const _sampleModel_1_v2 = LocalGameSave(
   id: 'id1',
   name: 'save 1',
+  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
   history: [
-    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 1 3',
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      lastMoveFrom: 'e2',
+      lastMoveTo: 'e4',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      lastMoveFrom: 'e7',
+      lastMoveTo: 'e5',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      lastMoveFrom: 'f1',
+      lastMoveTo: 'c4',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/p1pp1ppp/8/1p2p3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq b6 0 1',
+      lastMoveFrom: 'b7',
+      lastMoveTo: 'b5',
+    ),
   ],
 );
 const _sampleModel_2 = LocalGameSave(
   id: 'id2',
   name: 'save 2',
+  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
   history: [
-    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      lastMoveFrom: 'e2',
+      lastMoveTo: 'e4',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      lastMoveFrom: 'e7',
+      lastMoveTo: 'e5',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      lastMoveFrom: 'f1',
+      lastMoveTo: 'c4',
+    ),
   ],
 );
 const _sampleModel_3 = LocalGameSave(
   id: 'id3',
   name: 'save 3',
+  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
   history: [
-    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      lastMoveFrom: 'e2',
+      lastMoveTo: 'e4',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      lastMoveFrom: 'e7',
+      lastMoveTo: 'e5',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      lastMoveFrom: 'f1',
+      lastMoveTo: 'c4',
+    ),
   ],
 );
 const _sampleModel_4 = LocalGameSave(
   id: 'id4',
   name: 'save 4',
+  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
   history: [
-    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      lastMoveFrom: 'e2',
+      lastMoveTo: 'e4',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      lastMoveFrom: 'e7',
+      lastMoveTo: 'e5',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      lastMoveFrom: 'f1',
+      lastMoveTo: 'c4',
+    ),
   ],
 );
 const _sampleModel_5 = LocalGameSave(
   id: 'id5',
   name: 'save 5',
+  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
   history: [
-    'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-    'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-    'rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2',
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      lastMoveFrom: 'e2',
+      lastMoveTo: 'e4',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      lastMoveFrom: 'e7',
+      lastMoveTo: 'e5',
+    ),
+    BoardStatusAndLastMove(
+      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      lastMoveFrom: 'f1',
+      lastMoveTo: 'c4',
+    ),
   ],
 );
 

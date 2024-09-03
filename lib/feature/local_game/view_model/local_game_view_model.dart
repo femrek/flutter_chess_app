@@ -26,6 +26,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       getPieceAt: _chessService.getPieceAt,
       movablePiecesCoordinates: movablePiecesCoordinates,
       checkStatus: _chessService.checkStatus,
+      lastMoveFrom: _chessService.lastMoveFrom,
+      lastMoveTo: _chessService.lastMoveTo,
     ));
 
     G.logger.t('LocalGameViewModel.init: Initialized');
@@ -61,6 +63,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       checkStatus: _chessService.checkStatus,
       moves: moveMap,
       focusedCoordinate: coordinate,
+      lastMoveFrom: _chessService.lastMoveFrom,
+      lastMoveTo: _chessService.lastMoveTo,
     ));
 
     G.logger.t('LocalGameViewModel.focus: Focused on $coordinate. '
@@ -80,6 +84,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
       checkStatus: _chessService.checkStatus,
+      lastMoveFrom: _chessService.lastMoveFrom,
+      lastMoveTo: _chessService.lastMoveTo,
     ));
 
     G.logger.t('LocalGameViewModel.removeFocus: Removed focus');
@@ -106,6 +112,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
       checkStatus: _chessService.checkStatus,
+      lastMoveFrom: _chessService.lastMoveFrom,
+      lastMoveTo: _chessService.lastMoveTo,
     ));
 
     G.logger.t('LocalGameViewModel.move: Moved $move');
@@ -127,6 +135,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
       checkStatus: _chessService.checkStatus,
+      lastMoveFrom: _chessService.lastMoveFrom,
+      lastMoveTo: _chessService.lastMoveTo,
     ));
 
     G.logger.t('LocalGameViewModel.undo: Undone');
@@ -148,6 +158,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
       checkStatus: _chessService.checkStatus,
+      lastMoveFrom: _chessService.lastMoveFrom,
+      lastMoveTo: _chessService.lastMoveTo,
     ));
 
     G.logger.t('LocalGameViewModel.redo: Redone');
@@ -169,6 +181,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
       checkStatus: _chessService.checkStatus,
+      lastMoveFrom: _chessService.lastMoveFrom,
+      lastMoveTo: _chessService.lastMoveTo,
     ));
 
     G.logger.t('LocalGameViewModel.reset: Reset');

@@ -36,7 +36,8 @@ class SetupLocalViewModel extends BaseCubit<SetupLocalState> {
       localGameSave: LocalGameSave(
         id: const Uuid().v4(),
         name: name,
-        history: [ch.Chess.DEFAULT_POSITION],
+        history: [],
+        defaultPosition: ch.Chess.DEFAULT_POSITION,
       ),
     );
 

@@ -1,3 +1,4 @@
+import 'package:gen/src/model/board_status_and_last_move.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'local_game_save.g.dart';
@@ -10,8 +11,7 @@ class LocalGameSave {
     required this.id,
     required this.name,
     required this.history,
-    this.lastMoveFrom,
-    this.lastMoveTo,
+    required this.defaultPosition,
   });
 
   /// Creates an empty instance of [LocalGameSave].
@@ -19,8 +19,7 @@ class LocalGameSave {
       : id = '',
         name = '',
         history = [],
-        lastMoveFrom = null,
-        lastMoveTo = null;
+        defaultPosition = '';
 
   /// Creates a new instance of [LocalGameSave] from a JSON object.
   factory LocalGameSave.fromJson(Map<String, dynamic> json) {
@@ -34,45 +33,42 @@ class LocalGameSave {
   final String name;
 
   /// The state history of the game in FEN format.
-  final List<String> history;
+  final List<BoardStatusAndLastMove> history;
 
-  /// The coordinates of where the last move was made from.
-  final String? lastMoveFrom;
-
-  /// The coordinates of where the last move was made to.
-  final String? lastMoveTo;
+  /// The last move made in the game.
+  final String defaultPosition;
 
   /// Converts the save to a JSON object.
   Map<String, dynamic> toJson() => _$LocalGameSaveToJson(this);
 
   /// The current state of the game.
-  String get currentState => history.last;
+  String get currentStateFen => history.lastOrNull?.fen ?? defaultPosition;
+
+  BoardStatusAndLastMove? get currentState => history.lastOrNull;
 
   /// Returns a copy of the save with the given fields updated.
   LocalGameSave copyWith({
     String? id,
     String? name,
-    List<String>? history,
-    String? lastMoveFrom,
-    String? lastMoveTo,
+    List<BoardStatusAndLastMove>? history,
+    String? defaultPosition,
   }) {
     return LocalGameSave(
       id: id ?? this.id,
       name: name ?? this.name,
       history: history ?? this.history,
-      lastMoveFrom: lastMoveFrom ?? this.lastMoveFrom,
-      lastMoveTo: lastMoveTo ?? this.lastMoveTo,
+      defaultPosition: defaultPosition ?? this.defaultPosition,
     );
   }
 
   /// Adds a new state to the history.
-  LocalGameSave addHistory(String stateFEN) {
-    return copyWith(history: [...history, stateFEN]);
+  LocalGameSave addHistory(BoardStatusAndLastMove state) {
+    return copyWith(history: [...history, state]);
   }
 
   /// Removes the last state from the history.
   LocalGameSave popHistory() {
-    if (history.length < 2) throw Exception('Cannot undo the initial state');
+    if (history.isEmpty) throw Exception('Cannot undo the initial state');
     return copyWith(history: history.sublist(0, history.length - 1));
   }
 }

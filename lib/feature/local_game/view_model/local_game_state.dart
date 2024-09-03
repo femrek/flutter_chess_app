@@ -16,6 +16,8 @@ class LocalGameLoadedState extends LocalGameState {
     required this.checkStatus,
     this.moves,
     this.focusedCoordinate,
+    this.lastMoveFrom,
+    this.lastMoveTo,
   });
 
   final AppPiece? Function(SquareCoordinate) getPieceAt;
@@ -27,6 +29,10 @@ class LocalGameLoadedState extends LocalGameState {
   final SquareCoordinate? focusedCoordinate;
 
   final AppChessTurnStatus checkStatus;
+
+  final SquareCoordinate? lastMoveFrom;
+
+  final SquareCoordinate? lastMoveTo;
 
   bool get isFocused => focusedCoordinate != null;
 
@@ -51,5 +57,15 @@ class LocalGameLoadedState extends LocalGameState {
   /// return true if the piece in the [coordinate] has a move in current state.
   bool isMovableFrom(SquareCoordinate coordinate) {
     return movablePiecesCoordinates.contains(coordinate);
+  }
+
+  /// return true if the [coordinate] is the last move from.
+  bool isLastMoveFrom(SquareCoordinate coordinate) {
+    return lastMoveFrom == coordinate;
+  }
+
+  /// return true if the [coordinate] is the last move to.
+  bool isLastMoveTo(SquareCoordinate coordinate) {
+    return lastMoveTo == coordinate;
   }
 }

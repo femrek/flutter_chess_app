@@ -74,6 +74,13 @@ class SquareCoordinate {
     return SquareCoordinate(column, row);
   }
 
+  /// Calls [SquareCoordinate.fromName] if [name] is not null, otherwise returns
+  /// null.
+  static SquareCoordinate? fromNameOrNull(String? name) {
+    if (name == null) return null;
+    return SquareCoordinate.fromName(name);
+  }
+
   /// The column of the square. 0 is the leftmost column, 7 is the rightmost
   /// column.
   final int x;

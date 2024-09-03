@@ -14,6 +14,12 @@ abstract interface class IChessService {
   /// found at the coordinate.
   AppPiece? getPieceAt(SquareCoordinate coordinate);
 
+  /// Gets the square that last move made from in the game.
+  SquareCoordinate? get lastMoveFrom;
+
+  /// Gets the square that last move made to in the game.
+  SquareCoordinate? get lastMoveTo;
+
   /// Gets the current check status of the game.
   AppChessTurnStatus get checkStatus;
 

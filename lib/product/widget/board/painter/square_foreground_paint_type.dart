@@ -15,4 +15,12 @@ enum SquareForegroundPaintType {
   /// Paint the square with a specific color to indicate that the piece is
   /// marked as the king in check.
   checkPiece,
+
+  /// Paint the square with a specific color to indicate that the square is
+  /// the last move from square.
+  movedFrom,
+
+  /// Paint the square with a specific color to indicate that the square is
+  /// the last move to square.
+  movedTo,
 }
