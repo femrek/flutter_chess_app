@@ -51,3 +51,5 @@ app.*.map.json
 
 # auto generated files
 libisar_macos.dylib
+*.isar
+*.isar.lock
