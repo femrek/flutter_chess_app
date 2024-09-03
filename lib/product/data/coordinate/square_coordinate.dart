@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 
 /// Represents a coordinate of a square on the board.
 @immutable
@@ -72,6 +73,21 @@ class SquareCoordinate {
     final column = index ~/ 8;
     final row = index % 8;
     return SquareCoordinate(column, row);
+  }
+
+  /// Creates a square coordinate from an index. valid distance is between
+  /// 0 and 63. Use if the top left square of gridview is A8 or A1 depending on
+  /// the orientation.
+  factory SquareCoordinate.fromIndex({
+    required int index,
+    required BoardOrientationEnum orientation,
+  }) {
+    switch (orientation) {
+      case BoardOrientationEnum.portrait:
+        return SquareCoordinate.fromIndexStartWithA8(index);
+      case BoardOrientationEnum.landscapeLeftBased:
+        return SquareCoordinate.fromIndexStartWithA1(index);
+    }
   }
 
   /// Calls [SquareCoordinate.fromName] if [name] is not null, otherwise returns

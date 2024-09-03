@@ -34,9 +34,10 @@ class GameBoard extends StatelessWidget {
       itemBuilder: (context, index) {
         return BoardSquare(
           unitSize: unitSize,
-          coordinate: orientation == BoardOrientationEnum.portrait
-              ? SquareCoordinate.fromIndexStartWithA8(index)
-              : SquareCoordinate.fromIndexStartWithA1(index),
+          coordinate: SquareCoordinate.fromIndex(
+            index: index,
+            orientation: orientation,
+          ),
           builder: squareBuilder,
         );
       },

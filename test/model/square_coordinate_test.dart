@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 
 void main() {
@@ -144,6 +145,79 @@ void main() {
 
     test('coordinate h8', () {
       final coordinateH8 = SquareCoordinate.fromIndexStartWithA1(63);
+      expect(coordinateH8.x, 7);
+      expect(coordinateH8.y, 7);
+      expect(coordinateH8.nameLowerCase, 'h8');
+    });
+  });
+
+  group(
+    'create a coordinate object with fromIndex constructor in portrait mode',
+    () {
+      test('coordinate a8', () {
+        final coordinateA8 = SquareCoordinate.fromIndex(
+            index: 0, orientation: BoardOrientationEnum.portrait);
+        expect(coordinateA8.x, 0);
+        expect(coordinateA8.y, 7);
+        expect(coordinateA8.nameLowerCase, 'a8');
+      });
+
+      test('coordinate h8', () {
+        final coordinateH8 = SquareCoordinate.fromIndex(
+            index: 7, orientation: BoardOrientationEnum.portrait);
+        expect(coordinateH8.x, 7);
+        expect(coordinateH8.y, 7);
+        expect(coordinateH8.nameLowerCase, 'h8');
+      });
+
+      test('coordinate a1', () {
+        final coordinateA1 = SquareCoordinate.fromIndex(
+            index: 56, orientation: BoardOrientationEnum.portrait);
+        expect(coordinateA1.x, 0);
+        expect(coordinateA1.y, 0);
+        expect(coordinateA1.nameLowerCase, 'a1');
+      });
+
+      test('coordinate h1', () {
+        final coordinateH1 = SquareCoordinate.fromIndex(
+            index: 63, orientation: BoardOrientationEnum.portrait);
+        expect(coordinateH1.x, 7);
+        expect(coordinateH1.y, 0);
+        expect(coordinateH1.nameLowerCase, 'h1');
+      });
+    },
+  );
+
+  group(
+      'create a coordinate object with fromIndex constructor '
+      'in landscape mode', () {
+    test('coordinate a1', () {
+      final coordinateA1 = SquareCoordinate.fromIndex(
+          index: 0, orientation: BoardOrientationEnum.landscapeLeftBased);
+      expect(coordinateA1.x, 0);
+      expect(coordinateA1.y, 0);
+      expect(coordinateA1.nameLowerCase, 'a1');
+    });
+
+    test('coordinate a8', () {
+      final coordinateA8 = SquareCoordinate.fromIndex(
+          index: 7, orientation: BoardOrientationEnum.landscapeLeftBased);
+      expect(coordinateA8.x, 0);
+      expect(coordinateA8.y, 7);
+      expect(coordinateA8.nameLowerCase, 'a8');
+    });
+
+    test('coordinate h1', () {
+      final coordinateH1 = SquareCoordinate.fromIndex(
+          index: 56, orientation: BoardOrientationEnum.landscapeLeftBased);
+      expect(coordinateH1.x, 7);
+      expect(coordinateH1.y, 0);
+      expect(coordinateH1.nameLowerCase, 'h1');
+    });
+
+    test('coordinate h8', () {
+      final coordinateH8 = SquareCoordinate.fromIndex(
+          index: 63, orientation: BoardOrientationEnum.landscapeLeftBased);
       expect(coordinateH8.x, 7);
       expect(coordinateH8.y, 7);
       expect(coordinateH8.nameLowerCase, 'h8');
