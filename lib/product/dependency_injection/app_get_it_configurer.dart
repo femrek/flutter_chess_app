@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
 import 'package:localchess/feature/setup_local/view_model/setup_local_view_model.dart';
 import 'package:localchess/product/cache/app_cache.dart';
+import 'package:localchess/product/cache/i_app_cache.dart';
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
 import 'package:localchess/product/theme/app_dark_theme.dart';
 import 'package:localchess/product/theme/app_light_theme.dart';
@@ -23,7 +24,7 @@ abstract final class AppGetItConfigurer {
 
       // cache
       ..registerLazySingleton<CacheManager>(HiveCacheManager.new)
-      ..registerLazySingleton<AppCache>(() => AppCache(
+      ..registerLazySingleton<IAppCache>(() => AppCache(
             cacheManager: GetIt.I<CacheManager>(),
             logger: GetIt.I<Logger>(),
           ))
@@ -31,7 +32,7 @@ abstract final class AppGetItConfigurer {
       // view model
       ..registerLazySingleton<AppViewModel>(AppViewModel.new)
       ..registerLazySingleton<SetupLocalViewModel>(() => SetupLocalViewModel(
-            appCache: GetIt.I<AppCache>(),
+            appCache: GetIt.I<IAppCache>(),
           ))
       ..registerLazySingleton(LocalGameViewModel.new);
   }

@@ -4,7 +4,7 @@ analyzer:
   exclude: [
     build/**,
     lib/**.g.dart,
-    test/cache/hive_common.dart,
+    test/test_config/hive/hive_common.dart,
   ]
 
 linter:

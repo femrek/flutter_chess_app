@@ -21,7 +21,7 @@ abstract interface class IChessService {
   SquareCoordinate? get lastMoveTo;
 
   /// Gets the current check status of the game.
-  AppChessTurnStatus get checkStatus;
+  AppChessTurnStatus get turnStatus;
 
   /// Gets the list of moves that can be made by the piece at the given [from]
   /// coordinate. If [from] is `null`, returns the list of all possible moves.

@@ -134,4 +134,7 @@ final class LocalGameSaveCacheModel implements CacheModel {
       'data': localGameSave.toJson(),
     };
   }
+
+  @override
+  String toString() => 'LocalGameSaveCacheModel: ${toJson()}';
 }

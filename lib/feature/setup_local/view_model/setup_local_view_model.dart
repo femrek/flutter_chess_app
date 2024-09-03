@@ -4,7 +4,7 @@ import 'package:chess/chess.dart' as ch;
 import 'package:core/core.dart';
 import 'package:gen/gen.dart';
 import 'package:localchess/feature/setup_local/view_model/setup_local_state.dart';
-import 'package:localchess/product/cache/app_cache.dart';
+import 'package:localchess/product/cache/i_app_cache.dart';
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
 import 'package:localchess/product/state/base/base_cubit.dart';
 import 'package:uuid/uuid.dart';
@@ -19,7 +19,7 @@ class SetupLocalViewModel extends BaseCubit<SetupLocalState> {
         ));
 
   /// The cache manager for performing cache operations.
-  final AppCache appCache;
+  final IAppCache appCache;
 
   /// Loads the local game saves.
   Future<void> loadSaves() async {

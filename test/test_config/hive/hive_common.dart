@@ -9,7 +9,7 @@ import 'package:isar/isar.dart';
 
 const _releases = 'https://github.com/isar/isar/releases/download/';
 
-Future<void> initTests() async {
+Future<void> initHiveTests() async {
   final lib = switch (Abi.current()) {
     Abi.macosArm64 || Abi.macosX64 => 'libisar_macos.dylib',
     Abi.linuxX64 => 'libisar_linux_x64.so',
@@ -31,7 +31,7 @@ Future<void> initTests() async {
 }
 
 Future<Box<E>> openTestBox<E>({String? name}) async {
-  await initTests();
+  await initHiveTests();
   name ??= Random().nextInt(999999).toString();
   final box = Hive.box<E>(name: name);
   box.verify();

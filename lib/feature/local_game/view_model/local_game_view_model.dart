@@ -25,7 +25,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     emit(LocalGameLoadedState(
       getPieceAt: _chessService.getPieceAt,
       movablePiecesCoordinates: movablePiecesCoordinates,
-      checkStatus: _chessService.checkStatus,
+      checkStatus: _chessService.turnStatus,
       lastMoveFrom: _chessService.lastMoveFrom,
       lastMoveTo: _chessService.lastMoveTo,
     ));
@@ -60,7 +60,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     emit(LocalGameLoadedState(
       getPieceAt: _chessService.getPieceAt,
       movablePiecesCoordinates: [],
-      checkStatus: _chessService.checkStatus,
+      checkStatus: _chessService.turnStatus,
       moves: moveMap,
       focusedCoordinate: coordinate,
       lastMoveFrom: _chessService.lastMoveFrom,
@@ -83,7 +83,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       getPieceAt: _chessService.getPieceAt,
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.checkStatus,
+      checkStatus: _chessService.turnStatus,
       lastMoveFrom: _chessService.lastMoveFrom,
       lastMoveTo: _chessService.lastMoveTo,
     ));
@@ -111,7 +111,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       getPieceAt: _chessService.getPieceAt,
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.checkStatus,
+      checkStatus: _chessService.turnStatus,
       lastMoveFrom: _chessService.lastMoveFrom,
       lastMoveTo: _chessService.lastMoveTo,
     ));
@@ -134,7 +134,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       getPieceAt: _chessService.getPieceAt,
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.checkStatus,
+      checkStatus: _chessService.turnStatus,
       lastMoveFrom: _chessService.lastMoveFrom,
       lastMoveTo: _chessService.lastMoveTo,
     ));
@@ -157,7 +157,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       getPieceAt: _chessService.getPieceAt,
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.checkStatus,
+      checkStatus: _chessService.turnStatus,
       lastMoveFrom: _chessService.lastMoveFrom,
       lastMoveTo: _chessService.lastMoveTo,
     ));
@@ -180,7 +180,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       getPieceAt: _chessService.getPieceAt,
       movablePiecesCoordinates:
           _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.checkStatus,
+      checkStatus: _chessService.turnStatus,
       lastMoveFrom: _chessService.lastMoveFrom,
       lastMoveTo: _chessService.lastMoveTo,
     ));

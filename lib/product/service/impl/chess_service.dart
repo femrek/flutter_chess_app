@@ -81,7 +81,7 @@ class ChessService implements IChessService {
   }
 
   @override
-  AppChessTurnStatus get checkStatus {
+  AppChessTurnStatus get turnStatus {
     G.logger.t('ChessService.checkStatus');
     final status = _checkStatus();
     G.logger.t('ChessService.checkStatus: $status');
@@ -218,7 +218,10 @@ class ChessService implements IChessService {
 
   @override
   bool canRedo() {
-    return _undoHistory.isNotEmpty;
+    G.logger.t('ChessService.canRedo');
+    final result = _undoHistory.isNotEmpty;
+    G.logger.t('ChessService.canRedo: $_undoHistory');
+    return result;
   }
 
   @override

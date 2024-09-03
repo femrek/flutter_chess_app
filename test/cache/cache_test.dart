@@ -5,32 +5,32 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gen/gen.dart';
 import 'package:get_it/get_it.dart';
 import 'package:localchess/product/cache/app_cache.dart';
+import 'package:localchess/product/cache/i_app_cache.dart';
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:logger/logger.dart';
 
-import 'hive_common.dart';
+import '../test_config/hive/hive_common.dart';
+import '../test_config/test_chess_fen_constants.dart';
 
-void main() {
-  setUp(() async {
-    // Setup GetIt
-    await GetIt.I.reset();
-    GetIt.I.registerSingleton<Logger>(Logger());
-    GetIt.I.registerSingleton<CacheManager>(
-      HiveCacheManager(path: 'test/cache/hive'),
-    );
-    GetIt.I.registerSingleton<AppCache>(AppCache(
-      cacheManager: GetIt.I<CacheManager>(),
-      logger: GetIt.I<Logger>(),
-    ));
+void main() async {
+  // Setup GetIt dependencies
+  await GetIt.I.reset();
+  GetIt.I.registerSingleton<Logger>(Logger());
+  GetIt.I.registerSingleton<CacheManager>(
+    HiveCacheManager(path: 'test/cache/hive'),
+  );
+  GetIt.I.registerSingleton<IAppCache>(AppCache(
+    cacheManager: GetIt.I<CacheManager>(),
+    logger: GetIt.I<Logger>(),
+  ));
 
-    // set logging level
-    Logger.level = Level.info;
+  // set logging level
+  Logger.level = Level.info;
 
-    // Initialize the cache
-    await initTests();
-    await G.appCache.init();
-  });
+  // Initialize the cache
+  await initHiveTests();
+  await G.appCache.init();
 
   tearDown(() async {
     G.appCache.localGameSaveOperator.removeAll();
@@ -418,7 +418,7 @@ void main() {
 
 const _sampleModel_1 = LocalGameSave(
   name: 'save 1',
-  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
+  defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
       fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
@@ -439,7 +439,7 @@ const _sampleModel_1 = LocalGameSave(
 );
 const _sampleModel_1_v2 = LocalGameSave(
   name: 'save 1',
-  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
+  defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
       fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
@@ -465,7 +465,7 @@ const _sampleModel_1_v2 = LocalGameSave(
 );
 const _sampleModel_2 = LocalGameSave(
   name: 'save 2',
-  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
+  defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
       fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
@@ -486,7 +486,7 @@ const _sampleModel_2 = LocalGameSave(
 );
 const _sampleModel_3 = LocalGameSave(
   name: 'save 3',
-  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
+  defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
       fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
@@ -507,7 +507,7 @@ const _sampleModel_3 = LocalGameSave(
 );
 const _sampleModel_4 = LocalGameSave(
   name: 'save 4',
-  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
+  defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
       fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
@@ -528,7 +528,7 @@ const _sampleModel_4 = LocalGameSave(
 );
 const _sampleModel_5 = LocalGameSave(
   name: 'save 5',
-  defaultPosition: 'bbrnqknr/pppppppp/8/8/8/8/PPPPPPPP/BBRNQKNR w - - 0 1',
+  defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
       fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
