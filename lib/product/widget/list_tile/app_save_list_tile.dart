@@ -4,6 +4,7 @@ import 'package:localchess/product/cache/model/local_game_save_cache_model.dart'
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/util/date_extension.dart';
+import 'package:localchess/product/widget/dialog/game_preview_dialog.dart';
 
 /// The function definition to trigger when the save list item selected.
 typedef OnSaveSelected = void Function(LocalGameSaveCacheModel save);
@@ -34,6 +35,16 @@ class AppSaveListTile extends StatelessWidget {
       subtitle: Text(
         LocaleKeys.widget_saveListTile_lastPlayed.tr() +
             (data.metaData?.updateAt.toVisualFormat ?? ''),
+      ),
+      trailing: IconButton(
+        icon: const Icon(Icons.preview),
+        onPressed: () {
+          GamePreviewDialog.show(
+            context: context,
+            save: data,
+            onPlayPressed: () => onSaveSelected(data),
+          );
+        },
       ),
       onTap: () {
         onSaveSelected(data);

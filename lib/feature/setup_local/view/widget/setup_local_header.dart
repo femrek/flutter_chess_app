@@ -34,17 +34,8 @@ class SetupLocalHeader extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: AppButton(
             onPressed: onPressedNewGame,
-            backgroundColor: Theme.of(context).brightness == Brightness.light
-                ? Theme.of(context).colorScheme.primary
-                : null,
-            child: Text(
+            child: const Text(
               LocaleKeys.screen_setupLocal_newGameButton,
-              style: Theme.of(context).brightness == Brightness.light
-                  ? Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontWeight: FontWeight.w500,
-                      )
-                  : null,
             ).tr(),
           ),
         ),

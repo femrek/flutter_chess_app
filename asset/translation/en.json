@@ -37,6 +37,11 @@
       "hint": "Game Name",
       "createButton": "Create",
       "cancelButton": "Cancel"
+    },
+    "gamePreviewDialog": {
+      "lastPlayed": "Last Played: ",
+      "created": "Started: ",
+      "play": "Play"
     }
   },
   "widget": {

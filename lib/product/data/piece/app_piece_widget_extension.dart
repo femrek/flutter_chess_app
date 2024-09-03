@@ -8,9 +8,7 @@ extension AppPieceWidgetExtension on AppPiece {
   /// Create a piece image widget from the piece
   Widget asImage({BoardOrientationEnum? orientation}) {
     return Transform.rotate(
-      angle: orientation == BoardOrientationEnum.landscapeLeftBased
-          ? 3.1415926535 / 2 * (isDark ? -1 : 1)
-          : 0,
+      angle: orientation?.pieceAngle(isDark: isDark) ?? 0,
       child: Transform.scale(
         scale: scale,
         child: image.svg(

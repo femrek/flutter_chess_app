@@ -37,6 +37,11 @@
       "hint": "Oyun Adı",
       "createButton": "Oluştur",
       "cancelButton": "İptal"
+    },
+    "gamePreviewDialog": {
+      "lastPlayed": "Son Oynama: ",
+      "created": "Oyunu Oluşturma: ",
+      "play": "Oyna"
     }
   },
   "widget": {
