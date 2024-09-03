@@ -27,6 +27,7 @@ class GamePreviewDialog extends StatefulWidget {
   /// The callback when the play button is pressed.
   final VoidCallback onPlayPressed;
 
+  /// Shows a [GamePreviewDialog] with the given [save] and [onPlayPressed].
   static Future<void> show({
     required BuildContext context,
     required LocalGameSaveCacheModel save,

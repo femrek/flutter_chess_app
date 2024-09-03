@@ -140,10 +140,6 @@ class SquareForegroundPainter extends CustomPainter {
     }
   }
 
-  SquareForegroundPainter copy() {
-    return SquareForegroundPainter(paintTypes: paintTypes);
-  }
-
   @override
   void paint(Canvas canvas, Size size) {
     G.logger.t('PieceBackgroundPainter.paint: start: $paintTypes');

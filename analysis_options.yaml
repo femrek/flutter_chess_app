@@ -1,5 +1,12 @@
 include: package:very_good_analysis/analysis_options.yaml
 
+analyzer:
+  exclude: [
+    build/**,
+    lib/**.g.dart,
+    test/cache/hive_common.dart,
+  ]
+
 linter:
   rules:
     sort_pub_dependencies: false

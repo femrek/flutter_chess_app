@@ -34,15 +34,11 @@ mixin SetupLocalStateMixin on BaseState<SetupLocalScreen> {
       if (name.isEmpty) return;
       final save = await viewModel.createGame(name);
 
-      if (context.mounted) {
-        await context.router.push(LocalGameRoute(save: save));
-      }
+      if (mounted) await context.router.push(LocalGameRoute(save: save));
     });
   }
 
   Future<void> onPressedSave(LocalGameSaveCacheModel save) async {
-    if (context.mounted) {
-      await context.router.push(LocalGameRoute(save: save));
-    }
+    await context.router.push(LocalGameRoute(save: save));
   }
 }

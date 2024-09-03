@@ -39,6 +39,7 @@ class LocalGameSave {
   /// The current state of the game.
   String get currentStateFen => history.lastOrNull?.fen ?? defaultPosition;
 
+  /// The current state of the game as FEN string.
   BoardStatusAndLastMove? get currentState => history.lastOrNull;
 
   /// Returns a copy of the save with the given fields updated.
