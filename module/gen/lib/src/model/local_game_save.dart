@@ -8,7 +8,6 @@ part 'local_game_save.g.dart';
 class LocalGameSave {
   /// Constructor
   const LocalGameSave({
-    required this.id,
     required this.name,
     required this.history,
     required this.defaultPosition,
@@ -16,8 +15,7 @@ class LocalGameSave {
 
   /// Creates an empty instance of [LocalGameSave].
   LocalGameSave.empty()
-      : id = '',
-        name = '',
+      : name = '',
         history = [],
         defaultPosition = '';
 
@@ -25,9 +23,6 @@ class LocalGameSave {
   factory LocalGameSave.fromJson(Map<String, dynamic> json) {
     return _$LocalGameSaveFromJson(json);
   }
-
-  /// The id of the save. Have to be unique. Recommended to use UUIDs.
-  final String id;
 
   /// The visible name of the save.
   final String name;
@@ -48,13 +43,11 @@ class LocalGameSave {
 
   /// Returns a copy of the save with the given fields updated.
   LocalGameSave copyWith({
-    String? id,
     String? name,
     List<BoardStatusAndLastMove>? history,
     String? defaultPosition,
   }) {
     return LocalGameSave(
-      id: id ?? this.id,
       name: name ?? this.name,
       history: history ?? this.history,
       defaultPosition: defaultPosition ?? this.defaultPosition,

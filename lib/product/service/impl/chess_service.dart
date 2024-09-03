@@ -32,10 +32,11 @@ class ChessService implements IChessService {
   final List<BoardStatusAndLastMove> _undoHistory = [];
 
   /// Updates the save with the new save. also updates the [_save] field.
-  Future<void> _updateSave(LocalGameSaveCacheModel newSave) async {
+  Future<void> _updateSave(LocalGameSave newSave) async {
     _save = await G.appCache.localGameSaveOperator.update(
       LocalGameSaveCacheModel(
-        localGameSave: newSave.localGameSave,
+        id: _save.id,
+        localGameSave: newSave,
       ),
     );
   }
@@ -169,12 +170,12 @@ class ChessService implements IChessService {
 
     _undoHistory.clear();
 
-    await _updateSave(LocalGameSaveCacheModel(
-      localGameSave: save.localGameSave.addHistory(BoardStatusAndLastMove(
+    await _updateSave(save.localGameSave.addHistory(
+      BoardStatusAndLastMove(
         fen: _chess.fen,
         lastMoveFrom: from,
         lastMoveTo: to,
-      )),
+      ),
     ));
 
     G.logger.t('ChessService.move: Moved to $move');
@@ -204,9 +205,7 @@ class ChessService implements IChessService {
     }
 
     // save the new status of the game.
-    await _updateSave(LocalGameSaveCacheModel(
-      localGameSave: save.localGameSave.popHistory(),
-    ));
+    await _updateSave(save.localGameSave.popHistory());
 
     // add the undone state to the undo history.
     _undoHistory.add(undoState);
@@ -232,9 +231,7 @@ class ChessService implements IChessService {
     }
 
     final redoState = _undoHistory.removeLast();
-    await _updateSave(LocalGameSaveCacheModel(
-      localGameSave: save.localGameSave.addHistory(redoState),
-    ));
+    await _updateSave(save.localGameSave.addHistory(redoState));
     _chess = ch.Chess.fromFEN(save.localGameSave.currentStateFen);
 
     G.logger.t('ChessService.redo: Redone');
@@ -246,9 +243,7 @@ class ChessService implements IChessService {
 
     _undoHistory.clear();
 
-    await _updateSave(LocalGameSaveCacheModel(
-      localGameSave: save.localGameSave.copyWith(history: []),
-    ));
+    await _updateSave(save.localGameSave.copyWith(history: []));
 
     _chess.load(save.localGameSave.currentStateFen);
 

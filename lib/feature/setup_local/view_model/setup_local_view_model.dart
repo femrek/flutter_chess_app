@@ -33,8 +33,8 @@ class SetupLocalViewModel extends BaseCubit<SetupLocalState> {
   /// Creates a new game and save it to the cache.
   Future<LocalGameSaveCacheModel> createGame(String name) async {
     final newSave = LocalGameSaveCacheModel(
+      id: const Uuid().v4(),
       localGameSave: LocalGameSave(
-        id: const Uuid().v4(),
         name: name,
         history: [],
         defaultPosition: ch.Chess.DEFAULT_POSITION,
