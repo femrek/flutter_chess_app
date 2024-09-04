@@ -4,6 +4,18 @@ abstract final class TestChessFenConstants {
   static const String initialFen =
       'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
+  static const String initialFen_1stMove_e4 =
+      'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1';
+
+  static const String initialFen_2ndMove_e5 =
+      'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1';
+
+  static const String initialFen_3rdMove_c4 =
+      'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1';
+
+  static const String initialFen_4thMove_b5 =
+      'rnbqkbnr/p1pp1ppp/8/1p2p3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq b6 0 1';
+
   static const String readyToPromotionMoveFen_b7Move =
       '4k3/1P6/8/8/8/8/8/4K3 w - - 0 1';
 

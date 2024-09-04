@@ -3,34 +3,19 @@
 import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gen/gen.dart';
-import 'package:get_it/get_it.dart';
-import 'package:localchess/product/cache/app_cache.dart';
-import 'package:localchess/product/cache/i_app_cache.dart';
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:logger/logger.dart';
 
-import '../test_config/hive/hive_common.dart';
 import '../test_config/test_chess_fen_constants.dart';
+import '../test_config/test_init.dart';
 
 void main() async {
-  // Setup GetIt dependencies
-  await GetIt.I.reset();
-  GetIt.I.registerSingleton<Logger>(Logger());
-  GetIt.I.registerSingleton<CacheManager>(
-    HiveCacheManager(path: 'test/cache/hive'),
-  );
-  GetIt.I.registerSingleton<IAppCache>(AppCache(
-    cacheManager: GetIt.I<CacheManager>(),
-    logger: GetIt.I<Logger>(),
-  ));
-
   // set logging level
   Logger.level = Level.info;
 
-  // Initialize the cache
-  await initHiveTests();
-  await G.appCache.init();
+  // init
+  await TestInit.initWithHiveImpl();
 
   tearDown(() async {
     G.appCache.localGameSaveOperator.removeAll();
@@ -421,17 +406,17 @@ const _sampleModel_1 = LocalGameSave(
   defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      fen: TestChessFenConstants.initialFen_1stMove_e4,
       lastMoveFrom: 'e2',
       lastMoveTo: 'e4',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      fen: TestChessFenConstants.initialFen_2ndMove_e5,
       lastMoveFrom: 'e7',
       lastMoveTo: 'e5',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      fen: TestChessFenConstants.initialFen_3rdMove_c4,
       lastMoveFrom: 'f1',
       lastMoveTo: 'c4',
     ),
@@ -442,22 +427,22 @@ const _sampleModel_1_v2 = LocalGameSave(
   defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      fen: TestChessFenConstants.initialFen_1stMove_e4,
       lastMoveFrom: 'e2',
       lastMoveTo: 'e4',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      fen: TestChessFenConstants.initialFen_2ndMove_e5,
       lastMoveFrom: 'e7',
       lastMoveTo: 'e5',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      fen: TestChessFenConstants.initialFen_3rdMove_c4,
       lastMoveFrom: 'f1',
       lastMoveTo: 'c4',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/p1pp1ppp/8/1p2p3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq b6 0 1',
+      fen: TestChessFenConstants.initialFen_3rdMove_c4,
       lastMoveFrom: 'b7',
       lastMoveTo: 'b5',
     ),
@@ -468,17 +453,17 @@ const _sampleModel_2 = LocalGameSave(
   defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      fen: TestChessFenConstants.initialFen_1stMove_e4,
       lastMoveFrom: 'e2',
       lastMoveTo: 'e4',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      fen: TestChessFenConstants.initialFen_2ndMove_e5,
       lastMoveFrom: 'e7',
       lastMoveTo: 'e5',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      fen: TestChessFenConstants.initialFen_3rdMove_c4,
       lastMoveFrom: 'f1',
       lastMoveTo: 'c4',
     ),
@@ -489,17 +474,17 @@ const _sampleModel_3 = LocalGameSave(
   defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      fen: TestChessFenConstants.initialFen_1stMove_e4,
       lastMoveFrom: 'e2',
       lastMoveTo: 'e4',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      fen: TestChessFenConstants.initialFen_2ndMove_e5,
       lastMoveFrom: 'e7',
       lastMoveTo: 'e5',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      fen: TestChessFenConstants.initialFen_3rdMove_c4,
       lastMoveFrom: 'f1',
       lastMoveTo: 'c4',
     ),
@@ -510,17 +495,17 @@ const _sampleModel_4 = LocalGameSave(
   defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      fen: TestChessFenConstants.initialFen_1stMove_e4,
       lastMoveFrom: 'e2',
       lastMoveTo: 'e4',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      fen: TestChessFenConstants.initialFen_2ndMove_e5,
       lastMoveFrom: 'e7',
       lastMoveTo: 'e5',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      fen: TestChessFenConstants.initialFen_3rdMove_c4,
       lastMoveFrom: 'f1',
       lastMoveTo: 'c4',
     ),
@@ -531,17 +516,17 @@ const _sampleModel_5 = LocalGameSave(
   defaultPosition: TestChessFenConstants.initialFen,
   history: [
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1',
+      fen: TestChessFenConstants.initialFen_1stMove_e4,
       lastMoveFrom: 'e2',
       lastMoveTo: 'e4',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 1',
+      fen: TestChessFenConstants.initialFen_2ndMove_e5,
       lastMoveFrom: 'e7',
       lastMoveTo: 'e5',
     ),
     BoardStatusAndLastMove(
-      fen: 'rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1',
+      fen: TestChessFenConstants.initialFen_3rdMove_c4,
       lastMoveFrom: 'f1',
       lastMoveTo: 'c4',
     ),
