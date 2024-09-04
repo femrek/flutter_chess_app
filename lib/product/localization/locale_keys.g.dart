@@ -33,18 +33,28 @@ abstract class  LocaleKeys {
   static const dialog_gamePreviewDialog_created = 'dialog.gamePreviewDialog.created';
   static const dialog_gamePreviewDialog_play = 'dialog.gamePreviewDialog.play';
   static const dialog_gamePreviewDialog = 'dialog.gamePreviewDialog';
+  static const dialog_confirmationDialog_restartLocalGame_title = 'dialog.confirmationDialog.restartLocalGame.title';
+  static const dialog_confirmationDialog_restartLocalGame_content = 'dialog.confirmationDialog.restartLocalGame.content';
+  static const dialog_confirmationDialog_restartLocalGame_confirmButton = 'dialog.confirmationDialog.restartLocalGame.confirmButton';
+  static const dialog_confirmationDialog_restartLocalGame_cancelButton = 'dialog.confirmationDialog.restartLocalGame.cancelButton';
+  static const dialog_confirmationDialog_restartLocalGame = 'dialog.confirmationDialog.restartLocalGame';
+  static const dialog_confirmationDialog = 'dialog.confirmationDialog';
   static const dialog = 'dialog';
   static const widget_saveListTile_lastPlayed = 'widget.saveListTile.lastPlayed';
   static const widget_saveListTile = 'widget.saveListTile';
   static const widget = 'widget';
-  static const chessTurn_black = 'chessTurn.black';
-  static const chessTurn_white = 'chessTurn.white';
-  static const chessTurn_blackKingCheck = 'chessTurn.blackKingCheck';
-  static const chessTurn_whiteKingCheck = 'chessTurn.whiteKingCheck';
-  static const chessTurn_blackKingCheckmate = 'chessTurn.blackKingCheckmate';
-  static const chessTurn_whiteKingCheckmate = 'chessTurn.whiteKingCheckmate';
-  static const chessTurn_draw = 'chessTurn.draw';
-  static const chessTurn_stalemate = 'chessTurn.stalemate';
-  static const chessTurn = 'chessTurn';
+  static const game_undo = 'game.undo';
+  static const game_redo = 'game.redo';
+  static const game_restart = 'game.restart';
+  static const game_chessTurn_black = 'game.chessTurn.black';
+  static const game_chessTurn_white = 'game.chessTurn.white';
+  static const game_chessTurn_blackKingCheck = 'game.chessTurn.blackKingCheck';
+  static const game_chessTurn_whiteKingCheck = 'game.chessTurn.whiteKingCheck';
+  static const game_chessTurn_blackKingCheckmate = 'game.chessTurn.blackKingCheckmate';
+  static const game_chessTurn_whiteKingCheckmate = 'game.chessTurn.whiteKingCheckmate';
+  static const game_chessTurn_draw = 'game.chessTurn.draw';
+  static const game_chessTurn_stalemate = 'game.chessTurn.stalemate';
+  static const game_chessTurn = 'game.chessTurn';
+  static const game = 'game';
 
 }

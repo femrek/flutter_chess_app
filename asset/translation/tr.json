@@ -42,6 +42,14 @@
       "lastPlayed": "Son Oynama: ",
       "created": "Oyunu Oluşturma: ",
       "play": "Oyna"
+    },
+    "confirmationDialog": {
+      "restartLocalGame": {
+        "title": "Oyunu Yeniden Başlat",
+        "content": "Oyunu yeniden başlatmak istediğinizden emin misiniz?",
+        "confirmButton": "Yeniden Başlat",
+        "cancelButton": "İptal"
+      }
     }
   },
   "widget": {
@@ -49,14 +57,19 @@
       "lastPlayed": "Son Oynama: "
     }
   },
-  "chessTurn": {
-    "black": "Siyah",
-    "white": "Beyaz",
-    "blackKingCheck": "Siyah",
-    "whiteKingCheck": "Beyaz",
-    "blackKingCheckmate": "Beyaz Kazandı",
-    "whiteKingCheckmate": "Siyah Kazandı",
-    "draw": "Berabere",
-    "stalemate": "Berabere"
+  "game": {
+    "undo": "Geri Al",
+    "redo": "Yeniden Yap",
+    "restart": "Yeniden Başlat",
+    "chessTurn": {
+      "black": "Siyah",
+      "white": "Beyaz",
+      "blackKingCheck": "Siyah",
+      "whiteKingCheck": "Beyaz",
+      "blackKingCheckmate": "Beyaz Kazandı",
+      "whiteKingCheckmate": "Siyah Kazandı",
+      "draw": "Berabere",
+      "stalemate": "Berabere"
+    }
   }
 }

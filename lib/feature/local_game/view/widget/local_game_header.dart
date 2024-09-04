@@ -6,6 +6,9 @@ class LocalGameHeader extends StatelessWidget implements PreferredSizeWidget {
   const LocalGameHeader({
     required this.gameName,
     required this.frontColor,
+    required this.undoButtonBuilder,
+    required this.redoButtonBuilder,
+    required this.onRestartPressed,
     super.key,
   });
 
@@ -15,6 +18,15 @@ class LocalGameHeader extends StatelessWidget implements PreferredSizeWidget {
   /// The color of the front elements.
   final Color frontColor;
 
+  /// The builder for the undo button.
+  final WidgetBuilder undoButtonBuilder;
+
+  /// The builder for the redo button.
+  final WidgetBuilder redoButtonBuilder;
+
+  /// The callback when the restart button is pressed.
+  final VoidCallback onRestartPressed;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -22,14 +34,33 @@ class LocalGameHeader extends StatelessWidget implements PreferredSizeWidget {
         BackButton(
           color: frontColor,
         ),
+
+        // the title. The game name
         Expanded(
           child: Text(
             gameName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   color: frontColor,
                 ),
           ),
         ),
+
+        // The restart button
+        IconButton(
+          onPressed: onRestartPressed,
+          icon: Icon(
+            Icons.restart_alt,
+            color: frontColor,
+          ),
+        ),
+
+        // The undo button
+        undoButtonBuilder(context),
+
+        // The redo button
+        redoButtonBuilder(context),
       ],
     );
   }

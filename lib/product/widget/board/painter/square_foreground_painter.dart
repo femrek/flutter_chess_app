@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/painter/square_foreground_paint_type.dart';
 
@@ -142,13 +141,9 @@ class SquareForegroundPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    G.logger.t('PieceBackgroundPainter.paint: start: $paintTypes');
-
     for (final paintType in paintTypes) {
       _performPaint(paintType, canvas, size);
     }
-
-    G.logger.t('PieceBackgroundPainter.paint: end: $paintTypes');
   }
 
   @override

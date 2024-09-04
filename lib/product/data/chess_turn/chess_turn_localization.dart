@@ -9,21 +9,21 @@ extension ChessTurnLocalization on AppChessTurnStatus {
   String get localized {
     switch (this) {
       case AppChessTurnStatus.white:
-        return LocaleKeys.chessTurn_white.tr();
+        return LocaleKeys.game_chessTurn_white.tr();
       case AppChessTurnStatus.black:
-        return LocaleKeys.chessTurn_black.tr();
+        return LocaleKeys.game_chessTurn_black.tr();
       case AppChessTurnStatus.blackKingCheck:
-        return LocaleKeys.chessTurn_blackKingCheck.tr();
+        return LocaleKeys.game_chessTurn_blackKingCheck.tr();
       case AppChessTurnStatus.whiteKingCheck:
-        return LocaleKeys.chessTurn_whiteKingCheck.tr();
+        return LocaleKeys.game_chessTurn_whiteKingCheck.tr();
       case AppChessTurnStatus.blackKingCheckmate:
-        return LocaleKeys.chessTurn_blackKingCheckmate.tr();
+        return LocaleKeys.game_chessTurn_blackKingCheckmate.tr();
       case AppChessTurnStatus.whiteKingCheckmate:
-        return LocaleKeys.chessTurn_whiteKingCheckmate.tr();
+        return LocaleKeys.game_chessTurn_whiteKingCheckmate.tr();
       case AppChessTurnStatus.draw:
-        return LocaleKeys.chessTurn_draw.tr();
+        return LocaleKeys.game_chessTurn_draw.tr();
       case AppChessTurnStatus.stalemate:
-        return LocaleKeys.chessTurn_stalemate.tr();
+        return LocaleKeys.game_chessTurn_stalemate.tr();
     }
   }
 }

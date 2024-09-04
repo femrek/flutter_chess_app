@@ -42,6 +42,14 @@
       "lastPlayed": "Last Played: ",
       "created": "Started: ",
       "play": "Play"
+    },
+    "confirmationDialog": {
+      "restartLocalGame": {
+        "title": "Restart Game",
+        "content": "Are you sure you want to restart the game?",
+        "confirmButton": "Restart",
+        "cancelButton": "Cancel"
+      }
     }
   },
   "widget": {
@@ -49,14 +57,20 @@
       "lastPlayed": "Last Played: "
     }
   },
-  "chessTurn": {
-    "black": "Black Turn",
-    "white": "White Turn",
-    "blackKingCheck": "Black Turn",
-    "whiteKingCheck": "White Turn",
-    "blackKingCheckmate": "White is the Winner",
-    "whiteKingCheckmate": "Black is the Winner",
-    "draw": "Draw",
-    "stalemate": "Stalemate"
+  "game": {
+    "undo": "Undo",
+    "redo": "Redo",
+    "restart": "Restart",
+    "chessTurn": {
+      "yourTurn": "Your Turn",
+      "black": "Black Turn",
+      "white": "White Turn",
+      "blackKingCheck": "Black Turn",
+      "whiteKingCheck": "White Turn",
+      "blackKingCheckmate": "White is the Winner",
+      "whiteKingCheckmate": "Black is the Winner",
+      "draw": "Draw",
+      "stalemate": "Stalemate"
+    }
   }
 }

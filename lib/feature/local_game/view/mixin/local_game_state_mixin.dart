@@ -1,11 +1,14 @@
 // ignore_for_file: public_member_api_docs
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:localchess/feature/local_game/view/local_game_screen.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/state/base/base_state.dart';
+import 'package:localchess/product/widget/dialog/confirmation_dialog.dart';
 import 'package:localchess/product/widget/dialog/pick_a_promotion_dialog.dart';
 
 mixin LocalGameStateMixin on BaseState<LocalGameScreen> {
@@ -111,5 +114,43 @@ mixin LocalGameStateMixin on BaseState<LocalGameScreen> {
     );
 
     G.logger.t('onMoveTried: Moved to $targetCoordinate');
+  }
+
+  void onUndoPressed() {
+    G.logger.t('LocalGameStateMixin.onUndoPressed');
+    viewModel.undo();
+    G.logger.t('LocalGameStateMixin.onUndoPressed: Undid');
+  }
+
+  void onRedoPressed() {
+    G.logger.t('LocalGameStateMixin.onRedoPressed');
+    viewModel.redo();
+    G.logger.t('LocalGameStateMixin.onRedoPressed: Redid');
+  }
+
+  Future<void> onRestartPressed() async {
+    G.logger.t('LocalGameStateMixin.onRestartPressed');
+
+    final confirmed = await ConfirmationDialog.show(
+      context: context,
+      title: LocaleKeys.dialog_confirmationDialog_restartLocalGame_title.tr(),
+      content:
+          LocaleKeys.dialog_confirmationDialog_restartLocalGame_content.tr(),
+      confirmText: LocaleKeys
+          .dialog_confirmationDialog_restartLocalGame_confirmButton
+          .tr(),
+      cancelText: LocaleKeys
+          .dialog_confirmationDialog_restartLocalGame_cancelButton
+          .tr(),
+    );
+
+    if (!confirmed) {
+      G.logger.d('Restart is cancelled');
+      return;
+    }
+
+    await viewModel.reset();
+
+    G.logger.t('LocalGameStateMixin.onRestartPressed: Restarted');
   }
 }

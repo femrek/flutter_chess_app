@@ -15,10 +15,14 @@ class LocalGameLoadedState extends LocalGameState {
     required this.isFocused,
     required this.turnStatus,
     required this.capturedPieces,
+    required this.canUndo,
+    required this.canRedo,
   });
 
   final Map<SquareCoordinate, SquareData> squareStates;
   final bool isFocused;
   final AppChessTurnStatus turnStatus;
   final List<AppPiece> capturedPieces;
+  final bool canUndo;
+  final bool canRedo;
 }

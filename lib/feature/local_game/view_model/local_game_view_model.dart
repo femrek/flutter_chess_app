@@ -48,6 +48,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       isFocused: false,
       turnStatus: turnStatus,
       capturedPieces: capturedPieces,
+      canUndo: _chessService.canUndo(),
+      canRedo: _chessService.canRedo(),
     ));
 
     G.logger.t('LocalGameViewModel._emitStateCompletely: Completely emitted');
@@ -93,6 +95,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       isFocused: true,
       turnStatus: turnStatus,
       capturedPieces: (state as LocalGameLoadedState).capturedPieces,
+      canUndo: _chessService.canUndo(),
+      canRedo: _chessService.canRedo(),
     ));
 
     G.logger.t('LocalGameViewModel._emitStateWhenFocus:'
