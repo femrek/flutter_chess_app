@@ -22,6 +22,41 @@ enum AppPiece {
     required this.name,
   });
 
+  /// Creates a piece from the name case sensitive. Upper case for white pieces
+  /// and lower case for black pieces. (e.g. 'P', 'R', 'N', 'B', 'Q', 'K', 'p',
+  /// 'r', 'n', 'b', 'q', 'k')
+  factory AppPiece.fromNameCaseSensitive(String name) {
+    switch (name) {
+      case 'P':
+        return pawnW;
+      case 'R':
+        return rookW;
+      case 'N':
+        return knightW;
+      case 'B':
+        return bishopW;
+      case 'Q':
+        return queenW;
+      case 'K':
+        return kingW;
+      case 'p':
+        return pawnB;
+      case 'r':
+        return rookB;
+      case 'n':
+        return knightB;
+      case 'b':
+        return bishopB;
+      case 'q':
+        return queenB;
+      case 'k':
+        return kingB;
+      default:
+        throw Exception('undefined piece name. '
+            'Piece name must be one of [ P, R, N, B, Q, K, p, r, n, b, q, k ]');
+    }
+  }
+
   /// Creates a piece from the name form chess library.
   factory AppPiece.fromName({
     required String name,

@@ -12,6 +12,7 @@ BoardStatusAndLastMove _$BoardStatusAndLastMoveFromJson(
       fen: json['fen'] as String,
       lastMoveFrom: json['lastMoveFrom'] as String,
       lastMoveTo: json['lastMoveTo'] as String,
+      capturedPiece: json['capturedPiece'] as String?,
     );
 
 Map<String, dynamic> _$BoardStatusAndLastMoveToJson(
@@ -20,4 +21,5 @@ Map<String, dynamic> _$BoardStatusAndLastMoveToJson(
       'fen': instance.fen,
       'lastMoveFrom': instance.lastMoveFrom,
       'lastMoveTo': instance.lastMoveTo,
+      'capturedPiece': instance.capturedPiece,
     };

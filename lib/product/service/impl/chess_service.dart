@@ -126,6 +126,20 @@ class ChessService implements IChessService {
   }
 
   @override
+  List<AppPiece> get capturedPieces {
+    final capturedPieces = save.localGameSave.history
+        .map<AppPiece?>((e) {
+          final name = e.capturedPiece;
+          if (name == null) return null;
+          return AppPiece.fromNameCaseSensitive(name);
+        })
+        .whereType<AppPiece>()
+        .toList();
+
+    return capturedPieces;
+  }
+
+  @override
   Set<AppChessMove> moves({SquareCoordinate? from}) {
     final rawMoves = _chess.generate_moves();
 
@@ -155,8 +169,24 @@ class ChessService implements IChessService {
       'Missing promotion, the move requires a promotion',
     );
 
+    // get the move coordinate names.
     final from = move.from.nameLowerCase;
     final to = move.to.nameLowerCase;
+
+    // find the captured piece if exists.
+    late final String? capturedPiece;
+    {
+      final piece = _chess.get(to);
+      if (piece != null) {
+        if (piece.color == ch.Color.BLACK) {
+          capturedPiece = piece.type.toLowerCase();
+        } else {
+          capturedPiece = piece.type.toUpperCase();
+        }
+      } else {
+        capturedPiece = null;
+      }
+    }
 
     final moveResult = _chess.move({
       'from': from,
@@ -175,10 +205,12 @@ class ChessService implements IChessService {
         fen: _chess.fen,
         lastMoveFrom: from,
         lastMoveTo: to,
+        capturedPiece: capturedPiece,
       ),
     ));
 
-    G.logger.t('ChessService.move: Moved to $move');
+    G.logger.t('ChessService.move: Moved to $move, promotion: $promotion, '
+        'captured: $capturedPiece');
   }
 
   @override
@@ -192,10 +224,7 @@ class ChessService implements IChessService {
 
     // get history and validate
     final history = save.localGameSave.history;
-    if (history.isEmpty) {
-      G.logger.w('No history to undo');
-      throw Exception('No history to undo');
-    }
+    if (history.isEmpty) throw Exception('No history to undo');
 
     // get and validate last status
     final undoState = save.localGameSave.currentState;
@@ -228,10 +257,7 @@ class ChessService implements IChessService {
   Future<void> redo() async {
     G.logger.t('ChessService.redo');
 
-    if (_undoHistory.isEmpty) {
-      G.logger.w('No history to redo');
-      return;
-    }
+    if (_undoHistory.isEmpty) throw Exception('No history to redo');
 
     final redoState = _undoHistory.removeLast();
     await _updateSave(save.localGameSave.addHistory(redoState));

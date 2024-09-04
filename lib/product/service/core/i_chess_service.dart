@@ -23,6 +23,9 @@ abstract interface class IChessService {
   /// Gets the current check status of the game.
   AppChessTurnStatus get turnStatus;
 
+  /// Gets the list of captured pieces in the game save.
+  List<AppPiece> get capturedPieces;
+
   /// Gets the list of moves that can be made by the piece at the given [from]
   /// coordinate. If [from] is `null`, returns the list of all possible moves.
   /// The list is empty if no moves are possible.

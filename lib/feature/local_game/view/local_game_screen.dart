@@ -9,7 +9,9 @@ import 'package:localchess/feature/local_game/view_model/local_game_view_model.d
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
+import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
+import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/state/base/base_state.dart';
@@ -17,6 +19,8 @@ import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
 import 'package:localchess/product/widget/button/app_button/app_button.dart';
+import 'package:localchess/product/widget/captured_piece_indicator/captured_piece_indicator.dart';
+import 'package:localchess/product/widget/captured_piece_indicator/horizontal_direction.dart';
 
 /// Local Game Screen widget
 @RoutePage()
@@ -61,7 +65,26 @@ class _LocalGameScreenState extends BaseState<LocalGameScreen>
                 ),
               ),
             ),
-            if (kDebugMode) _DebugButtons(),
+            const Expanded(
+              child: SafeArea(
+                top: false,
+                child: Row(
+                  children: [
+                    RotatedBox(
+                      quarterTurns: 1,
+                      child: _CapturedPieceIndicator(isCapturedByDark: false),
+                    ),
+                    Spacer(),
+                    if (kDebugMode) _DebugButtons(),
+                    Spacer(),
+                    RotatedBox(
+                      quarterTurns: 3,
+                      child: _CapturedPieceIndicator(isCapturedByDark: true),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -69,7 +92,40 @@ class _LocalGameScreenState extends BaseState<LocalGameScreen>
   }
 }
 
+class _CapturedPieceIndicator extends StatelessWidget {
+  const _CapturedPieceIndicator({
+    required this.isCapturedByDark,
+  });
+
+  final bool isCapturedByDark;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<LocalGameViewModel, LocalGameState, List<AppPiece>>(
+      selector: (state) {
+        if (state is LocalGameLoadedState) {
+          return state.capturedPieces
+              .where((e) => e.isDark != isCapturedByDark)
+              .toList();
+        }
+        return [];
+      },
+      builder: (context, pieces) {
+        return CapturedPieceIndicator(
+          pieces: pieces,
+          pieceSize: MediaQuery.of(context).size.width / 8,
+          direction: isCapturedByDark
+              ? HorizontalDirection.rightToLeft
+              : HorizontalDirection.leftToRight,
+        );
+      },
+    );
+  }
+}
+
 class _DebugButtons extends StatelessWidget {
+  const _DebugButtons();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -163,6 +219,7 @@ class _Board extends StatelessWidget {
                 return BoardSquareContent(
                   data: state,
                   onDragStarted: () => onFocusTried(coordinate),
+                  orientation: BoardOrientationEnum.landscapeLeftBased,
                 );
               },
             ),

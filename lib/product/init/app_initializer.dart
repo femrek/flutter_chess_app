@@ -43,7 +43,7 @@ abstract final class AppInitializer {
       return true;
     };
 
-    Logger.level = Level.trace;
+    Logger.level = Level.info;
     G.logger.d('App initialized.');
   }
 }
