@@ -14,21 +14,90 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
 
   late IChessService _chessService;
 
+  final _squareStates = <SquareCoordinate, SquareData>{
+    for (var e in SquareCoordinate.boardSquares) e: SquareData.empty(),
+  };
+
+  void _emitNormal() {
+    G.logger.t('LocalGameViewModel._emitStateCompletely');
+
+    final movablePiecesCoordinates =
+        _chessService.moves().map((e) => e.from).toList();
+    final turnStatus = _chessService.turnStatus;
+
+    for (final coordinate in _squareStates.keys) {
+      final piece = _chessService.getPieceAt(coordinate);
+
+      _squareStates[coordinate] = SquareData(
+        piece: piece,
+        canMove: movablePiecesCoordinates.contains(coordinate),
+        isThisCheck: piece != null && turnStatus.isCheckOn(piece),
+        isLastMoveFromThis: coordinate == _chessService.lastMoveFrom,
+        isLastMoveToThis: coordinate == _chessService.lastMoveTo,
+        isFocusedOnThis: false,
+      );
+    }
+
+    emit(LocalGameLoadedState(
+      squareStates: _squareStates,
+      isFocused: false,
+      turnStatus: turnStatus,
+    ));
+
+    G.logger.t('LocalGameViewModel._emitStateCompletely: Completely emitted');
+  }
+
+  void _emitFocus(SquareCoordinate focusedCoordinate) {
+    G.logger.t('LocalGameViewModel._emitStateWhenFocus: $focusedCoordinate');
+
+    final turnStatus = _chessService.turnStatus;
+    {
+      final piece = _chessService.getPieceAt(focusedCoordinate);
+      _squareStates[focusedCoordinate] = SquareData(
+        piece: piece,
+        canMove: false,
+        isThisCheck: piece != null && turnStatus.isCheckOn(piece),
+        isLastMoveFromThis: false,
+        isLastMoveToThis: false,
+        isFocusedOnThis: true,
+      );
+    }
+
+    for (final move in _chessService.moves(from: focusedCoordinate)) {
+      if (move.from != focusedCoordinate) continue;
+
+      final piece = _chessService.getPieceAt(move.to);
+
+      _squareStates[move.to] = SquareData(
+        piece: _chessService.getPieceAt(move.to),
+        canMove: false,
+        isThisCheck: false,
+        isLastMoveFromThis: _chessService.lastMoveFrom == move.to,
+        isLastMoveToThis: _chessService.lastMoveTo == move.to,
+        isFocusedOnThis: false,
+        moveToThis: piece == null ? move : null,
+        captureToThis: piece != null ? move : null,
+      );
+    }
+
+    emit(LocalGameLoadedState(
+      squareStates: _squareStates,
+      isFocused: true,
+      turnStatus: turnStatus,
+    ));
+
+    G.logger.t('LocalGameViewModel._emitStateWhenFocus:'
+        ' Focused on $focusedCoordinate');
+  }
+
   /// Initializes the view model
   Future<void> init(LocalGameSaveCacheModel save) async {
     G.logger.t('LocalGameViewModel.init: $save');
 
     _chessService = ChessService(save: save);
-    final movablePiecesCoordinates =
-        _chessService.moves().map((e) => e.from).toList();
-    G.logger.d('movablePiecesCoordinates: $movablePiecesCoordinates');
-    emit(LocalGameLoadedState(
-      getPieceAt: _chessService.getPieceAt,
-      movablePiecesCoordinates: movablePiecesCoordinates,
-      checkStatus: _chessService.turnStatus,
-      lastMoveFrom: _chessService.lastMoveFrom,
-      lastMoveTo: _chessService.lastMoveTo,
-    ));
+
+    // emit
+    _emitNormal();
 
     G.logger.t('LocalGameViewModel.init: Initialized');
   }
@@ -41,34 +110,27 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     final state = this.state;
     if (state is! LocalGameLoadedState) throw Exception('Invalid state');
 
-    // check if the coordinate is contained in movablePiecesCoordinates.
-    if (!state.movablePiecesCoordinates.contains(coordinate)) {
+    final squareState = state.squareStates[coordinate];
+
+    // check if the square could not be found.
+    if (squareState == null) {
       throw Exception(
-        'Invalid coordinate when focusing. focus coordinate must be'
-        ' contained in movablePiecesCoordinates',
+        'Invalid move. No square state found for $coordinate',
       );
     }
 
-    final moveMap = <SquareCoordinate, AppChessMove>{};
-    _chessService.moves(from: coordinate).forEach((e) {
-      if (e.from == e.to) return;
-      if (e.from != coordinate) return;
-      moveMap[e.to] = e;
-    });
+    // check if the coordinate is contained in movablePiecesCoordinates.
+    if (!squareState.canMove) {
+      throw Exception(
+        'Invalid coordinate when focusing. focus coordinate must be able to '
+        'move',
+      );
+    }
 
-    // update the state.
-    emit(LocalGameLoadedState(
-      getPieceAt: _chessService.getPieceAt,
-      movablePiecesCoordinates: [],
-      checkStatus: _chessService.turnStatus,
-      moves: moveMap,
-      focusedCoordinate: coordinate,
-      lastMoveFrom: _chessService.lastMoveFrom,
-      lastMoveTo: _chessService.lastMoveTo,
-    ));
+    // emit
+    _emitFocus(coordinate);
 
-    G.logger.t('LocalGameViewModel.focus: Focused on $coordinate. '
-        'moves: $moveMap');
+    G.logger.t('LocalGameViewModel.focus: Focused on $coordinate.');
   }
 
   /// Removes the focus from the focused piece.
@@ -78,15 +140,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     final state = this.state;
     if (state is! LocalGameLoadedState) throw Exception('Invalid state');
 
-    // update the state.
-    emit(LocalGameLoadedState(
-      getPieceAt: _chessService.getPieceAt,
-      movablePiecesCoordinates:
-          _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.turnStatus,
-      lastMoveFrom: _chessService.lastMoveFrom,
-      lastMoveTo: _chessService.lastMoveTo,
-    ));
+    // emit
+    _emitNormal();
 
     G.logger.t('LocalGameViewModel.removeFocus: Removed focus');
   }
@@ -101,20 +156,12 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
 
     final state = this.state;
     if (state is! LocalGameLoadedState) throw Exception('Invalid state');
-    if (!state.isFocused) throw Exception('No piece is focused');
 
     // perform the move.
     await _chessService.move(move: move, promotion: promotion);
 
-    // update the state.
-    emit(LocalGameLoadedState(
-      getPieceAt: _chessService.getPieceAt,
-      movablePiecesCoordinates:
-          _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.turnStatus,
-      lastMoveFrom: _chessService.lastMoveFrom,
-      lastMoveTo: _chessService.lastMoveTo,
-    ));
+    // emit
+    _emitNormal();
 
     G.logger.t('LocalGameViewModel.move: Moved $move');
   }
@@ -129,15 +176,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     // perform the undo.
     await _chessService.undo();
 
-    // update the state.
-    emit(LocalGameLoadedState(
-      getPieceAt: _chessService.getPieceAt,
-      movablePiecesCoordinates:
-          _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.turnStatus,
-      lastMoveFrom: _chessService.lastMoveFrom,
-      lastMoveTo: _chessService.lastMoveTo,
-    ));
+    // emit
+    _emitNormal();
 
     G.logger.t('LocalGameViewModel.undo: Undone');
   }
@@ -152,15 +192,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     // perform the redo.
     await _chessService.redo();
 
-    // update the state.
-    emit(LocalGameLoadedState(
-      getPieceAt: _chessService.getPieceAt,
-      movablePiecesCoordinates:
-          _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.turnStatus,
-      lastMoveFrom: _chessService.lastMoveFrom,
-      lastMoveTo: _chessService.lastMoveTo,
-    ));
+    // emit
+    _emitNormal();
 
     G.logger.t('LocalGameViewModel.redo: Redone');
   }
@@ -175,15 +208,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     // perform the reset.
     await _chessService.reset();
 
-    // update the state.
-    emit(LocalGameLoadedState(
-      getPieceAt: _chessService.getPieceAt,
-      movablePiecesCoordinates:
-          _chessService.moves().map((e) => e.from).toList(),
-      checkStatus: _chessService.turnStatus,
-      lastMoveFrom: _chessService.lastMoveFrom,
-      lastMoveTo: _chessService.lastMoveTo,
-    ));
+    // emit
+    _emitNormal();
 
     G.logger.t('LocalGameViewModel.reset: Reset');
   }

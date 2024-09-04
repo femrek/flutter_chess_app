@@ -9,15 +9,12 @@ import 'package:localchess/feature/local_game/view_model/local_game_view_model.d
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
-import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
-import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
+import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
-import 'package:localchess/product/widget/board/painter/square_foreground_paint_type.dart';
-import 'package:localchess/product/widget/board/painter/square_foreground_painter.dart';
 import 'package:localchess/product/widget/button/app_button/app_button.dart';
 
 /// Local Game Screen widget
@@ -79,7 +76,7 @@ class _DebugButtons extends StatelessWidget {
         BlocSelector<LocalGameViewModel, LocalGameState, AppChessTurnStatus?>(
           selector: (state) {
             if (state is LocalGameLoadedState) {
-              return state.checkStatus;
+              return state.turnStatus;
             }
             return null;
           },
@@ -142,7 +139,7 @@ class _Board extends StatelessWidget {
           onFocusTried(coordinate);
         }
       },
-      child: DragTarget<SquareCoordinate>(
+      child: DragTarget(
         onAcceptWithDetails: (details) {
           onMoveTried(coordinate);
         },
@@ -153,59 +150,17 @@ class _Board extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
             color: Colors.transparent,
-            child: BlocBuilder<LocalGameViewModel, LocalGameState>(
-              builder: (context, state) {
-                // Do not show anything if the state is not loaded.
-                if (state is! LocalGameLoadedState) {
-                  return const SizedBox.shrink();
+            child: BlocSelector<LocalGameViewModel, LocalGameState, SquareData>(
+              selector: (state) {
+                if (state is LocalGameLoadedState) {
+                  return state.squareStates[coordinate] ?? SquareData.empty();
                 }
-
-                // get piece in this tile if it exists.
-                final piece = state.getPieceAt(coordinate);
-
-                // check if this coordinate contains a piece that can be moved
-                // to.
-                final containsByMoves = state.isMovableTo(coordinate);
-
-                // configure the painter based on the state.
-                final isThisCheck = state.isCheckOn(piece);
-                final isLastMoveFromThis = state.isLastMoveFrom(coordinate);
-                final isLastMoveToThis = state.isLastMoveTo(coordinate);
-                final isFocusedOnThis = state.isFocusedOn(coordinate);
-                final isMovableToThis = containsByMoves && piece == null;
-                final canCaptured = containsByMoves && piece != null;
-                final painter = SquareForegroundPainter(paintTypes: [
-                  if (isThisCheck) SquareForegroundPaintType.checkPiece,
-                  if (isLastMoveFromThis) SquareForegroundPaintType.movedFrom,
-                  if (isLastMoveToThis) SquareForegroundPaintType.movedTo,
-                  if (isFocusedOnThis) SquareForegroundPaintType.focusedPiece,
-                  if (isMovableToThis) SquareForegroundPaintType.movableToThis,
-                  if (canCaptured) SquareForegroundPaintType.capturePiece,
-                ]);
-
-                return Draggable(
-                  data: coordinate,
-                  onDragStarted: () {
-                    onFocusTried(coordinate);
-                  },
-                  childWhenDragging: CustomPaint(
-                    painter: painter,
-                  ),
-                  maxSimultaneousDrags:
-                      state.isMovableFrom(coordinate) || isFocusedOnThis
-                          ? 1
-                          : 0,
-                  feedback: piece?.asImage(
-                        orientation: BoardOrientationEnum.landscapeLeftBased,
-                      ) ??
-                      const SizedBox.shrink(),
-                  child: CustomPaint(
-                    painter: painter,
-                    child: piece?.asImage(
-                          orientation: BoardOrientationEnum.landscapeLeftBased,
-                        ) ??
-                        const SizedBox.shrink(),
-                  ),
+                return SquareData.empty();
+              },
+              builder: (context, state) {
+                return BoardSquareContent(
+                  data: state,
+                  onDragStarted: () => onFocusTried(coordinate),
                 );
               },
             ),

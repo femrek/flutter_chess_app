@@ -35,7 +35,14 @@ mixin LocalGameStateMixin on BaseState<LocalGameScreen> {
       G.logger.w('A piece is already focused');
       return;
     }
-    if (!state.movablePiecesCoordinates.contains(coordinate)) {
+
+    final squareState = state.squareStates[coordinate];
+    if (squareState == null) {
+      G.logger.w('Invalid coordinate when focusing. No square state found');
+      return;
+    }
+
+    if (!squareState.canMove) {
       G.logger.d(
         'Invalid coordinate when focusing. focus coordinate must be'
         ' contained in movablePiecesCoordinates',
@@ -57,10 +64,21 @@ mixin LocalGameStateMixin on BaseState<LocalGameScreen> {
     if (state is! LocalGameLoadedState) return;
     if (!state.isFocused) return;
 
-    // find and validate the move.
-    final moves = state.moves;
-    if (moves == null) throw Exception('moves is null');
-    final move = moves[targetCoordinate];
+    // get square state data
+    final squareState = state.squareStates[targetCoordinate];
+
+    // cancel if the square could not be found.
+    if (squareState == null) {
+      G.logger.d('Invalid move. No square state found for $targetCoordinate');
+      viewModel.removeFocus();
+      G.logger.t('onMoveTried: Removed focus');
+      return;
+    }
+
+    // get the move to be made.
+    final move = squareState.moveToThis ?? squareState.captureToThis;
+
+    // cancel the move if no move is found.
     if (move == null) {
       G.logger.d('Invalid move. No move found for $targetCoordinate');
       viewModel.removeFocus();
@@ -71,16 +89,12 @@ mixin LocalGameStateMixin on BaseState<LocalGameScreen> {
     // pick a piece for promotion if the move is a promotion move.
     String? promotion;
     if (move.hasPromotion) {
-      // get the moving piece to determine the promotion piece color.
-      final movingPiece = state.getPieceAt(move.from);
-      if (movingPiece == null) {
-        G.logger.w('movingPiece is null when move has promotion');
-      }
-
       // pick a promotion piece if the move is a promotion move.
       promotion = await PickAPromotionDialog.show(
         context: context,
-        isDark: state.getPieceAt(move.from)?.isDark ?? true,
+
+        // if the moving piece is null, default to dark.
+        isDark: state.turnStatus.isDark ?? true,
       );
 
       // cancel the move if dialog is dismissed.

@@ -115,6 +115,14 @@ class SquareCoordinate {
   /// The square in this coordinate should be dark
   bool get isDark => (y + x).isEven;
 
+  static final List<SquareCoordinate> _boardSquares = List.generate(
+    64,
+    SquareCoordinate.fromIndexStartWithA8,
+  );
+
+  /// Returns a list of all squares on the board.
+  static List<SquareCoordinate> get boardSquares => _boardSquares;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

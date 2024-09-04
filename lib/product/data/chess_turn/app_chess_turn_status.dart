@@ -6,21 +6,25 @@ enum AppChessTurnStatus {
   /// When the game is still ongoing. back turn.
   black(
     winnerEnum: AppChessWinner.none,
+    isDark: true,
   ),
 
   /// When the game is still ongoing. white turn.
   white(
     winnerEnum: AppChessWinner.none,
+    isDark: false,
   ),
 
   /// When black king is in check.
   blackKingCheck(
     winnerEnum: AppChessWinner.none,
+    isDark: true,
   ),
 
   /// When white king is in check.
   whiteKingCheck(
     winnerEnum: AppChessWinner.none,
+    isDark: false,
   ),
 
   /// When black king is checkmated.
@@ -46,10 +50,15 @@ enum AppChessTurnStatus {
 
   const AppChessTurnStatus({
     required this.winnerEnum,
+    this.isDark,
   });
 
   /// The winner of the game.
   final AppChessWinner winnerEnum;
+
+  /// Whether the turn is black. If `null`, the game is ongoing.
+  /// If `true`, the piece is black. If `false`, the piece is white.
+  final bool? isDark;
 
   /// Whether the [piece] is in check.
   bool isCheckOn(AppPiece piece) {
