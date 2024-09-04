@@ -10,6 +10,7 @@ import 'package:localchess/product/cache/model/local_game_save_cache_model.dart'
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
+import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
@@ -153,9 +154,10 @@ class _Board extends StatelessWidget {
             child: BlocSelector<LocalGameViewModel, LocalGameState, SquareData>(
               selector: (state) {
                 if (state is LocalGameLoadedState) {
-                  return state.squareStates[coordinate] ?? SquareData.empty();
+                  return state.squareStates[coordinate] ??
+                      const SquareData.withDefaultValues();
                 }
-                return SquareData.empty();
+                return const SquareData.withDefaultValues();
               },
               builder: (context, state) {
                 return BoardSquareContent(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
+import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/widget/board/painter/square_foreground_paint_type.dart';
 import 'package:localchess/product/widget/board/painter/square_foreground_painter.dart';
 
@@ -12,7 +12,8 @@ class BoardSquareContent extends StatelessWidget {
   /// Create a new instance of [BoardSquareContent].
   const BoardSquareContent({
     required this.data,
-    required this.onDragStarted,
+    this.onDragStarted,
+    this.orientation = BoardOrientationEnum.portrait,
     super.key,
   });
 
@@ -20,7 +21,10 @@ class BoardSquareContent extends StatelessWidget {
   final SquareData data;
 
   /// The callback function when the drag started.
-  final VoidCallback onDragStarted;
+  final VoidCallback? onDragStarted;
+
+  /// The orientation of the board.
+  final BoardOrientationEnum orientation;
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +45,15 @@ class BoardSquareContent extends StatelessWidget {
       ),
       maxSimultaneousDrags: data.canMove ? 1 : 0,
       feedback: data.piece?.asImage(
-            orientation: BoardOrientationEnum.landscapeLeftBased,
+            orientation: orientation,
+            isAchromatic: data.isSyncInProcess,
           ) ??
           const SizedBox.shrink(),
       child: CustomPaint(
         painter: painter,
         child: data.piece?.asImage(
-              orientation: BoardOrientationEnum.landscapeLeftBased,
+              orientation: orientation,
+              isAchromatic: data.isSyncInProcess,
             ) ??
             const SizedBox.shrink(),
       ),

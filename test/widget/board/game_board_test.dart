@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:localchess/product/data/piece/app_piece.dart';
+import 'package:localchess/product/data/square_data.dart';
+import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
 import 'package:logger/logger.dart';
 
@@ -12,9 +15,6 @@ void main() async {
 
   group('load game to the board', () {
     testWidgets('create empty board', (WidgetTester tester) async {
-      // final chessService = ChessService(
-      //   save: _save,
-      // );
       await tester.pumpWidget(MaterialApp(
         home: GameBoardWithFrame.portrait(
           size: 100,
@@ -46,6 +46,44 @@ void main() async {
 
       // check if there are 64 squares
       expect(find.byKey(const ValueKey('square')), findsNWidgets(64));
+    });
+  });
+
+  group(
+      'test square content with square data.'
+      ' Validate only if it is created', () {
+    testWidgets('create an empty square', (tester) async {
+      await tester.pumpWidget(const MaterialApp(
+        home: BoardSquareContent(
+          data: SquareData.withDefaultValues(),
+        ),
+      ));
+
+      {
+        final square = find.byType(BoardSquareContent);
+        expect(square, findsOneWidget);
+      }
+    });
+
+    testWidgets('create a square with a piece', (tester) async {
+      await tester.pumpWidget(const MaterialApp(
+        home: BoardSquareContent(
+          data: SquareData(
+            canMove: true,
+            isThisCheck: true,
+            isLastMoveFromThis: true,
+            isLastMoveToThis: true,
+            isFocusedOnThis: true,
+            isSyncInProcess: true,
+            piece: AppPiece.pawnW,
+          ),
+        ),
+      ));
+
+      {
+        final square = find.byType(BoardSquareContent);
+        expect(square, findsOneWidget);
+      }
     });
   });
 }

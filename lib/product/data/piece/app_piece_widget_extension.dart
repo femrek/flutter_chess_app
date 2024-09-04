@@ -6,7 +6,13 @@ import 'package:localchess/product/theme/app_color_scheme.dart';
 /// Create a piece image widget easily
 extension AppPieceWidgetExtension on AppPiece {
   /// Create a piece image widget from the piece
-  Widget asImage({BoardOrientationEnum? orientation}) {
+  Widget asImage({
+    BoardOrientationEnum? orientation,
+    bool isAchromatic = false,
+  }) {
+    final color = isDark
+        ? AppColorScheme.blackPieceColor
+        : AppColorScheme.whitePieceColor;
     return Transform.rotate(
       angle: orientation?.pieceAngle(isDark: isDark) ?? 0,
       child: Transform.scale(
@@ -14,9 +20,7 @@ extension AppPieceWidgetExtension on AppPiece {
         child: image.svg(
           package: 'gen',
           colorFilter: ColorFilter.mode(
-            isDark
-                ? AppColorScheme.blackPieceColor
-                : AppColorScheme.whitePieceColor,
+            isAchromatic ? color.withOpacity(0.3) : color,
             BlendMode.srcIn,
           ),
         ),

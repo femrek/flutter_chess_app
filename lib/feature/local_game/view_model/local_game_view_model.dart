@@ -2,6 +2,7 @@ import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
+import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
 import 'package:localchess/product/service/impl/chess_service.dart';
@@ -15,7 +16,8 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
   late IChessService _chessService;
 
   final _squareStates = <SquareCoordinate, SquareData>{
-    for (var e in SquareCoordinate.boardSquares) e: SquareData.empty(),
+    for (var e in SquareCoordinate.boardSquares)
+      e: const SquareData.withDefaultValues(),
   };
 
   void _emitNormal() {
@@ -35,6 +37,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
         isLastMoveFromThis: coordinate == _chessService.lastMoveFrom,
         isLastMoveToThis: coordinate == _chessService.lastMoveTo,
         isFocusedOnThis: false,
+        isSyncInProcess: false,
       );
     }
 
@@ -60,6 +63,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
         isLastMoveFromThis: false,
         isLastMoveToThis: false,
         isFocusedOnThis: true,
+        isSyncInProcess: false,
       );
     }
 
@@ -75,6 +79,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
         isLastMoveFromThis: _chessService.lastMoveFrom == move.to,
         isLastMoveToThis: _chessService.lastMoveTo == move.to,
         isFocusedOnThis: false,
+        isSyncInProcess: false,
         moveToThis: piece == null ? move : null,
         captureToThis: piece != null ? move : null,
       );
