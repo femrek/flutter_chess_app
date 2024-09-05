@@ -141,17 +141,23 @@ class ChessService implements IChessService {
 
   @override
   Set<AppChessMove> moves({SquareCoordinate? from}) {
+    G.logger.t('ChessService.moves: from: $from');
+
     final rawMoves = _chess.generate_moves();
 
     final moves = <AppChessMove>{};
 
     for (final move in rawMoves) {
-      moves.add(AppChessMove(
-        from: SquareCoordinate.fromName(move.fromAlgebraic),
-        to: SquareCoordinate.fromName(move.toAlgebraic),
-        hasPromotion: move.promotion != null,
-      ));
+      if (from == null || move.fromAlgebraic == from.nameLowerCase) {
+        moves.add(AppChessMove(
+          from: SquareCoordinate.fromName(move.fromAlgebraic),
+          to: SquareCoordinate.fromName(move.toAlgebraic),
+          hasPromotion: move.promotion != null,
+        ));
+      }
     }
+
+    G.logger.t('ChessService.moves: $moves');
 
     return moves;
   }

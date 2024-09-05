@@ -60,6 +60,33 @@ void main() async {
     });
   });
 
+  group('test generating moves', () {
+    test('generate all moves on initial board', () {
+      final chessService = ChessService(save: _saveNew);
+
+      final moves = chessService.moves();
+      expect(moves.length, 20);
+    });
+
+    test('generate moves from a2 on initial board', () {
+      final chessService = ChessService(save: _saveNew);
+
+      final moves = chessService.moves(from: SquareCoordinate.fromName('a2'));
+      expect(moves.length, 2);
+      expect(
+        moves.map<SquareCoordinate>((e) => e.from),
+        everyElement(SquareCoordinate.fromName('a2')),
+      );
+      expect(
+        moves.map<SquareCoordinate>((e) => e.to),
+        containsAll([
+          SquareCoordinate.fromName('a3'),
+          SquareCoordinate.fromName('a4'),
+        ]),
+      );
+    });
+  });
+
   group('Perform move operation on ChessService', () {
     test('Get the current board status', () {
       final chessService = ChessService(save: _saveNew);

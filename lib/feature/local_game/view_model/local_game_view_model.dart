@@ -73,8 +73,6 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     }
 
     for (final move in _chessService.moves(from: focusedCoordinate)) {
-      if (move.from != focusedCoordinate) continue;
-
       final piece = _chessService.getPieceAt(move.to);
 
       _squareStates[move.to] = SquareData(
