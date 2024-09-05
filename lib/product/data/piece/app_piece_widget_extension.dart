@@ -13,8 +13,8 @@ extension AppPieceWidgetExtension on AppPiece {
     final pieceColor = color.when(
         black: AppColorScheme.blackPieceColor,
         white: AppColorScheme.whitePieceColor);
-    return Transform.rotate(
-      angle: orientation?.pieceAngle(color: color) ?? 0,
+    return RotatedBox(
+      quarterTurns: orientation?.pieceRotateQuarters(color: color) ?? 0,
       child: Transform.scale(
         scale: scale,
         child: image.svg(

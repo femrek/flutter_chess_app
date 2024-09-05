@@ -10,12 +10,12 @@ enum BoardOrientationEnum {
   ;
 
   /// Returns the angle of the piece in radians
-  double pieceAngle({required PlayerColor color}) {
+  int pieceRotateQuarters({required PlayerColor color}) {
     switch (this) {
       case BoardOrientationEnum.portrait:
         return 0;
       case BoardOrientationEnum.landscapeLeftBased:
-        return 3.1415926535 / 2 * color.when(black: -1, white: 1);
+        return color.when(black: -1, white: 1);
     }
   }
 }
