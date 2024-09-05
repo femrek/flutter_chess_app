@@ -74,19 +74,14 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height: size,
-              width: size,
-              child: GameBoardWithFrame.portrait(
-                size: size,
-                squareBuilder: (context, coordinate) {
-                  return _chessService.getPieceAt(coordinate)?.asImage(
-                            orientation: BoardOrientationEnum.portrait,
-                          ) ??
-                      const SizedBox.shrink();
-                },
-              ),
+            // The board
+            _ChessBoard(
+              chessService: _chessService,
+              onPlayPressed: widget.onPlayPressed,
+              size: size,
             ),
+
+            // The game details
             const SizedBox(height: 8),
             const AppPadding.card(vertical: 0).toWidget(
               child: Text(
@@ -110,6 +105,8 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
               ),
             ),
             const SizedBox(height: 8),
+
+            // The play button
             const AppPadding.card(vertical: 0).toWidget(
               child: Align(
                 alignment: Alignment.centerRight,
@@ -125,6 +122,57 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
           ],
         );
       }),
+    );
+  }
+}
+
+class _ChessBoard extends StatefulWidget {
+  const _ChessBoard({
+    required this.chessService,
+    required this.onPlayPressed,
+    required this.size,
+  });
+
+  final IChessService chessService;
+  final VoidCallback onPlayPressed;
+  final double size;
+
+  @override
+  State<_ChessBoard> createState() => _ChessBoardState();
+}
+
+class _ChessBoardState extends State<_ChessBoard> {
+  final ValueNotifier<bool> _isPressed = ValueNotifier(false);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTapDown: (_) => _isPressed.value = true,
+      onTapUp: (_) => _isPressed.value = false,
+      onTapCancel: () => _isPressed.value = false,
+      onTap: widget.onPlayPressed,
+      child: ValueListenableBuilder(
+        valueListenable: _isPressed,
+        builder: (context, isPressed, child) {
+          final scale = isPressed ? 0.9 : 1.0;
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 50),
+            curve: Curves.easeInOutCubic,
+            transformAlignment: Alignment.center,
+            transform: Matrix4.diagonal3Values(scale, scale, 1),
+            child: child,
+          );
+        },
+        child: GameBoardWithFrame.portrait(
+          size: widget.size,
+          squareBuilder: (context, coordinate) {
+            return widget.chessService.getPieceAt(coordinate)?.asImage(
+                      orientation: BoardOrientationEnum.portrait,
+                    ) ??
+                const SizedBox.shrink();
+          },
+        ),
+      ),
     );
   }
 }
