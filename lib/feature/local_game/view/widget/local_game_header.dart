@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:localchess/product/localization/locale_keys.g.dart';
 
 /// The header of the local game screen.
 class LocalGameHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -49,6 +51,7 @@ class LocalGameHeader extends StatelessWidget implements PreferredSizeWidget {
 
         // The restart button
         IconButton(
+          tooltip: LocaleKeys.game_restart.tr(),
           onPressed: onRestartPressed,
           icon: Icon(
             Icons.restart_alt,

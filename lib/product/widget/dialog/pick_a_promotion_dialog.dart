@@ -2,28 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:localchess/product/constant/radius/app_radius_constant.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
+import 'package:localchess/product/data/player_color.dart';
 
 /// Dialog for picking a promotion piece. The dialog returns the selected piece
 /// code name when pop. [q, r, b, n]
 class PickAPromotionDialog extends StatelessWidget {
   /// Create an instance for [PickAPromotionDialog].
   const PickAPromotionDialog({
-    required this.isDark,
+    required this.color,
     super.key,
   });
 
   /// Whether the pieces are black or white.
-  final bool isDark;
+  final PlayerColor color;
 
   /// Shows the [PickAPromotionDialog] dialog.
   static Future<String?> show({
     required BuildContext context,
-    required bool isDark,
+    required PlayerColor color,
   }) async {
     final result = await showDialog<String>(
       context: context,
       builder: (context) {
-        return PickAPromotionDialog(isDark: isDark);
+        return PickAPromotionDialog(color: color);
       },
     );
     return result;
@@ -49,7 +50,8 @@ class PickAPromotionDialog extends StatelessWidget {
             ),
             itemCount: 4,
             itemBuilder: (context, index) {
-              final piece = isDark ? _blackPieces[index] : _whitePieces[index];
+              final piece = color.when(
+                  black: _blackPieces[index], white: _whitePieces[index]);
               return InkWell(
                 onTap: () {
                   Navigator.of(context).pop(piece.name);

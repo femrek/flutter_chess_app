@@ -7,9 +7,12 @@ import 'package:localchess/feature/local_game/view/widget/local_game_header.dart
 import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
+import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
+import 'package:localchess/product/data/player_color.dart';
 import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
@@ -17,8 +20,9 @@ import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
-import 'package:localchess/product/widget/captured_piece_indicator/captured_piece_indicator.dart';
-import 'package:localchess/product/widget/captured_piece_indicator/horizontal_direction.dart';
+import 'package:localchess/product/widget/player_information_section/captured_piece_indicator/captured_piece_indicator.dart';
+import 'package:localchess/product/widget/player_information_section/captured_piece_indicator/horizontal_direction.dart';
+import 'package:localchess/product/widget/player_information_section/turn_indicator.dart';
 
 /// Local Game Screen widget
 @RoutePage()
@@ -85,25 +89,28 @@ class _LocalGameScreenState extends BaseState<LocalGameScreen>
             // the free space left from the board.
             // contains captured pieces, turn status and etc.
             const Expanded(
-              child: SafeArea(
-                top: false,
-                child: Row(
-                  children: [
-                    // white side captured pieces. black pieces here.
-                    RotatedBox(
-                      quarterTurns: 1,
-                      child: _CapturedPieceIndicator(isCapturedByDark: false),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // white side information section
+                  Expanded(
+                    child: SafeArea(
+                      top: false,
+                      child: _InfoSection(color: PlayerColor.white),
                     ),
+                  ),
 
-                    Spacer(),
+                  // divider
+                  VerticalDivider(),
 
-                    // black side captured pieces. white pieces here.
-                    RotatedBox(
-                      quarterTurns: 3,
-                      child: _CapturedPieceIndicator(isCapturedByDark: true),
+                  // black side information section
+                  Expanded(
+                    child: SafeArea(
+                      top: false,
+                      child: _InfoSection(color: PlayerColor.black),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -177,12 +184,78 @@ class _RedoButtonBuilder extends StatelessWidget {
   }
 }
 
-class _CapturedPieceIndicator extends StatelessWidget {
-  const _CapturedPieceIndicator({
-    required this.isCapturedByDark,
+class _InfoSection extends StatelessWidget {
+  const _InfoSection({
+    required this.color,
   });
 
-  final bool isCapturedByDark;
+  final PlayerColor color;
+
+  @override
+  Widget build(BuildContext context) {
+    return RotatedBox(
+      quarterTurns: color.when(black: 3, white: 1),
+      child: const EdgeInsets.symmetric(horizontal: 8).toWidget(
+        child: Column(
+          // align the children to board side. currently useless because the
+          // content fills the whole space.
+          crossAxisAlignment: color.when(
+            black: CrossAxisAlignment.end,
+            white: CrossAxisAlignment.start,
+          ),
+
+          children: [
+            // turn status
+            _TurnIndicator(side: color),
+
+            const Spacer(),
+
+            // black side captured pieces. white pieces here.
+            _CapturedPieceIndicator(
+              playerColor: color,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TurnIndicator extends StatelessWidget {
+  const _TurnIndicator({
+    required this.side,
+  });
+
+  final PlayerColor side;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<LocalGameViewModel, LocalGameState,
+        AppChessTurnStatus?>(
+      selector: (state) {
+        if (state is LocalGameLoadedState) {
+          return state.turnStatus;
+        }
+        return null;
+      },
+      builder: (context, status) {
+        if (status == null) return const SizedBox.shrink();
+        return TurnIndicator(
+          status: status,
+          side: side,
+          textColor: Theme.of(context).colorScheme.onSurface,
+        );
+      },
+    );
+  }
+}
+
+class _CapturedPieceIndicator extends StatelessWidget {
+  const _CapturedPieceIndicator({
+    required this.playerColor,
+  });
+
+  final PlayerColor playerColor;
 
   @override
   Widget build(BuildContext context) {
@@ -190,19 +263,18 @@ class _CapturedPieceIndicator extends StatelessWidget {
       selector: (state) {
         if (state is LocalGameLoadedState) {
           return state.capturedPieces
-              .where((e) => e.isDark != isCapturedByDark)
+              .where((e) => playerColor != e.color)
               .toList();
         }
         return [];
       },
       builder: (context, pieces) {
         return CapturedPieceIndicator(
-          pieces: pieces,
-          pieceSize: MediaQuery.of(context).size.width / 8,
-          direction: isCapturedByDark
-              ? HorizontalDirection.rightToLeft
-              : HorizontalDirection.leftToRight,
-        );
+            pieces: pieces,
+            pieceSize: MediaQuery.of(context).size.width / 8,
+            direction: playerColor.when(
+                black: HorizontalDirection.rightToLeft,
+                white: HorizontalDirection.leftToRight));
       },
     );
   }

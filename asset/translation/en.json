@@ -63,10 +63,11 @@
     "restart": "Restart",
     "chessTurn": {
       "yourTurn": "Your Turn",
+      "opponentTurn": "Opponent's Turn",
       "black": "Black Turn",
       "white": "White Turn",
-      "blackKingCheck": "Black Turn",
-      "whiteKingCheck": "White Turn",
+      "blackKingCheck": "King Under Attack",
+      "whiteKingCheck": "King Under Attack",
       "blackKingCheckmate": "White is the Winner",
       "whiteKingCheckmate": "Black is the Winner",
       "draw": "Draw",

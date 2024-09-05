@@ -10,17 +10,17 @@ extension AppPieceWidgetExtension on AppPiece {
     BoardOrientationEnum? orientation,
     bool isAchromatic = false,
   }) {
-    final color = isDark
-        ? AppColorScheme.blackPieceColor
-        : AppColorScheme.whitePieceColor;
+    final pieceColor = color.when(
+        black: AppColorScheme.blackPieceColor,
+        white: AppColorScheme.whitePieceColor);
     return Transform.rotate(
-      angle: orientation?.pieceAngle(isDark: isDark) ?? 0,
+      angle: orientation?.pieceAngle(color: color) ?? 0,
       child: Transform.scale(
         scale: scale,
         child: image.svg(
           package: 'gen',
           colorFilter: ColorFilter.mode(
-            isAchromatic ? color.withOpacity(0.3) : color,
+            isAchromatic ? pieceColor.withOpacity(0.3) : pieceColor,
             BlendMode.srcIn,
           ),
         ),

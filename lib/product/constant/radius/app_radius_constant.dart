@@ -2,4 +2,7 @@
 abstract final class AppRadiusConstant {
   /// The radius of the dialog corners.
   static const double dialogCornerRadius = 24;
+
+  /// The radius of the text box in the turn indicator widget.
+  static const double turnIndicatorBoxCornerRadius = 8;
 }

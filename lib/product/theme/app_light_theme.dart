@@ -12,7 +12,7 @@ final class AppLightTheme implements AppTheme {
 
   @override
   ThemeData get theme => _theme.copyWith(
-        scaffoldBackgroundColor: const Color(0xffeeeeee),
+        scaffoldBackgroundColor: AppColorScheme.lightScaffoldBackgroundColor,
         cardTheme: cardTheme,
         appBarTheme: appBarTheme,
         dialogTheme: dialogTheme,

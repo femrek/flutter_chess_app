@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
-import 'package:localchess/product/widget/captured_piece_indicator/horizontal_direction.dart';
+import 'package:localchess/product/widget/player_information_section/captured_piece_indicator/horizontal_direction.dart';
 
 /// A widget that shows the captured pieces
 class CapturedPieceIndicator extends StatelessWidget {

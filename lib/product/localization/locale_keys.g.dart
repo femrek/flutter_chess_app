@@ -46,6 +46,8 @@ abstract class  LocaleKeys {
   static const game_undo = 'game.undo';
   static const game_redo = 'game.redo';
   static const game_restart = 'game.restart';
+  static const game_chessTurn_yourTurn = 'game.chessTurn.yourTurn';
+  static const game_chessTurn_opponentTurn = 'game.chessTurn.opponentTurn';
   static const game_chessTurn_black = 'game.chessTurn.black';
   static const game_chessTurn_white = 'game.chessTurn.white';
   static const game_chessTurn_blackKingCheck = 'game.chessTurn.blackKingCheck';

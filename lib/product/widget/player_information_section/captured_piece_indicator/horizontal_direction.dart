@@ -1,4 +1,4 @@
-/// Enum for horizontal direction. Used in [CapturedPieceIndicator].
+/// Enum for horizontal direction.
 enum HorizontalDirection {
   /// New Pieces are added from the left side. the alignment is left.
   leftToRight,

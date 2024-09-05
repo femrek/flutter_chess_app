@@ -1,30 +1,31 @@
 import 'package:localchess/product/data/chess_turn/app_chess_winner.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
+import 'package:localchess/product/data/player_color.dart';
 
 /// AppCheckmateStatus enum
 enum AppChessTurnStatus {
   /// When the game is still ongoing. back turn.
   black(
     winnerEnum: AppChessWinner.none,
-    isDark: true,
+    turn: PlayerColor.black,
   ),
 
   /// When the game is still ongoing. white turn.
   white(
     winnerEnum: AppChessWinner.none,
-    isDark: false,
+    turn: PlayerColor.white,
   ),
 
   /// When black king is in check.
   blackKingCheck(
     winnerEnum: AppChessWinner.none,
-    isDark: true,
+    turn: PlayerColor.black,
   ),
 
   /// When white king is in check.
   whiteKingCheck(
     winnerEnum: AppChessWinner.none,
-    isDark: false,
+    turn: PlayerColor.white,
   ),
 
   /// When black king is checkmated.
@@ -50,15 +51,14 @@ enum AppChessTurnStatus {
 
   const AppChessTurnStatus({
     required this.winnerEnum,
-    this.isDark,
+    this.turn,
   });
 
   /// The winner of the game.
   final AppChessWinner winnerEnum;
 
-  /// Whether the turn is black. If `null`, the game is ongoing.
-  /// If `true`, the piece is black. If `false`, the piece is white.
-  final bool? isDark;
+  /// Whether the turn is dark.
+  final PlayerColor? turn;
 
   /// Whether the [piece] is in check.
   bool isCheckOn(AppPiece piece) {

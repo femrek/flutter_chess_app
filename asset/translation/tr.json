@@ -62,14 +62,16 @@
     "redo": "Yeniden Yap",
     "restart": "Yeniden Başlat",
     "chessTurn": {
+      "yourTurn": "Sıra Sizde",
+      "opponentTurn": "Rakibin Sırası",
       "black": "Siyah",
       "white": "Beyaz",
-      "blackKingCheck": "Siyah",
-      "whiteKingCheck": "Beyaz",
+      "blackKingCheck": "Şah Çekiliyor",
+      "whiteKingCheck": "Şah Çekiliyor",
       "blackKingCheckmate": "Beyaz Kazandı",
       "whiteKingCheckmate": "Siyah Kazandı",
-      "draw": "Berabere",
-      "stalemate": "Berabere"
+      "draw": "Berabere, Çıkmaz Oyun",
+      "stalemate": "Berabere, Pat"
     }
   }
 }

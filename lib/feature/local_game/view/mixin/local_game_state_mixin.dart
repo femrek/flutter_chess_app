@@ -5,6 +5,7 @@ import 'package:localchess/feature/local_game/view/local_game_screen.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
+import 'package:localchess/product/data/player_color.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/state/base/base_state.dart';
@@ -97,7 +98,7 @@ mixin LocalGameStateMixin on BaseState<LocalGameScreen> {
         context: context,
 
         // if the moving piece is null, default to dark.
-        isDark: state.turnStatus.isDark ?? true,
+        color: state.turnStatus.turn ?? PlayerColor.black,
       );
 
       // cancel the move if dialog is dismissed.

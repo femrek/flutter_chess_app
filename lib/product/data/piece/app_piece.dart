@@ -1,24 +1,25 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:gen/gen.dart';
+import 'package:localchess/product/data/player_color.dart';
 
 /// Types of the pieces in the chess game.
 enum AppPiece {
-  pawnB(isDark: true, name: 'p'),
-  rookB(isDark: true, name: 'r'),
-  knightB(isDark: true, name: 'n'),
-  bishopB(isDark: true, name: 'b'),
-  queenB(isDark: true, name: 'q'),
-  kingB(isDark: true, name: 'k'),
-  pawnW(isDark: false, name: 'p'),
-  rookW(isDark: false, name: 'r'),
-  knightW(isDark: false, name: 'n'),
-  bishopW(isDark: false, name: 'b'),
-  queenW(isDark: false, name: 'q'),
-  kingW(isDark: false, name: 'k');
+  pawnB(color: PlayerColor.black, name: 'p'),
+  rookB(color: PlayerColor.black, name: 'r'),
+  knightB(color: PlayerColor.black, name: 'n'),
+  bishopB(color: PlayerColor.black, name: 'b'),
+  queenB(color: PlayerColor.black, name: 'q'),
+  kingB(color: PlayerColor.black, name: 'k'),
+  pawnW(color: PlayerColor.white, name: 'p'),
+  rookW(color: PlayerColor.white, name: 'r'),
+  knightW(color: PlayerColor.white, name: 'n'),
+  bishopW(color: PlayerColor.white, name: 'b'),
+  queenW(color: PlayerColor.white, name: 'q'),
+  kingW(color: PlayerColor.white, name: 'k');
 
   const AppPiece({
-    required this.isDark,
+    required this.color,
     required this.name,
   });
 
@@ -82,7 +83,7 @@ enum AppPiece {
   }
 
   /// Whether the piece is dark.
-  final bool isDark;
+  final PlayerColor color;
 
   /// The code of the piece. (e.g. 'p', 'n', 'b', 'r', 'q', 'k')
   final String name;
