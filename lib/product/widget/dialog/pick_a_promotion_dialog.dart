@@ -52,11 +52,17 @@ class PickAPromotionDialog extends StatelessWidget {
             itemBuilder: (context, index) {
               final piece = color.when(
                   black: _blackPieces[index], white: _whitePieces[index]);
-              return InkWell(
-                onTap: () {
-                  Navigator.of(context).pop(piece.name);
-                },
-                child: piece.asImage(),
+              return ClipOval(
+                clipper: const _CircleClipper(),
+                child: Material(
+                  color: Theme.of(context).colorScheme.secondary,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).pop(piece.name);
+                    },
+                    child: piece.asImage(),
+                  ),
+                ),
               );
             },
           ),
@@ -78,4 +84,17 @@ class PickAPromotionDialog extends StatelessWidget {
     AppPiece.bishopW,
     AppPiece.knightW,
   ];
+}
+
+class _CircleClipper extends CustomClipper<Rect> {
+  const _CircleClipper();
+
+  @override
+  Rect getClip(Size size) => Rect.fromCircle(
+        center: size.center(Offset.zero),
+        radius: size.shortestSide / 2,
+      );
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Rect> oldClipper) => false;
 }
