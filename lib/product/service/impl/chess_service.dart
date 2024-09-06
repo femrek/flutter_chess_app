@@ -152,6 +152,11 @@ class ChessService implements IChessService {
   Set<AppChessMove> moves({SquareCoordinate? from}) {
     G.logger.t('ChessService.moves: from: $from');
 
+    if (_chess.game_over) {
+      G.logger.t('ChessService.moves: Game is over, no moves');
+      return {};
+    }
+
     final rawMoves = _chess.generate_moves();
 
     final moves = <AppChessMove>{};
