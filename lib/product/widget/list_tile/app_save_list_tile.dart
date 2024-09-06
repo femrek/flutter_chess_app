@@ -7,14 +7,14 @@ import 'package:localchess/product/util/date_extension.dart';
 import 'package:localchess/product/widget/dialog/game_preview_dialog.dart';
 
 /// The function definition to trigger when the save list item selected.
-typedef OnSaveSelected = void Function(LocalGameSaveCacheModel save);
+typedef OnPlayPressed = void Function(LocalGameSaveCacheModel save);
 
 /// Component for use for each list element.
 class AppSaveListTile extends StatelessWidget {
   /// Create [AppSaveListTile} instance.
   const AppSaveListTile({
     required this.data,
-    required this.onSaveSelected,
+    required this.onPlayPressed,
     super.key,
   });
 
@@ -22,7 +22,7 @@ class AppSaveListTile extends StatelessWidget {
   final LocalGameSaveCacheModel data;
 
   /// Called when the user tap the save. Gives the save data as parameter.
-  final OnSaveSelected onSaveSelected;
+  final OnPlayPressed onPlayPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -37,17 +37,21 @@ class AppSaveListTile extends StatelessWidget {
             (data.metaData?.updateAt.toVisualFormat ?? ''),
       ),
       trailing: IconButton(
-        icon: const Icon(Icons.preview),
+        icon: Icon(
+          Theme.of(context).brightness == Brightness.light
+              ? Icons.play_circle_outline
+              : Icons.play_circle_filled,
+        ),
         onPressed: () {
-          GamePreviewDialog.show(
-            context: context,
-            save: data,
-            onPlayPressed: () => onSaveSelected(data),
-          );
+          onPlayPressed(data);
         },
       ),
       onTap: () {
-        onSaveSelected(data);
+        GamePreviewDialog.show(
+          context: context,
+          save: data,
+          onPlayPressed: () => onPlayPressed(data),
+        );
       },
     );
   }

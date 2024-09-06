@@ -19,7 +19,7 @@ class SetupLocalSaveList extends StatelessWidget {
   final EdgeInsets padding;
 
   /// The callback when a save is selected.
-  final OnSaveSelected onSaveSelected;
+  final OnPlayPressed onSaveSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class SetupLocalSaveList extends StatelessWidget {
       itemBuilder: (_, index) {
         return AppSaveListTile(
           data: saveList[index],
-          onSaveSelected: onSaveSelected,
+          onPlayPressed: onSaveSelected,
         );
       },
     );

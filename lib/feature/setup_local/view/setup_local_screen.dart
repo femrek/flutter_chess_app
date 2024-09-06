@@ -52,7 +52,7 @@ class _SaveList extends StatelessWidget {
     required this.onPressedSave,
   });
 
-  final OnSaveSelected onPressedSave;
+  final OnPlayPressed onPressedSave;
 
   @override
   Widget build(BuildContext context) {

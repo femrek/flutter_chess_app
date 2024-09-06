@@ -32,13 +32,19 @@ class GamePreviewDialog extends StatefulWidget {
     required BuildContext context,
     required LocalGameSaveCacheModel save,
     required VoidCallback onPlayPressed,
+    bool popAfterPlay = true,
   }) async {
     await showDialog<void>(
       context: context,
       builder: (context) {
         return GamePreviewDialog(
           save: save,
-          onPlayPressed: onPlayPressed,
+          onPlayPressed: () {
+            onPlayPressed();
+            if (popAfterPlay) {
+              Navigator.of(context).pop();
+            }
+          },
         );
       },
     );
