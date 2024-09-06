@@ -8,7 +8,8 @@ class SetupLocalSaveList extends StatelessWidget {
   const SetupLocalSaveList({
     required this.saveList,
     required this.padding,
-    required this.onSaveSelected,
+    required this.onPlayPressed,
+    required this.onRemovePressed,
     super.key,
   });
 
@@ -18,8 +19,11 @@ class SetupLocalSaveList extends StatelessWidget {
   /// The padding around the list.
   final EdgeInsets padding;
 
-  /// The callback when a save is selected.
-  final OnPlayPressed onSaveSelected;
+  /// The callback when clicked on play button of a save.
+  final OnPressedWithGameSave onPlayPressed;
+
+  /// The callback when clicked on remove button of a save.
+  final OnPressedWithGameSave onRemovePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,8 @@ class SetupLocalSaveList extends StatelessWidget {
       itemBuilder: (_, index) {
         return AppSaveListTile(
           data: saveList[index],
-          onPlayPressed: onSaveSelected,
+          onPlayPressed: onPlayPressed,
+          onRemovePressed: onRemovePressed,
         );
       },
     );

@@ -14,6 +14,7 @@ LocalGameSave _$LocalGameSaveFromJson(Map<String, dynamic> json) =>
               (e) => BoardStatusAndLastMove.fromJson(e as Map<String, dynamic>))
           .toList(),
       defaultPosition: json['defaultPosition'] as String,
+      isGameOver: json['isGameOver'] as bool,
     );
 
 Map<String, dynamic> _$LocalGameSaveToJson(LocalGameSave instance) =>
@@ -21,4 +22,5 @@ Map<String, dynamic> _$LocalGameSaveToJson(LocalGameSave instance) =>
       'name': instance.name,
       'history': instance.history,
       'defaultPosition': instance.defaultPosition,
+      'isGameOver': instance.isGameOver,
     };

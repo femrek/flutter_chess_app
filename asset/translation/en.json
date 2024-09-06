@@ -41,13 +41,20 @@
     "gamePreviewDialog": {
       "lastPlayed": "Last Played: ",
       "created": "Started: ",
-      "play": "Play"
+      "play": "Play",
+      "delete": "Delete"
     },
     "confirmationDialog": {
       "restartLocalGame": {
         "title": "Restart Game",
         "content": "Are you sure you want to restart the game?",
         "confirmButton": "Restart",
+        "cancelButton": "Cancel"
+      },
+      "deleteLocalGame": {
+        "title": "Delete Game",
+        "content": "Are you sure you want to delete the game: '{}'?",
+        "confirmButton": "Delete",
         "cancelButton": "Cancel"
       }
     }

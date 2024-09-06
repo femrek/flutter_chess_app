@@ -38,6 +38,7 @@ class SetupLocalViewModel extends BaseCubit<SetupLocalState> {
         name: name,
         history: [],
         defaultPosition: ch.Chess.DEFAULT_POSITION,
+        isGameOver: false,
       ),
     );
 
@@ -50,5 +51,12 @@ class SetupLocalViewModel extends BaseCubit<SetupLocalState> {
     unawaited(loadSaves());
 
     return savedSave;
+  }
+
+  /// Removes the save permanently from the cache.
+  Future<void> removeSave(LocalGameSaveCacheModel save) async {
+    final removed = await appCache.localGameSaveOperator.remove(save.id);
+
+    if (removed) await loadSaves();
   }
 }

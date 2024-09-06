@@ -1,4 +1,6 @@
-/// The base class for all cache models
+/// Data class to keep some data managed by database management system for all
+/// cache models. This field of CacheModel is managed by the database management
+/// system and should not be modified by the application.
 class CacheModelMetaData {
   /// Creates a new [CacheModelMetaData]
   const CacheModelMetaData({

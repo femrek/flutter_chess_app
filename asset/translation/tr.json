@@ -41,13 +41,20 @@
     "gamePreviewDialog": {
       "lastPlayed": "Son Oynama: ",
       "created": "Oyunu Oluşturma: ",
-      "play": "Oyna"
+      "play": "Oyna",
+      "delete": "Sil"
     },
     "confirmationDialog": {
       "restartLocalGame": {
         "title": "Oyunu Yeniden Başlat",
         "content": "Oyunu yeniden başlatmak istediğinizden emin misiniz?",
         "confirmButton": "Yeniden Başlat",
+        "cancelButton": "İptal"
+      },
+      "deleteLocalGame": {
+        "title": "Oyunu Sil",
+        "content": "Oyunu silmek istediğinizden emin misiniz: '{}'?",
+        "confirmButton": "Sil",
         "cancelButton": "İptal"
       }
     }

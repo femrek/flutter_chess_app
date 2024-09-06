@@ -11,13 +11,15 @@ class LocalGameSave {
     required this.name,
     required this.history,
     required this.defaultPosition,
+    required this.isGameOver,
   });
 
   /// Creates an empty instance of [LocalGameSave].
   LocalGameSave.empty()
       : name = '',
         history = [],
-        defaultPosition = '';
+        defaultPosition = '',
+        isGameOver = false;
 
   /// Creates a new instance of [LocalGameSave] from a JSON object.
   factory LocalGameSave.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,9 @@ class LocalGameSave {
   /// The last move made in the game.
   final String defaultPosition;
 
+  /// Whether the game is over.
+  final bool isGameOver;
+
   /// Converts the save to a JSON object.
   Map<String, dynamic> toJson() => _$LocalGameSaveToJson(this);
 
@@ -47,11 +52,13 @@ class LocalGameSave {
     String? name,
     List<BoardStatusAndLastMove>? history,
     String? defaultPosition,
+    bool? isGameOver,
   }) {
     return LocalGameSave(
       name: name ?? this.name,
       history: history ?? this.history,
       defaultPosition: defaultPosition ?? this.defaultPosition,
+      isGameOver: isGameOver ?? this.isGameOver,
     );
   }
 

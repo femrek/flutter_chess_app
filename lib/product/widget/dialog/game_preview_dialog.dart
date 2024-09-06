@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
+import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
 import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
@@ -18,6 +19,7 @@ class GamePreviewDialog extends StatefulWidget {
   const GamePreviewDialog({
     required this.save,
     required this.onPlayPressed,
+    required this.onRemovePressed,
     super.key,
   });
 
@@ -27,11 +29,15 @@ class GamePreviewDialog extends StatefulWidget {
   /// The callback when the play button is pressed.
   final VoidCallback onPlayPressed;
 
+  /// The callback when the remove button is pressed.
+  final VoidCallback onRemovePressed;
+
   /// Shows a [GamePreviewDialog] with the given [save] and [onPlayPressed].
   static Future<void> show({
     required BuildContext context,
     required LocalGameSaveCacheModel save,
     required VoidCallback onPlayPressed,
+    required VoidCallback onRemovePressed,
     bool popAfterPlay = true,
   }) async {
     await showDialog<void>(
@@ -45,6 +51,7 @@ class GamePreviewDialog extends StatefulWidget {
               Navigator.of(context).pop();
             }
           },
+          onRemovePressed: onRemovePressed,
         );
       },
     );
@@ -87,8 +94,17 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
               size: size,
             ),
 
-            // The game details
+            // turn status
             const SizedBox(height: 8),
+            const AppPadding.card(vertical: 0).toWidget(
+              child: Text(
+                _turnStatusText,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+
+            // The game details
+            const SizedBox(height: 4),
             const AppPadding.card(vertical: 0).toWidget(
               child: Text(
                 widget.save.localGameSave.name,
@@ -114,14 +130,34 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
 
             // The play button
             const AppPadding.card(vertical: 0).toWidget(
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: widget.onPlayPressed,
-                  child: const Text(
-                    LocaleKeys.dialog_gamePreviewDialog_play,
-                  ).tr(),
-                ),
+              child: Row(
+                children: [
+                  // The delete button
+                  ElevatedButton(
+                    onPressed: widget.onRemovePressed,
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(
+                        Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                    child: Text(
+                      LocaleKeys.dialog_gamePreviewDialog_delete,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onError,
+                      ),
+                    ).tr(),
+                  ),
+
+                  const Spacer(),
+
+                  // The play button
+                  TextButton(
+                    onPressed: widget.onPlayPressed,
+                    child: const Text(
+                      LocaleKeys.dialog_gamePreviewDialog_play,
+                    ).tr(),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 12),
@@ -129,6 +165,16 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
         );
       }),
     );
+  }
+
+  String get _turnStatusText {
+    final status = _chessService.turnStatus;
+
+    return status.turn?.when(
+          black: LocaleKeys.game_chessTurn_black.tr(),
+          white: LocaleKeys.game_chessTurn_white.tr(),
+        ) ??
+        status.localized;
   }
 }
 

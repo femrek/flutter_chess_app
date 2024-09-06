@@ -7,7 +7,7 @@ import 'package:localchess/product/util/date_extension.dart';
 import 'package:localchess/product/widget/dialog/game_preview_dialog.dart';
 
 /// The function definition to trigger when the save list item selected.
-typedef OnPlayPressed = void Function(LocalGameSaveCacheModel save);
+typedef OnPressedWithGameSave = void Function(LocalGameSaveCacheModel save);
 
 /// Component for use for each list element.
 class AppSaveListTile extends StatelessWidget {
@@ -15,6 +15,7 @@ class AppSaveListTile extends StatelessWidget {
   const AppSaveListTile({
     required this.data,
     required this.onPlayPressed,
+    required this.onRemovePressed,
     super.key,
   });
 
@@ -22,7 +23,11 @@ class AppSaveListTile extends StatelessWidget {
   final LocalGameSaveCacheModel data;
 
   /// Called when the user tap the save. Gives the save data as parameter.
-  final OnPlayPressed onPlayPressed;
+  final OnPressedWithGameSave onPlayPressed;
+
+  /// Called when the user tap the remove button. Gives the save data as
+  /// parameter.
+  final OnPressedWithGameSave onRemovePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -31,28 +36,56 @@ class AppSaveListTile extends StatelessWidget {
         horizontal: 12,
         vertical: 4,
       ),
-      title: Text(data.localGameSave.name),
+      tileColor: data.localGameSave.isGameOver
+          ? Theme.of(context).colorScheme.onSurface.withOpacity(0.1)
+          : null,
+      title: Text(
+        data.localGameSave.name,
+        style: TextStyle(
+          decoration:
+              data.localGameSave.isGameOver ? TextDecoration.lineThrough : null,
+        ),
+      ),
       subtitle: Text(
         LocaleKeys.widget_saveListTile_lastPlayed.tr() +
             (data.metaData?.updateAt.toVisualFormat ?? ''),
       ),
       trailing: IconButton(
         icon: Icon(
-          Theme.of(context).brightness == Brightness.light
-              ? Icons.play_circle_outline
-              : Icons.play_circle_filled,
+          _getIcon(context),
         ),
         onPressed: () {
-          onPlayPressed(data);
+          if (data.localGameSave.isGameOver) {
+            onRemovePressed(data);
+          } else {
+            onPlayPressed(data);
+          }
         },
       ),
       onTap: () {
         GamePreviewDialog.show(
           context: context,
           save: data,
-          onPlayPressed: () => onPlayPressed(data),
+          onPlayPressed: () {
+            onPlayPressed(data);
+          },
+          onRemovePressed: () {
+            onRemovePressed(data);
+          },
         );
       },
     );
+  }
+
+  IconData _getIcon(BuildContext context) {
+    if (data.localGameSave.isGameOver) {
+      return Icons.delete;
+    } else {
+      if (Theme.of(context).brightness == Brightness.light) {
+        return Icons.play_circle_outline;
+      } else {
+        return Icons.play_circle_filled;
+      }
+    }
   }
 }

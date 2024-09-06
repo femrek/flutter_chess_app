@@ -37,7 +37,10 @@ class _SetupLocalScreenState extends BaseState<SetupLocalScreen>
                 onPressedNewGame: onPressedNewGame,
               ),
               Expanded(
-                child: _SaveList(onPressedSave: onPressedSave),
+                child: _SaveList(
+                  onPlayPressed: onPlayPressed,
+                  onRemovePressed: onRemovePressed,
+                ),
               ),
             ],
           ),
@@ -49,10 +52,12 @@ class _SetupLocalScreenState extends BaseState<SetupLocalScreen>
 
 class _SaveList extends StatelessWidget {
   const _SaveList({
-    required this.onPressedSave,
+    required this.onPlayPressed,
+    required this.onRemovePressed,
   });
 
-  final OnPlayPressed onPressedSave;
+  final OnPressedWithGameSave onPlayPressed;
+  final OnPressedWithGameSave onRemovePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +71,8 @@ class _SaveList extends StatelessWidget {
         return SetupLocalSaveList(
           padding: padding,
           saveList: saveList,
-          onSaveSelected: onPressedSave,
+          onPlayPressed: onPlayPressed,
+          onRemovePressed: onRemovePressed,
         );
       },
     );

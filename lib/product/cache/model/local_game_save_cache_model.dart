@@ -26,6 +26,9 @@ final class LocalGameSaveCacheModel implements CacheModel {
   @override
   final String id;
 
+  @override
+  CacheModelMetaData? metaData;
+
   /// The local game save.
   final LocalGameSave localGameSave;
 
@@ -122,9 +125,6 @@ final class LocalGameSaveCacheModel implements CacheModel {
       return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
     }
   }
-
-  @override
-  CacheModelMetaData? metaData;
 
   @override
   Map<String, dynamic> toJson() {

@@ -33,10 +33,19 @@ class ChessService implements IChessService {
 
   /// Updates the save with the new save. also updates the [_save] field.
   Future<void> _updateSave(LocalGameSave newSave) async {
+    // check and update if game over status is changed.
+    late final LocalGameSave newSaveResult;
+    if (_chess.game_over != newSave.isGameOver) {
+      newSaveResult = newSave.copyWith(isGameOver: _chess.game_over);
+    } else {
+      newSaveResult = newSave;
+    }
+
+    // update the save in the cache.
     _save = await G.appCache.localGameSaveOperator.update(
       LocalGameSaveCacheModel(
         id: _save.id,
-        localGameSave: newSave,
+        localGameSave: newSaveResult,
       ),
     );
   }
@@ -239,14 +248,13 @@ class ChessService implements IChessService {
       return;
     }
 
-    // save the new status of the game.
-    await _updateSave(save.localGameSave.popHistory());
+    // undo and save state
+    final newSave = save.localGameSave.popHistory();
+    _chess = ch.Chess.fromFEN(newSave.currentStateFen);
+    await _updateSave(newSave);
 
-    // add the undone state to the undo history.
+    // add move to undo history
     _undoHistory.add(undoState);
-
-    // update the chess engine.
-    _chess = ch.Chess.fromFEN(save.localGameSave.currentStateFen);
 
     G.logger.t('ChessService.undo: Undone');
   }
@@ -265,9 +273,13 @@ class ChessService implements IChessService {
 
     if (_undoHistory.isEmpty) throw Exception('No history to redo');
 
+    // pop redo state
     final redoState = _undoHistory.removeLast();
-    await _updateSave(save.localGameSave.addHistory(redoState));
-    _chess = ch.Chess.fromFEN(save.localGameSave.currentStateFen);
+
+    // redo and save state
+    final newSave = save.localGameSave.addHistory(redoState);
+    _chess = ch.Chess.fromFEN(newSave.currentStateFen);
+    await _updateSave(newSave);
 
     G.logger.t('ChessService.redo: Redone');
   }
@@ -276,11 +288,13 @@ class ChessService implements IChessService {
   Future<void> reset() async {
     G.logger.t('ChessService.reset');
 
+    // clear undo history
     _undoHistory.clear();
 
-    await _updateSave(save.localGameSave.copyWith(history: []));
-
-    _chess.load(save.localGameSave.currentStateFen);
+    // reset and save state
+    final newSave = save.localGameSave.copyWith(history: []);
+    _chess.load(newSave.currentStateFen);
+    await _updateSave(newSave);
 
     G.logger.t('ChessService.reset: Reset');
   }

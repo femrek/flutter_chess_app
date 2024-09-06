@@ -8,6 +8,7 @@ class ConfirmationDialog extends StatelessWidget {
     required this.title,
     required this.confirmText,
     required this.cancelText,
+    required this.alert,
     this.content,
     super.key,
   });
@@ -24,6 +25,9 @@ class ConfirmationDialog extends StatelessWidget {
   /// The content text of the dialog. Optional description.
   final String? content;
 
+  /// The alert flag to show the dialog as an alert dialog.
+  final bool alert;
+
   /// Shows the confirmation dialog with given [title], [content],
   /// [confirmText],
   static Future<bool> show({
@@ -32,6 +36,7 @@ class ConfirmationDialog extends StatelessWidget {
     required String confirmText,
     required String cancelText,
     String? content,
+    bool alert = true,
   }) async {
     return await showDialog<bool>(
           context: context,
@@ -41,6 +46,7 @@ class ConfirmationDialog extends StatelessWidget {
               confirmText: confirmText,
               cancelText: cancelText,
               content: content,
+              alert: alert,
             );
           },
         ) ??
@@ -58,10 +64,26 @@ class ConfirmationDialog extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(cancelText),
         ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text(confirmText),
-        ),
+        if (alert)
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ButtonStyle(
+              backgroundColor: WidgetStatePropertyAll(
+                Theme.of(context).colorScheme.error,
+              ),
+            ),
+            child: Text(
+              confirmText,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onError,
+              ),
+            ),
+          )
+        else
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(confirmText),
+          ),
       ],
     );
   }

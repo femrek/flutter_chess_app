@@ -421,6 +421,7 @@ const _sampleModel_1 = LocalGameSave(
       lastMoveTo: 'c4',
     ),
   ],
+  isGameOver: false,
 );
 const _sampleModel_1_v2 = LocalGameSave(
   name: 'save 1',
@@ -447,6 +448,7 @@ const _sampleModel_1_v2 = LocalGameSave(
       lastMoveTo: 'b5',
     ),
   ],
+  isGameOver: false,
 );
 const _sampleModel_2 = LocalGameSave(
   name: 'save 2',
@@ -468,6 +470,7 @@ const _sampleModel_2 = LocalGameSave(
       lastMoveTo: 'c4',
     ),
   ],
+  isGameOver: false,
 );
 const _sampleModel_3 = LocalGameSave(
   name: 'save 3',
@@ -489,6 +492,7 @@ const _sampleModel_3 = LocalGameSave(
       lastMoveTo: 'c4',
     ),
   ],
+  isGameOver: false,
 );
 const _sampleModel_4 = LocalGameSave(
   name: 'save 4',
@@ -510,6 +514,7 @@ const _sampleModel_4 = LocalGameSave(
       lastMoveTo: 'c4',
     ),
   ],
+  isGameOver: false,
 );
 const _sampleModel_5 = LocalGameSave(
   name: 'save 5',
@@ -531,6 +536,7 @@ const _sampleModel_5 = LocalGameSave(
       lastMoveTo: 'c4',
     ),
   ],
+  isGameOver: false,
 );
 
 List<LocalGameSaveCacheModel> _sampleModels = [

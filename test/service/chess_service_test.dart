@@ -408,45 +408,6 @@ void main() async {
   });
 
   group('test check status', () {
-    /*
-     AppChessTurnStatus _checkStatus() {
-    if (_chess.game_over) {
-      // checkmate
-      if (_chess.in_checkmate) {
-        if (_chess.turn == ch.Color.BLACK) {
-          return AppChessTurnStatus.blackKingCheckmate;
-        }
-        return AppChessTurnStatus.whiteKingCheckmate;
-      }
-
-      // stalemate
-      if (_chess.in_stalemate) {
-        return AppChessTurnStatus.stalemate;
-      }
-
-      // draw
-      if (_chess.in_draw) {
-        return AppChessTurnStatus.draw;
-      }
-    }
-
-    // check
-    if (_chess.in_check) {
-      if (_chess.turn == ch.Color.BLACK) {
-        return AppChessTurnStatus.blackKingCheck;
-      }
-      return AppChessTurnStatus.whiteKingCheck;
-    }
-
-    // ongoing
-    if (_chess.turn == ch.Color.BLACK) {
-      return AppChessTurnStatus.black;
-    }
-    return AppChessTurnStatus.white;
-  }
-
-
-     */
     test('test when the game in checkmate', () {
       final chessService = ChessService(save: _saveCheckmate_blackLost);
 
@@ -525,6 +486,7 @@ final _saveNew = LocalGameSaveCacheModel(
     name: 'save new',
     history: [],
     defaultPosition: TestChessFenConstants.initialFen,
+    isGameOver: false,
   ),
 );
 
@@ -549,6 +511,7 @@ final _savePlayed = LocalGameSaveCacheModel(
         lastMoveTo: 'c4',
       ),
     ],
+    isGameOver: false,
     defaultPosition: TestChessFenConstants.initialFen,
   ),
 );
@@ -564,6 +527,7 @@ final _saveToGetPromotionMove_fromB7_toB8 = LocalGameSaveCacheModel(
         lastMoveTo: 'b8',
       ),
     ],
+    isGameOver: false,
     defaultPosition: TestChessFenConstants.readyToPromotionMoveFen_b7Move,
   ),
 );
@@ -573,6 +537,7 @@ final _saveToGetPromotionCapture_fromB7_toA8 = LocalGameSaveCacheModel(
   localGameSave: const LocalGameSave(
     name: 'save to get promotion with capture',
     history: [],
+    isGameOver: false,
     defaultPosition: TestChessFenConstants.readyToPromotionMoveFen_b7CaptureA8,
   ),
 );
@@ -582,6 +547,7 @@ final _saveBlackKingUnderAttack = LocalGameSaveCacheModel(
   localGameSave: const LocalGameSave(
     name: 'save black king under attack',
     history: [],
+    isGameOver: false,
     defaultPosition: TestChessFenConstants.blackKingIsUnderAttackFen,
   ),
 );
@@ -591,6 +557,7 @@ final _saveCheckmate_blackLost = LocalGameSaveCacheModel(
   localGameSave: const LocalGameSave(
     name: 'save checkmate black lost',
     history: [],
+    isGameOver: false,
     defaultPosition: TestChessFenConstants.checkmateFen_blackLost,
   ),
 );
@@ -600,6 +567,7 @@ final _saveStalemate = LocalGameSaveCacheModel(
   localGameSave: const LocalGameSave(
     name: 'save stalemate',
     history: [],
+    isGameOver: true,
     defaultPosition: TestChessFenConstants.stalemateFen,
   ),
 );
@@ -609,6 +577,7 @@ final _saveDraw = LocalGameSaveCacheModel(
   localGameSave: const LocalGameSave(
     name: 'save draw',
     history: [],
+    isGameOver: false,
     defaultPosition: TestChessFenConstants.preDrawFen,
   ),
 );
