@@ -7,8 +7,8 @@ import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/widget/button/app_button/app_button.dart';
 
 /// The header part of the setup_local_screen.
-class SetupLocalHeader extends StatelessWidget {
-  const SetupLocalHeader({
+class SetupHostHeader extends StatelessWidget {
+  const SetupHostHeader({
     required this.onPressedNewGame,
     super.key,
   });
@@ -23,7 +23,7 @@ class SetupLocalHeader extends StatelessWidget {
         const BackButton(),
         Expanded(
           child: Text(
-            LocaleKeys.screen_setupLocal_title,
+            LocaleKeys.screen_setupHost_title,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   height: 1,
                 ),
@@ -35,7 +35,7 @@ class SetupLocalHeader extends StatelessWidget {
           child: AppButton(
             onPressed: onPressedNewGame,
             child: const Text(
-              LocaleKeys.screen_setupLocal_newGameButton,
+              LocaleKeys.screen_setupHost_newGameButton,
             ).tr(),
           ),
         ),

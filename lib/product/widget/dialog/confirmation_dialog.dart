@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:localchess/product/localization/locale_keys.g.dart';
 
 /// A dialog that asks for confirmation. return true if the user confirms.
 /// Otherwise, return false.
@@ -51,6 +53,25 @@ class ConfirmationDialog extends StatelessWidget {
           },
         ) ??
         false;
+  }
+
+  /// Shows the confirmation dialog for deleting a game save.
+  static Future<bool> showRemoveConfirmation({
+    required BuildContext context,
+    required String gameName,
+  }) {
+    return ConfirmationDialog.show(
+      context: context,
+      title: LocaleKeys.dialog_confirmationDialog_deleteLocalGame_title.tr(),
+      content: LocaleKeys.dialog_confirmationDialog_deleteLocalGame_content
+          .tr(args: [gameName]),
+      confirmText: LocaleKeys
+          .dialog_confirmationDialog_deleteLocalGame_confirmButton
+          .tr(),
+      cancelText: LocaleKeys
+          .dialog_confirmationDialog_deleteLocalGame_cancelButton
+          .tr(),
+    );
   }
 
   @override

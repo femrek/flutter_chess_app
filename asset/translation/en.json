@@ -27,8 +27,13 @@
       }
     },
     "setupLocal": {
+      "title": "Saved Games",
+      "newGameButton": "New Game"
+    },
+    "setupHost": {
+      "title": "Host a Game",
       "newGameButton": "New Game",
-      "savedGamesListTitle": "Saved Games"
+      "listTitle": "Saved Games"
     }
   },
   "dialog": {

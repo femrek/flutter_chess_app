@@ -65,10 +65,17 @@ class HomeRoute extends _i8.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.HostGameScreen]
-class HostGameRoute extends _i8.PageRouteInfo<void> {
-  const HostGameRoute({List<_i8.PageRouteInfo>? children})
-      : super(
+class HostGameRoute extends _i8.PageRouteInfo<HostGameRouteArgs> {
+  HostGameRoute({
+    required _i9.GameSaveCacheModel save,
+    _i10.Key? key,
+    List<_i8.PageRouteInfo>? children,
+  }) : super(
           HostGameRoute.name,
+          args: HostGameRouteArgs(
+            save: save,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -77,9 +84,29 @@ class HostGameRoute extends _i8.PageRouteInfo<void> {
   static _i8.PageInfo page = _i8.PageInfo(
     name,
     builder: (data) {
-      return const _i3.HostGameScreen();
+      final args = data.argsAs<HostGameRouteArgs>();
+      return _i3.HostGameScreen(
+        save: args.save,
+        key: args.key,
+      );
     },
   );
+}
+
+class HostGameRouteArgs {
+  const HostGameRouteArgs({
+    required this.save,
+    this.key,
+  });
+
+  final _i9.GameSaveCacheModel save;
+
+  final _i10.Key? key;
+
+  @override
+  String toString() {
+    return 'HostGameRouteArgs{save: $save, key: $key}';
+  }
 }
 
 /// generated route for

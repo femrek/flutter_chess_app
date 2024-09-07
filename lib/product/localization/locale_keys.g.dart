@@ -20,9 +20,13 @@ abstract class  LocaleKeys {
   static const screen_home_drawer_language = 'screen.home.drawer.language';
   static const screen_home_drawer = 'screen.home.drawer';
   static const screen_home = 'screen.home';
+  static const screen_setupLocal_title = 'screen.setupLocal.title';
   static const screen_setupLocal_newGameButton = 'screen.setupLocal.newGameButton';
-  static const screen_setupLocal_savedGamesListTitle = 'screen.setupLocal.savedGamesListTitle';
   static const screen_setupLocal = 'screen.setupLocal';
+  static const screen_setupHost_title = 'screen.setupHost.title';
+  static const screen_setupHost_newGameButton = 'screen.setupHost.newGameButton';
+  static const screen_setupHost_listTitle = 'screen.setupHost.listTitle';
+  static const screen_setupHost = 'screen.setupHost';
   static const screen = 'screen';
   static const dialog_createGameDialog_title = 'dialog.createGameDialog.title';
   static const dialog_createGameDialog_hint = 'dialog.createGameDialog.hint';

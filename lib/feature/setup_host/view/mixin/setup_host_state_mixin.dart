@@ -1,10 +1,8 @@
 // ignore_for_file: public_member_api_docs
 
-import 'dart:async';
-
 import 'package:auto_route/auto_route.dart';
-import 'package:localchess/feature/setup_local/view/setup_local_screen.dart';
-import 'package:localchess/feature/setup_local/view_model/setup_local_view_model.dart';
+import 'package:localchess/feature/setup_host/view/setup_host_screen.dart';
+import 'package:localchess/feature/setup_host/view_model/setup_host_view_model.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/navigation/app_route.gr.dart';
@@ -12,14 +10,14 @@ import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/widget/dialog/confirmation_dialog.dart';
 import 'package:localchess/product/widget/dialog/enter_game_name_dialog.dart';
 
-mixin SetupLocalStateMixin on BaseState<SetupLocalScreen> {
+mixin SetupHostStateMixin on BaseState<SetupHostScreen> {
+  SetupHostViewModel get viewModel => G.setupHostViewModel;
+
   @override
   void initState() {
     super.initState();
     viewModel.loadSaves();
   }
-
-  SetupLocalViewModel get viewModel => G.setupLocalViewModel;
 
   /// onPressed function of new game button. Do not return [Future], because
   /// the button should not show progress indicator.
@@ -29,12 +27,12 @@ mixin SetupLocalStateMixin on BaseState<SetupLocalScreen> {
       if (name.isEmpty) return;
       final save = await viewModel.createGame(name);
 
-      if (mounted) await context.router.push(LocalGameRoute(save: save));
+      if (mounted) await context.router.push(HostGameRoute(save: save));
     });
   }
 
   Future<void> onPlayPressed(GameSaveCacheModel save) async {
-    await context.router.push(LocalGameRoute(save: save));
+    if (mounted) await context.router.push(HostGameRoute(save: save));
   }
 
   Future<void> onRemovePressed(GameSaveCacheModel save) async {

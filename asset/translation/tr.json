@@ -27,8 +27,13 @@
       }
     },
     "setupLocal": {
+      "title": "Oyun Kayıtları",
+      "newGameButton": "Yeni Oyun Oluştur"
+    },
+    "setupHost": {
+      "title": "Oyun Oluştur",
       "newGameButton": "Yeni Oyun Oluştur",
-      "savedGamesListTitle": "Oyun Kayıtları"
+      "listTitle": "Kayıtlı Oyunlar"
     }
   },
   "dialog": {

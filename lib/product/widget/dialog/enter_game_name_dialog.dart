@@ -1,4 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:localchess/product/localization/locale_keys.g.dart';
 
 /// Dialog for entering a name. The dialog returns the entered text when pop.
 class EnterGameNameDialog extends StatefulWidget {
@@ -26,20 +28,22 @@ class EnterGameNameDialog extends StatefulWidget {
   /// Shows the [EnterGameNameDialog] dialog.
   static Future<String?> show({
     required BuildContext context,
-    required String title,
-    required String hintText,
-    required String confirmText,
-    required String cancelText,
+    String? title,
+    String? hintText,
+    String? confirmText,
+    String? cancelText,
   }) async {
     final result = await showDialog<String>(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return EnterGameNameDialog(
-          title: title,
-          hintText: hintText,
-          confirmText: confirmText,
-          cancelText: cancelText,
+          title: title ?? LocaleKeys.dialog_createGameDialog_title.tr(),
+          hintText: hintText ?? LocaleKeys.dialog_createGameDialog_hint.tr(),
+          confirmText: confirmText ??
+              LocaleKeys.dialog_createGameDialog_createButton.tr(),
+          cancelText: cancelText ??
+              LocaleKeys.dialog_createGameDialog_cancelButton.tr(),
         );
       },
     );
