@@ -5,7 +5,6 @@ import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/init/app_initializer.dart';
 import 'package:localchess/product/init/app_view_model_initalizer.dart';
 import 'package:localchess/product/localization/app_localization.dart';
-import 'package:localchess/product/navigation/app_route.dart';
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
 import 'package:widget/widget.dart';
 
@@ -30,7 +29,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       // navigation
-      routerConfig: AppRoute().config(),
+      routerConfig: G.appRoute.config(),
 
       // localization
       localizationsDelegates: context.localizationDelegates,

@@ -4,6 +4,7 @@ import 'package:localchess/feature/local_game/view_model/local_game_view_model.d
 import 'package:localchess/feature/setup_local/view_model/setup_local_view_model.dart';
 import 'package:localchess/product/cache/app_cache.dart';
 import 'package:localchess/product/cache/i_app_cache.dart';
+import 'package:localchess/product/navigation/app_route.dart';
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
 import 'package:localchess/product/theme/app_dark_theme.dart';
 import 'package:localchess/product/theme/app_light_theme.dart';
@@ -17,6 +18,9 @@ abstract final class AppGetItConfigurer {
     GetIt.I
       // logger
       ..registerLazySingleton<Logger>(Logger.new)
+
+      // navigation
+      ..registerLazySingleton<AppRoute>(AppRoute.new)
 
       // theme
       ..registerLazySingleton<AppDarkTheme>(AppDarkTheme.new)

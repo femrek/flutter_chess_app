@@ -57,6 +57,11 @@
         "confirmButton": "Sil",
         "cancelButton": "İptal"
       }
+    },
+    "errorDialog": {
+      "title": "Bir Hata Oluştu",
+      "content": "Hata: {}",
+      "closeButton": "Kapat"
     }
   },
   "widget": {

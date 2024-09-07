@@ -57,6 +57,11 @@
         "confirmButton": "Delete",
         "cancelButton": "Cancel"
       }
+    },
+    "errorDialog": {
+      "title": "An Error Occurred",
+      "content": "Error: {}",
+      "closeButton": "Close"
     }
   },
   "widget": {

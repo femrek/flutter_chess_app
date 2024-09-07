@@ -1,5 +1,3 @@
-// ignore_for_file: sort_constructors_first
-
 import 'package:auto_route/auto_route.dart';
 import 'package:localchess/product/navigation/app_route.gr.dart';
 
@@ -18,13 +16,4 @@ class AppRoute extends RootStackRouter {
         AutoRoute(page: GuestGameRoute.page),
         AutoRoute(page: LocalGameRoute.page),
       ];
-
-  /// factory method to get the singleton instance
-  factory AppRoute() => _instance ??= AppRoute._();
-
-  /// singleton instance
-  static AppRoute? _instance;
-
-  /// private constructor
-  AppRoute._();
 }
