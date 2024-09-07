@@ -7,7 +7,6 @@ class ErrorDialog extends StatefulWidget {
     required this.title,
     required this.content,
     required this.closeText,
-    // required this.onClosePressed,
     super.key,
   });
 
@@ -20,27 +19,21 @@ class ErrorDialog extends StatefulWidget {
   /// The text of the close button.
   final String closeText;
 
-  /// The callback function to be called when the close button is pressed.
-  // final VoidCallback onClosePressed;
-
   /// Shows the [ErrorDialog] dialog.
   static Future<void> show({
     required BuildContext context,
     required String title,
     required String content,
     required String closeText,
-    // required VoidCallback onClosePressed,
     Key? key,
   }) async {
     await showDialog<void>(
       context: context,
-      // barrierDismissible: false,
       builder: (context) {
         return ErrorDialog(
           title: title,
           content: content,
           closeText: closeText,
-          // onClosePressed: onClosePressed,
           key: key,
         );
       },
@@ -60,9 +53,7 @@ class ErrorDialogState extends State<ErrorDialog> {
       content: Text(widget.content),
       actions: <Widget>[
         TextButton(
-          // onPressed: widget.onClosePressed,
           onPressed: () {
-            // widget.onClosePressed();
             Navigator.of(context).pop();
           },
           child: Text(widget.closeText),
