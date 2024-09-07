@@ -1,13 +1,13 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/util/date_extension.dart';
 import 'package:localchess/product/widget/dialog/game_preview_dialog.dart';
 
 /// The function definition to trigger when the save list item selected.
-typedef OnPressedWithGameSave = void Function(LocalGameSaveCacheModel save);
+typedef OnPressedWithGameSave = void Function(GameSaveCacheModel save);
 
 /// Component for use for each list element.
 class AppSaveListTile extends StatelessWidget {
@@ -20,7 +20,7 @@ class AppSaveListTile extends StatelessWidget {
   });
 
   /// The data to present in this tile.
-  final LocalGameSaveCacheModel data;
+  final GameSaveCacheModel data;
 
   /// Called when the user tap the save. Gives the save data as parameter.
   final OnPressedWithGameSave onPlayPressed;
@@ -36,14 +36,14 @@ class AppSaveListTile extends StatelessWidget {
         horizontal: 12,
         vertical: 4,
       ),
-      tileColor: data.localGameSave.isGameOver
+      tileColor: data.gameSave.isGameOver
           ? Theme.of(context).colorScheme.onSurface.withOpacity(0.1)
           : null,
       title: Text(
-        data.localGameSave.name,
+        data.gameSave.name,
         style: TextStyle(
           decoration:
-              data.localGameSave.isGameOver ? TextDecoration.lineThrough : null,
+              data.gameSave.isGameOver ? TextDecoration.lineThrough : null,
         ),
       ),
       subtitle: Text(
@@ -55,7 +55,7 @@ class AppSaveListTile extends StatelessWidget {
           _getIcon(context),
         ),
         onPressed: () {
-          if (data.localGameSave.isGameOver) {
+          if (data.gameSave.isGameOver) {
             onRemovePressed(data);
           } else {
             onPlayPressed(data);
@@ -78,7 +78,7 @@ class AppSaveListTile extends StatelessWidget {
   }
 
   IconData _getIcon(BuildContext context) {
-    if (data.localGameSave.isGameOver) {
+    if (data.gameSave.isGameOver) {
       return Icons.delete;
     } else {
       if (Theme.of(context).brightness == Brightness.light) {

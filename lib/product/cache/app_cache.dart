@@ -1,6 +1,6 @@
 import 'package:core/core.dart';
 import 'package:localchess/product/cache/i_app_cache.dart';
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:logger/logger.dart';
 
 /// Manages caching operations
@@ -20,11 +20,11 @@ class AppCache implements IAppCache {
   @override
   Future<void> init() async {
     await _cacheManager.init(items: [
-      LocalGameSaveCacheModel.empty(),
+      GameSaveCacheModel.empty(),
     ]);
   }
 
   @override
-  late final CacheOperator<LocalGameSaveCacheModel> localGameSaveOperator =
+  late final CacheOperator<GameSaveCacheModel> gameSaveOperator =
       HiveCacheOperator(logger: _logger);
 }

@@ -1,13 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'local_game_save.dart';
+part of 'game_save.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LocalGameSave _$LocalGameSaveFromJson(Map<String, dynamic> json) =>
-    LocalGameSave(
+GameSave _$GameSaveFromJson(Map<String, dynamic> json) => GameSave(
       name: json['name'] as String,
       history: (json['history'] as List<dynamic>)
           .map(
@@ -17,8 +16,7 @@ LocalGameSave _$LocalGameSaveFromJson(Map<String, dynamic> json) =>
       isGameOver: json['isGameOver'] as bool,
     );
 
-Map<String, dynamic> _$LocalGameSaveToJson(LocalGameSave instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$GameSaveToJson(GameSave instance) => <String, dynamic>{
       'name': instance.name,
       'history': instance.history,
       'defaultPosition': instance.defaultPosition,

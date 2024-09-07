@@ -1,6 +1,6 @@
 import 'package:chess/chess.dart' as ch;
 import 'package:gen/gen.dart';
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
@@ -14,10 +14,10 @@ class ChessService implements IChessService {
   /// Creates the chess service. [save] is the local game save for the current
   /// game. The service performs operations on this save.
   ChessService({
-    required LocalGameSaveCacheModel save,
+    required GameSaveCacheModel save,
   }) : _save = save {
     try {
-      final currentFEN = save.localGameSave.currentStateFen;
+      final currentFEN = save.gameSave.currentStateFen;
       _chess = ch.Chess.fromFEN(currentFEN);
     } on StateError catch (e) {
       G.logger.e('currentState seems to be null. Error: $e');
@@ -25,16 +25,16 @@ class ChessService implements IChessService {
     }
   }
 
-  LocalGameSaveCacheModel _save;
+  GameSaveCacheModel _save;
 
   late ch.Chess _chess;
 
   final List<BoardStatusAndLastMove> _undoHistory = [];
 
   /// Updates the save with the new save. also updates the [_save] field.
-  Future<void> _updateSave(LocalGameSave newSave) async {
+  Future<void> _updateSave(GameSave newSave) async {
     // check and update if game over status is changed.
-    late final LocalGameSave newSaveResult;
+    late final GameSave newSaveResult;
     if (_chess.game_over != newSave.isGameOver) {
       newSaveResult = newSave.copyWith(isGameOver: _chess.game_over);
     } else {
@@ -42,16 +42,16 @@ class ChessService implements IChessService {
     }
 
     // update the save in the cache.
-    _save = await G.appCache.localGameSaveOperator.update(
-      LocalGameSaveCacheModel(
+    _save = await G.appCache.gameSaveOperator.update(
+      GameSaveCacheModel(
         id: _save.id,
-        localGameSave: newSaveResult,
+        gameSave: newSaveResult,
       ),
     );
   }
 
   @override
-  LocalGameSaveCacheModel get save => _save;
+  GameSaveCacheModel get save => _save;
 
   @override
   AppPiece? getPieceAt(SquareCoordinate coordinate) {
@@ -70,7 +70,7 @@ class ChessService implements IChessService {
     G.logger.t('ChessService.lastMoveFrom');
 
     final result = SquareCoordinate.fromNameOrNull(
-        save.localGameSave.currentState?.lastMoveFrom);
+        save.gameSave.currentState?.lastMoveFrom);
 
     G.logger.t('ChessService.lastMoveFrom: $result');
 
@@ -81,8 +81,8 @@ class ChessService implements IChessService {
   SquareCoordinate? get lastMoveTo {
     G.logger.t('ChessService.lastMoveTo');
 
-    final result = SquareCoordinate.fromNameOrNull(
-        save.localGameSave.currentState?.lastMoveTo);
+    final result =
+        SquareCoordinate.fromNameOrNull(save.gameSave.currentState?.lastMoveTo);
 
     G.logger.t('ChessService.lastMoveTo: $result');
 
@@ -136,7 +136,7 @@ class ChessService implements IChessService {
 
   @override
   List<AppPiece> get capturedPieces {
-    final capturedPieces = save.localGameSave.history
+    final capturedPieces = save.gameSave.history
         .map<AppPiece?>((e) {
           final name = e.capturedPiece;
           if (name == null) return null;
@@ -220,7 +220,7 @@ class ChessService implements IChessService {
 
     _undoHistory.clear();
 
-    await _updateSave(save.localGameSave.addHistory(
+    await _updateSave(save.gameSave.addHistory(
       BoardStatusAndLastMove(
         fen: _chess.fen,
         lastMoveFrom: from,
@@ -235,7 +235,7 @@ class ChessService implements IChessService {
 
   @override
   bool canUndo() {
-    return save.localGameSave.history.isNotEmpty;
+    return save.gameSave.history.isNotEmpty;
   }
 
   @override
@@ -243,18 +243,18 @@ class ChessService implements IChessService {
     G.logger.t('ChessService.undo');
 
     // get history and validate
-    final history = save.localGameSave.history;
+    final history = save.gameSave.history;
     if (history.isEmpty) throw Exception('No history to undo');
 
     // get and validate last status
-    final undoState = save.localGameSave.currentState;
+    final undoState = save.gameSave.currentState;
     if (undoState == null) {
       G.logger.e('currentState is null when undoing and history is not empty');
       return;
     }
 
     // undo and save state
-    final newSave = save.localGameSave.popHistory();
+    final newSave = save.gameSave.popHistory();
     _chess = ch.Chess.fromFEN(newSave.currentStateFen);
     await _updateSave(newSave);
 
@@ -282,7 +282,7 @@ class ChessService implements IChessService {
     final redoState = _undoHistory.removeLast();
 
     // redo and save state
-    final newSave = save.localGameSave.addHistory(redoState);
+    final newSave = save.gameSave.addHistory(redoState);
     _chess = ch.Chess.fromFEN(newSave.currentStateFen);
     await _updateSave(newSave);
 
@@ -297,7 +297,7 @@ class ChessService implements IChessService {
     _undoHistory.clear();
 
     // reset and save state
-    final newSave = save.localGameSave.copyWith(history: []);
+    final newSave = save.gameSave.copyWith(history: []);
     _chess.load(newSave.currentStateFen);
     await _updateSave(newSave);
 

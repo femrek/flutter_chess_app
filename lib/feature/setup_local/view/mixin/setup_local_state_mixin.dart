@@ -6,7 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:localchess/feature/setup_local/view/setup_local_screen.dart';
 import 'package:localchess/feature/setup_local/view_model/setup_local_view_model.dart';
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/navigation/app_route.gr.dart';
@@ -39,16 +39,16 @@ mixin SetupLocalStateMixin on BaseState<SetupLocalScreen> {
     });
   }
 
-  Future<void> onPlayPressed(LocalGameSaveCacheModel save) async {
+  Future<void> onPlayPressed(GameSaveCacheModel save) async {
     await context.router.push(LocalGameRoute(save: save));
   }
 
-  Future<void> onRemovePressed(LocalGameSaveCacheModel save) async {
+  Future<void> onRemovePressed(GameSaveCacheModel save) async {
     final removeConfirmed = await ConfirmationDialog.show(
       context: context,
       title: LocaleKeys.dialog_confirmationDialog_deleteLocalGame_title.tr(),
       content: LocaleKeys.dialog_confirmationDialog_deleteLocalGame_content
-          .tr(args: [save.localGameSave.name]),
+          .tr(args: [save.gameSave.name]),
       confirmText: LocaleKeys
           .dialog_confirmationDialog_deleteLocalGame_confirmButton
           .tr(),

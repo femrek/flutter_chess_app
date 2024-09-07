@@ -2,25 +2,25 @@ import 'package:core/core.dart';
 import 'package:gen/gen.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 
-/// A cache model for [LocalGameSave]
-final class LocalGameSaveCacheModel implements CacheModel {
-  /// Creates a new [LocalGameSaveCacheModel]
-  LocalGameSaveCacheModel({
+/// A cache model for [GameSave]
+final class GameSaveCacheModel implements CacheModel {
+  /// Creates a new [GameSaveCacheModel]
+  GameSaveCacheModel({
     required this.id,
-    required this.localGameSave,
+    required this.gameSave,
     this.creationError,
   });
 
-  LocalGameSaveCacheModel._internal({
+  GameSaveCacheModel._internal({
     required this.id,
-    required this.localGameSave,
+    required this.gameSave,
     this.metaData,
   }) : creationError = null;
 
-  /// Creates an empty [LocalGameSaveCacheModel]
-  LocalGameSaveCacheModel.empty({String? errorMessage})
+  /// Creates an empty [GameSaveCacheModel]
+  GameSaveCacheModel.empty({String? errorMessage})
       : id = '',
-        localGameSave = LocalGameSave.empty(),
+        gameSave = GameSave.empty(),
         creationError = errorMessage;
 
   @override
@@ -29,8 +29,8 @@ final class LocalGameSaveCacheModel implements CacheModel {
   @override
   CacheModelMetaData? metaData;
 
-  /// The local game save.
-  final LocalGameSave localGameSave;
+  /// The game save data.
+  final GameSave gameSave;
 
   /// The error message if an error occurred while creating an object.
   final String? creationError;
@@ -41,17 +41,17 @@ final class LocalGameSaveCacheModel implements CacheModel {
     if (json == null) {
       const errorMessage = 'json is null';
       G.logger.e(errorMessage);
-      return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+      return GameSaveCacheModel.empty(errorMessage: errorMessage);
     }
     if (json is! Map) {
       const errorMessage = 'json is not a Map';
       G.logger.e(errorMessage);
-      return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+      return GameSaveCacheModel.empty(errorMessage: errorMessage);
     }
     if (json is! Map<String, dynamic>) {
       const errorMessage = 'json is not a Map<String, dynamic>';
       G.logger.e(errorMessage);
-      return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+      return GameSaveCacheModel.empty(errorMessage: errorMessage);
     }
 
     // validate the id. log and return empty, if id is not valid.
@@ -60,12 +60,12 @@ final class LocalGameSaveCacheModel implements CacheModel {
       if (id == null) {
         const errorMessage = 'id is null';
         G.logger.e(errorMessage);
-        return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+        return GameSaveCacheModel.empty(errorMessage: errorMessage);
       }
       if (id is! String) {
         const errorMessage = 'id is not a String';
         G.logger.e(errorMessage);
-        return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+        return GameSaveCacheModel.empty(errorMessage: errorMessage);
       }
     }
 
@@ -75,17 +75,17 @@ final class LocalGameSaveCacheModel implements CacheModel {
       if (dataJson == null) {
         const errorMessage = 'dataJson is null';
         G.logger.e(errorMessage);
-        return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+        return GameSaveCacheModel.empty(errorMessage: errorMessage);
       }
       if (dataJson is! Map) {
         const errorMessage = 'dataJson is not a Map';
         G.logger.e(errorMessage);
-        return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+        return GameSaveCacheModel.empty(errorMessage: errorMessage);
       }
       if (dataJson is! Map<String, dynamic>) {
         const errorMessage = 'dataJson is not a Map<String, dynamic>';
         G.logger.e(errorMessage);
-        return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+        return GameSaveCacheModel.empty(errorMessage: errorMessage);
       }
     }
 
@@ -96,24 +96,24 @@ final class LocalGameSaveCacheModel implements CacheModel {
       if (metadataJson == null) {
         const errorMessage = 'metadataJson is null';
         G.logger.e(errorMessage);
-        return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+        return GameSaveCacheModel.empty(errorMessage: errorMessage);
       }
       if (metadataJson is! Map) {
         const errorMessage = 'metadataJson is not a Map';
         G.logger.e(errorMessage);
-        return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+        return GameSaveCacheModel.empty(errorMessage: errorMessage);
       }
       if (metadataJson is! Map<String, dynamic>) {
         const errorMessage = 'metadataJson is not a Map<String, dynamic>';
         G.logger.e(errorMessage);
-        return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+        return GameSaveCacheModel.empty(errorMessage: errorMessage);
       }
     }
 
     try {
-      return LocalGameSaveCacheModel._internal(
+      return GameSaveCacheModel._internal(
         id: id,
-        localGameSave: LocalGameSave.fromJson(dataJson),
+        gameSave: GameSave.fromJson(dataJson),
         metaData: CacheModelMetaData.fromJson(metadataJson),
       );
     } on TypeError catch (e) {
@@ -122,7 +122,7 @@ final class LocalGameSaveCacheModel implements CacheModel {
         errorMessage,
         error: e,
       );
-      return LocalGameSaveCacheModel.empty(errorMessage: errorMessage);
+      return GameSaveCacheModel.empty(errorMessage: errorMessage);
     }
   }
 
@@ -131,10 +131,10 @@ final class LocalGameSaveCacheModel implements CacheModel {
     return {
       'id': id,
       'metaData': metaData?.toJson(),
-      'data': localGameSave.toJson(),
+      'data': gameSave.toJson(),
     };
   }
 
   @override
-  String toString() => 'LocalGameSaveCacheModel: ${toJson()}';
+  String toString() => 'GameSaveCacheModel: ${toJson()}';
 }

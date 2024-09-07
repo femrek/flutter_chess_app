@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 
 class SetupLocalState {
   SetupLocalState({
@@ -8,10 +8,10 @@ class SetupLocalState {
   });
 
   /// The list of local game saves.
-  final List<LocalGameSaveCacheModel> saves;
+  final List<GameSaveCacheModel> saves;
 
   SetupLocalState copyWith({
-    List<LocalGameSaveCacheModel>? saves,
+    List<GameSaveCacheModel>? saves,
   }) {
     return SetupLocalState(
       saves: saves ?? this.saves,

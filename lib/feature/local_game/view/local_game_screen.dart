@@ -6,7 +6,7 @@ import 'package:localchess/feature/local_game/view/mixin/local_game_state_mixin.
 import 'package:localchess/feature/local_game/view/widget/local_game_header.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
@@ -34,7 +34,7 @@ class LocalGameScreen extends StatefulWidget {
   });
 
   /// The selected save to play
-  final LocalGameSaveCacheModel save;
+  final GameSaveCacheModel save;
 
   @override
   State<LocalGameScreen> createState() => _LocalGameScreenState();
@@ -59,7 +59,7 @@ class _LocalGameScreenState extends BaseState<LocalGameScreen>
                   children: [
                     // the header
                     LocalGameHeader(
-                      gameName: widget.save.localGameSave.name,
+                      gameName: widget.save.gameSave.name,
                       frontColor: AppColorScheme.boardCoordinateTextColor,
                       undoButtonBuilder: (context) {
                         return _UndoButtonBuilder(

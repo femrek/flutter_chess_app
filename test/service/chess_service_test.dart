@@ -2,7 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gen/gen.dart';
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
@@ -20,7 +20,7 @@ void main() async {
   await TestInit.initWithTestCacheImpl();
 
   setUp(() {
-    G.appCache.localGameSaveOperator.saveAll([
+    G.appCache.gameSaveOperator.saveAll([
       _saveNew,
       _savePlayed,
       _saveToGetPromotionMove_fromB7_toB8,
@@ -33,7 +33,7 @@ void main() async {
   });
 
   tearDown(() {
-    G.appCache.localGameSaveOperator.removeAll();
+    G.appCache.gameSaveOperator.removeAll();
   });
 
   group('Create an ChessService instance and validate status', () {
@@ -303,12 +303,12 @@ void main() async {
       expect(chessService.canUndo(), isTrue);
 
       // save the status before undo
-      final statusBeforeUndo = chessService.save.localGameSave.currentState;
+      final statusBeforeUndo = chessService.save.gameSave.currentState;
 
       // undo
       await chessService.undo();
       {
-        final currentStatus = chessService.save.localGameSave.currentState;
+        final currentStatus = chessService.save.gameSave.currentState;
         expect(chessService.canRedo(), isTrue);
         expect(chessService.canUndo(), isTrue);
         expect(currentStatus, isNot(statusBeforeUndo));
@@ -317,7 +317,7 @@ void main() async {
       // redo
       await chessService.redo();
       {
-        final currentStatus = chessService.save.localGameSave.currentState;
+        final currentStatus = chessService.save.gameSave.currentState;
         expect(chessService.canRedo(), isFalse);
         expect(chessService.canUndo(), isTrue);
         expect(currentStatus, statusBeforeUndo);
@@ -328,14 +328,14 @@ void main() async {
       final chessService = ChessService(save: _savePlayed);
 
       // save status before reset
-      final statusBeforeReset = chessService.save.localGameSave.currentState;
+      final statusBeforeReset = chessService.save.gameSave.currentState;
 
       // reset
       await chessService.reset();
 
       // check the status is changed after reset
       {
-        final currentStatus = chessService.save.localGameSave.currentState;
+        final currentStatus = chessService.save.gameSave.currentState;
         expect(chessService.canRedo(), isFalse);
         expect(chessService.canUndo(), isFalse);
         expect(currentStatus, isNot(statusBeforeReset));
@@ -480,9 +480,9 @@ void main() async {
   });
 }
 
-final _saveNew = LocalGameSaveCacheModel(
+final _saveNew = GameSaveCacheModel(
   id: 'id1',
-  localGameSave: const LocalGameSave(
+  gameSave: const GameSave(
     name: 'save new',
     history: [],
     defaultPosition: TestChessFenConstants.initialFen,
@@ -490,9 +490,9 @@ final _saveNew = LocalGameSaveCacheModel(
   ),
 );
 
-final _savePlayed = LocalGameSaveCacheModel(
+final _savePlayed = GameSaveCacheModel(
   id: 'id2',
-  localGameSave: const LocalGameSave(
+  gameSave: const GameSave(
     name: 'save played',
     history: [
       BoardStatusAndLastMove(
@@ -516,9 +516,9 @@ final _savePlayed = LocalGameSaveCacheModel(
   ),
 );
 
-final _saveToGetPromotionMove_fromB7_toB8 = LocalGameSaveCacheModel(
+final _saveToGetPromotionMove_fromB7_toB8 = GameSaveCacheModel(
   id: 'id3',
-  localGameSave: const LocalGameSave(
+  gameSave: const GameSave(
     name: 'save to get promotion with move',
     history: [
       BoardStatusAndLastMove(
@@ -532,9 +532,9 @@ final _saveToGetPromotionMove_fromB7_toB8 = LocalGameSaveCacheModel(
   ),
 );
 
-final _saveToGetPromotionCapture_fromB7_toA8 = LocalGameSaveCacheModel(
+final _saveToGetPromotionCapture_fromB7_toA8 = GameSaveCacheModel(
   id: 'id4',
-  localGameSave: const LocalGameSave(
+  gameSave: const GameSave(
     name: 'save to get promotion with capture',
     history: [],
     isGameOver: false,
@@ -542,9 +542,9 @@ final _saveToGetPromotionCapture_fromB7_toA8 = LocalGameSaveCacheModel(
   ),
 );
 
-final _saveBlackKingUnderAttack = LocalGameSaveCacheModel(
+final _saveBlackKingUnderAttack = GameSaveCacheModel(
   id: 'id5',
-  localGameSave: const LocalGameSave(
+  gameSave: const GameSave(
     name: 'save black king under attack',
     history: [],
     isGameOver: false,
@@ -552,9 +552,9 @@ final _saveBlackKingUnderAttack = LocalGameSaveCacheModel(
   ),
 );
 
-final _saveCheckmate_blackLost = LocalGameSaveCacheModel(
+final _saveCheckmate_blackLost = GameSaveCacheModel(
   id: 'id6',
-  localGameSave: const LocalGameSave(
+  gameSave: const GameSave(
     name: 'save checkmate black lost',
     history: [],
     isGameOver: false,
@@ -562,9 +562,9 @@ final _saveCheckmate_blackLost = LocalGameSaveCacheModel(
   ),
 );
 
-final _saveStalemate = LocalGameSaveCacheModel(
+final _saveStalemate = GameSaveCacheModel(
   id: 'id7',
-  localGameSave: const LocalGameSave(
+  gameSave: const GameSave(
     name: 'save stalemate',
     history: [],
     isGameOver: true,
@@ -572,9 +572,9 @@ final _saveStalemate = LocalGameSaveCacheModel(
   ),
 );
 
-final _saveDraw = LocalGameSaveCacheModel(
+final _saveDraw = GameSaveCacheModel(
   id: 'id8',
-  localGameSave: const LocalGameSave(
+  gameSave: const GameSave(
     name: 'save draw',
     history: [],
     isGameOver: false,

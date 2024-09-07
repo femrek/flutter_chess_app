@@ -1,6 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart';
+import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
@@ -24,7 +24,7 @@ class GamePreviewDialog extends StatefulWidget {
   });
 
   /// The local game save to preview.
-  final LocalGameSaveCacheModel save;
+  final GameSaveCacheModel save;
 
   /// The callback when the play button is pressed.
   final VoidCallback onPlayPressed;
@@ -35,7 +35,7 @@ class GamePreviewDialog extends StatefulWidget {
   /// Shows a [GamePreviewDialog] with the given [save] and [onPlayPressed].
   static Future<void> show({
     required BuildContext context,
-    required LocalGameSaveCacheModel save,
+    required GameSaveCacheModel save,
     required VoidCallback onPlayPressed,
     required VoidCallback onRemovePressed,
     bool popAfterPlay = true,
@@ -107,7 +107,7 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
             const SizedBox(height: 4),
             const AppPadding.card(vertical: 0).toWidget(
               child: Text(
-                widget.save.localGameSave.name,
+                widget.save.gameSave.name,
                 style: Theme.of(context).textTheme.displaySmall,
               ),
             ),

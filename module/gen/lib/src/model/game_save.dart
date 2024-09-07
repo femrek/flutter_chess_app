@@ -1,29 +1,29 @@
 import 'package:gen/src/model/board_status_and_last_move.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'local_game_save.g.dart';
+part 'game_save.g.dart';
 
 /// Keeps the save data of a local game.
 @JsonSerializable()
-class LocalGameSave {
-  /// Constructor
-  const LocalGameSave({
+class GameSave {
+  /// Create a [GameSave] object.
+  const GameSave({
     required this.name,
     required this.history,
     required this.defaultPosition,
     required this.isGameOver,
   });
 
-  /// Creates an empty instance of [LocalGameSave].
-  LocalGameSave.empty()
+  /// Creates an empty instance of [GameSave].
+  GameSave.empty()
       : name = '',
         history = [],
         defaultPosition = '',
         isGameOver = false;
 
-  /// Creates a new instance of [LocalGameSave] from a JSON object.
-  factory LocalGameSave.fromJson(Map<String, dynamic> json) {
-    return _$LocalGameSaveFromJson(json);
+  /// Creates a new instance of [GameSave] from a JSON object.
+  factory GameSave.fromJson(Map<String, dynamic> json) {
+    return _$GameSaveFromJson(json);
   }
 
   /// The visible name of the save.
@@ -39,7 +39,7 @@ class LocalGameSave {
   final bool isGameOver;
 
   /// Converts the save to a JSON object.
-  Map<String, dynamic> toJson() => _$LocalGameSaveToJson(this);
+  Map<String, dynamic> toJson() => _$GameSaveToJson(this);
 
   /// The current state of the game.
   String get currentStateFen => history.lastOrNull?.fen ?? defaultPosition;
@@ -48,13 +48,13 @@ class LocalGameSave {
   BoardStatusAndLastMove? get currentState => history.lastOrNull;
 
   /// Returns a copy of the save with the given fields updated.
-  LocalGameSave copyWith({
+  GameSave copyWith({
     String? name,
     List<BoardStatusAndLastMove>? history,
     String? defaultPosition,
     bool? isGameOver,
   }) {
-    return LocalGameSave(
+    return GameSave(
       name: name ?? this.name,
       history: history ?? this.history,
       defaultPosition: defaultPosition ?? this.defaultPosition,
@@ -63,12 +63,12 @@ class LocalGameSave {
   }
 
   /// Adds a new state to the history.
-  LocalGameSave addHistory(BoardStatusAndLastMove state) {
+  GameSave addHistory(BoardStatusAndLastMove state) {
     return copyWith(history: [...history, state]);
   }
 
   /// Removes the last state from the history.
-  LocalGameSave popHistory() {
+  GameSave popHistory() {
     if (history.isEmpty) throw Exception('Cannot undo the initial state');
     return copyWith(history: history.sublist(0, history.length - 1));
   }

@@ -22,7 +22,7 @@ import 'package:localchess/feature/setup_join/view/setup_join_screen.dart'
     as _i6;
 import 'package:localchess/feature/setup_local/view/setup_local_screen.dart'
     as _i7;
-import 'package:localchess/product/cache/model/local_game_save_cache_model.dart'
+import 'package:localchess/product/cache/model/game_save_cache_model.dart'
     as _i9;
 
 /// generated route for
@@ -86,7 +86,7 @@ class HostGameRoute extends _i8.PageRouteInfo<void> {
 /// [_i4.LocalGameScreen]
 class LocalGameRoute extends _i8.PageRouteInfo<LocalGameRouteArgs> {
   LocalGameRoute({
-    required _i9.LocalGameSaveCacheModel save,
+    required _i9.GameSaveCacheModel save,
     _i10.Key? key,
     List<_i8.PageRouteInfo>? children,
   }) : super(
@@ -118,7 +118,7 @@ class LocalGameRouteArgs {
     this.key,
   });
 
-  final _i9.LocalGameSaveCacheModel save;
+  final _i9.GameSaveCacheModel save;
 
   final _i10.Key? key;
 
