@@ -16,18 +16,30 @@ import 'package:logger/logger.dart';
 abstract final class G {
   static final _getIt = GetIt.I;
 
+  // logger
   static Logger get logger => _getIt<Logger>();
 
+  // route
   static AppRoute get appRoute => _getIt<AppRoute>();
 
+  // theme
   static AppDarkTheme get appDarkTheme => _getIt<AppDarkTheme>();
 
   static AppLightTheme get appLightTheme => _getIt<AppLightTheme>();
 
   static CacheManager get cacheManager => _getIt<CacheManager>();
 
+  // cache
   static IAppCache get appCache => _getIt<IAppCache>();
 
+  // network
+  static ISocketConfiguration get socketConfiguration =>
+      _getIt<ISocketConfiguration>();
+
+  // device properties
+  static IDeviceProperties get deviceProperties => _getIt<IDeviceProperties>();
+
+  // view model
   static AppViewModel get appViewModel => _getIt<AppViewModel>();
 
   static SetupLocalViewModel get setupLocalViewModel =>

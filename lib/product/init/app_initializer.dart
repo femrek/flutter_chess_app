@@ -15,6 +15,9 @@ abstract final class AppInitializer {
   }
 
   static Future<void> _init() async {
+    // error handling
+    AppErrorHandler.init();
+
     // dependency injection
     await AppGetItConfigurer.init();
 
@@ -24,8 +27,8 @@ abstract final class AppInitializer {
     // cache
     await G.appCache.init();
 
-    // error handling
-    AppErrorHandler.init();
+    // device id
+    await G.deviceProperties.init();
 
     Logger.level = Level.trace;
     G.logger.d('App initialized.');

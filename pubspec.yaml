@@ -27,6 +27,7 @@ dependencies:
   get_it: ^7.7.0
   logger: ^2.4.0
   uuid: ^4.4.2
+  async: ^2.11.0
 
   # State Management
   flutter_bloc: ^8.1.6

@@ -14,26 +14,25 @@ final class HiveCacheManager implements CacheManager {
   final String? _path;
 
   @override
-  Future<void> init({required List<CacheModel> items}) async {
+  Future<void> init() async {
     final dir = _path ?? (await getApplicationDocumentsDirectory()).path;
     Directory(dir).createSync(recursive: true);
     Hive.defaultDirectory = dir;
-
-    for (final item in items) {
-      Hive.registerAdapter(
-        item.runtimeType.toString(),
-        item.fromJson,
-      );
-    }
   }
 
-  /// Removes the cache.
+  @override
+  void registerCacheModel<T extends CacheModel>(T modelSample) {
+    Hive.registerAdapter<T>(
+      modelSample.runtimeType.toString(),
+      (json) => modelSample.fromJson(json) as T,
+    );
+  }
+
   @override
   void remove() {
     Hive.deleteAllBoxesFromDisk();
   }
 
-  /// The path to the cache.
   @override
   String? get path => Hive.defaultDirectory;
 }

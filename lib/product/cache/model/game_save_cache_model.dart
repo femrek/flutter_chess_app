@@ -8,8 +8,7 @@ final class GameSaveCacheModel implements CacheModel {
   GameSaveCacheModel({
     required this.id,
     required this.gameSave,
-    this.creationError,
-  });
+  }) : creationError = null;
 
   GameSaveCacheModel._internal({
     required this.id,
@@ -23,20 +22,8 @@ final class GameSaveCacheModel implements CacheModel {
         gameSave = GameSave.empty(),
         creationError = errorMessage;
 
-  @override
-  final String id;
-
-  @override
-  CacheModelMetaData? metaData;
-
-  /// The game save data.
-  final GameSave gameSave;
-
-  /// The error message if an error occurred while creating an object.
-  final String? creationError;
-
-  @override
-  CacheModel fromJson(dynamic json) {
+  /// Creates a [GameSaveCacheModel] from a json object
+  factory GameSaveCacheModel.fromJson(dynamic json) {
     // log and return empty if json is not valid.
     if (json == null) {
       const errorMessage = 'json is null';
@@ -124,6 +111,23 @@ final class GameSaveCacheModel implements CacheModel {
       );
       return GameSaveCacheModel.empty(errorMessage: errorMessage);
     }
+  }
+
+  @override
+  final String id;
+
+  @override
+  CacheModelMetaData? metaData;
+
+  /// The game save data.
+  final GameSave gameSave;
+
+  /// The error message if an error occurred while creating an object.
+  final String? creationError;
+
+  @override
+  GameSaveCacheModel fromJson(dynamic json) {
+    return GameSaveCacheModel.fromJson(json);
   }
 
   @override
