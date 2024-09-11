@@ -33,6 +33,8 @@ abstract class  LocaleKeys {
   static const dialog_createGameDialog_createButton = 'dialog.createGameDialog.createButton';
   static const dialog_createGameDialog_cancelButton = 'dialog.createGameDialog.cancelButton';
   static const dialog_createGameDialog = 'dialog.createGameDialog';
+  static const dialog_gamePreviewDialog_playAsWhite = 'dialog.gamePreviewDialog.playAsWhite';
+  static const dialog_gamePreviewDialog_playAsBlack = 'dialog.gamePreviewDialog.playAsBlack';
   static const dialog_gamePreviewDialog_lastPlayed = 'dialog.gamePreviewDialog.lastPlayed';
   static const dialog_gamePreviewDialog_created = 'dialog.gamePreviewDialog.created';
   static const dialog_gamePreviewDialog_play = 'dialog.gamePreviewDialog.play';

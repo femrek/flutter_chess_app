@@ -77,8 +77,9 @@ void main() async {
           firstClientInformation = clientInformation;
         }
 
-        manager = await SocketHostManager.create(
+        manager = await SocketHostManager.hostGame(
           address: _serverAddress,
+          gameName: _gameSaveCacheModel.gameSave.name,
           onDataListeners: [onData],
           onClientConnectListener: onClientConnect,
         );
@@ -108,6 +109,23 @@ void main() async {
         );
         final gameSaveDataJson = jsonEncode(gameSaveData.toJson());
         client.write('$gameSaveDataJson${manager.configuration.delimiter}');
+      }
+
+      // check if the introduce data from host is correct
+      {
+        final dataRaw = await client.first;
+        final dataString = String.fromCharCodes(dataRaw);
+        final dataJson =
+            dataString.split(manager.configuration.delimiter).first;
+        final data = manager.configuration.modelFromJsonString(dataJson);
+
+        expect(data, isA<IntroduceNetworkModel>());
+        expect((data as IntroduceNetworkModel).senderInformation, isNotNull);
+        expect(
+          data.gameName,
+          _gameSaveCacheModel.gameSave.name,
+          reason: 'Game name should be sent by the host',
+        );
       }
 
       // wait until the server is stopped.

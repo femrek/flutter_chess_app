@@ -9,30 +9,43 @@ import 'package:localchess/product/widget/board/game_board.dart';
 /// indicators
 class GameBoardWithFrame extends StatefulWidget {
   /// The widget that shows the game board constructor
-  const GameBoardWithFrame._internal({
+  const GameBoardWithFrame({
     required this.size,
     required this.squareBuilder,
     required this.orientation,
+    super.key,
   });
 
-  /// Creates the game board with frame in landscape mode
+  /// Creates the game board with frame in portrait mode
   factory GameBoardWithFrame.portrait({
     required double size,
     required BoardSquareBuilder squareBuilder,
   }) {
-    return GameBoardWithFrame._internal(
+    return GameBoardWithFrame(
       size: size,
       squareBuilder: squareBuilder,
       orientation: BoardOrientationEnum.portrait,
     );
   }
 
-  /// Creates the game board with frame in portrait mode
+  /// Creates the game board with frame in portrait mode but for black player.
+  factory GameBoardWithFrame.portraitUpsideDown({
+    required double size,
+    required BoardSquareBuilder squareBuilder,
+  }) {
+    return GameBoardWithFrame(
+      size: size,
+      squareBuilder: squareBuilder,
+      orientation: BoardOrientationEnum.portraitUpsideDown,
+    );
+  }
+
+  /// Creates the game board with frame in landscape mode
   factory GameBoardWithFrame.landscape({
     required double size,
     required BoardSquareBuilder squareBuilder,
   }) {
-    return GameBoardWithFrame._internal(
+    return GameBoardWithFrame(
       size: size,
       squareBuilder: squareBuilder,
       orientation: BoardOrientationEnum.landscapeLeftBased,
@@ -67,17 +80,21 @@ class _GameBoardWithFrameState extends BaseState<GameBoardWithFrame> {
           children: [
             _CoordinatorLine(
               unitSize: unitSize,
-              side: widget.orientation == BoardOrientationEnum.portrait
-                  ? _CoordinateLineSide.topP
-                  : _CoordinateLineSide.topL,
+              side: widget.orientation.when(
+                portrait: _CoordinateLineSide.topP,
+                portraitUpsideDown: _CoordinateLineSide.topPR,
+                landscapeLeftBased: _CoordinateLineSide.topL,
+              ),
             ),
             Row(
               children: [
                 _CoordinatorLine(
                   unitSize: unitSize,
-                  side: widget.orientation == BoardOrientationEnum.portrait
-                      ? _CoordinateLineSide.leftP
-                      : _CoordinateLineSide.leftL,
+                  side: widget.orientation.when(
+                    portrait: _CoordinateLineSide.leftP,
+                    portraitUpsideDown: _CoordinateLineSide.leftPR,
+                    landscapeLeftBased: _CoordinateLineSide.leftL,
+                  ),
                 ),
                 Container(
                   width: unitSize * 8,
@@ -90,17 +107,23 @@ class _GameBoardWithFrameState extends BaseState<GameBoardWithFrame> {
                   ),
                 ),
                 _CoordinatorLine(
-                    unitSize: unitSize,
-                    side: widget.orientation == BoardOrientationEnum.portrait
-                        ? _CoordinateLineSide.rightP
-                        : _CoordinateLineSide.rightL),
+                  unitSize: unitSize,
+                  side: widget.orientation.when(
+                    portrait: _CoordinateLineSide.rightP,
+                    portraitUpsideDown: _CoordinateLineSide.rightPR,
+                    landscapeLeftBased: _CoordinateLineSide.rightL,
+                  ),
+                ),
               ],
             ),
             _CoordinatorLine(
-                unitSize: unitSize,
-                side: widget.orientation == BoardOrientationEnum.portrait
-                    ? _CoordinateLineSide.bottomP
-                    : _CoordinateLineSide.bottomL),
+              unitSize: unitSize,
+              side: widget.orientation.when(
+                portrait: _CoordinateLineSide.bottomP,
+                portraitUpsideDown: _CoordinateLineSide.bottomPR,
+                landscapeLeftBased: _CoordinateLineSide.bottomL,
+              ),
+            ),
           ],
         ),
       ),
@@ -123,9 +146,12 @@ class _CoordinatorLine extends StatelessWidget {
         return '${7 - index + 1}';
       }
       return '${index + 1}';
+    } else {
+      if (side.reverse) {
+        return String.fromCharCode('H'.codeUnitAt(0) - index);
+      }
+      return String.fromCharCode('A'.codeUnitAt(0) + index);
     }
-
-    return String.fromCharCode('A'.codeUnitAt(0) + index);
   }
 
   @override
@@ -194,6 +220,36 @@ enum _CoordinateLineSide {
     isVertical: false,
     angel: 0,
     reverse: false,
+  ),
+
+  // portrait upside down
+  leftPR(
+    cellSizeMultiplier: Size(0.5, 1),
+    isNumeric: true,
+    isVertical: true,
+    angel: 0,
+    reverse: false,
+  ),
+  rightPR(
+    cellSizeMultiplier: Size(0.5, 1),
+    isNumeric: true,
+    isVertical: true,
+    angel: 0,
+    reverse: false,
+  ),
+  topPR(
+    cellSizeMultiplier: Size(1, 0.5),
+    isNumeric: false,
+    isVertical: false,
+    angel: 0,
+    reverse: true,
+  ),
+  bottomPR(
+    cellSizeMultiplier: Size(1, 0.5),
+    isNumeric: false,
+    isVertical: false,
+    angel: 0,
+    reverse: true,
   ),
 
   // landscape

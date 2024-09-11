@@ -20,7 +20,7 @@ class SetupLocalSaveList extends StatelessWidget {
   final EdgeInsets padding;
 
   /// The callback when clicked on play button of a save.
-  final OnPressedWithGameSave onPlayPressed;
+  final OnPressedPlaySave onPlayPressed;
 
   /// The callback when clicked on remove button of a save.
   final OnPressedWithGameSave onRemovePressed;

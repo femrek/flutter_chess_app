@@ -6,11 +6,16 @@ import 'package:localchess/product/constant/padding/padding_widget_extension.dar
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
 import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
+import 'package:localchess/product/data/player_color.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
 import 'package:localchess/product/service/impl/chess_service.dart';
+import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/util/date_extension.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
+
+/// The callback when the play button is pressed.
+typedef OnPreviewPlayPressed = void Function(PlayerColor chosenColor);
 
 /// The dialog to show the preview of the game. Presents the board and other
 /// details of the game.
@@ -20,6 +25,8 @@ class GamePreviewDialog extends StatefulWidget {
     required this.save,
     required this.onPlayPressed,
     required this.onRemovePressed,
+    required this.defaultColor,
+    required this.showColorChooser,
     super.key,
   });
 
@@ -27,17 +34,26 @@ class GamePreviewDialog extends StatefulWidget {
   final GameSaveCacheModel save;
 
   /// The callback when the play button is pressed.
-  final VoidCallback onPlayPressed;
+  final OnPreviewPlayPressed onPlayPressed;
 
   /// The callback when the remove button is pressed.
   final VoidCallback onRemovePressed;
+
+  /// The default color to choose.
+  final PlayerColor defaultColor;
+
+  /// When true the color chooser will be shown. If false the default color
+  /// will be used.
+  final bool showColorChooser;
 
   /// Shows a [GamePreviewDialog] with the given [save] and [onPlayPressed].
   static Future<void> show({
     required BuildContext context,
     required GameSaveCacheModel save,
-    required VoidCallback onPlayPressed,
+    required OnPreviewPlayPressed onPlayPressed,
     required VoidCallback onRemovePressed,
+    PlayerColor defaultColor = PlayerColor.white,
+    bool showColorChooser = false,
     bool popAfterPlay = true,
   }) async {
     await showDialog<void>(
@@ -45,13 +61,15 @@ class GamePreviewDialog extends StatefulWidget {
       builder: (context) {
         return GamePreviewDialog(
           save: save,
-          onPlayPressed: () {
-            onPlayPressed();
+          onPlayPressed: (color) {
+            onPlayPressed(color);
             if (popAfterPlay) {
               Navigator.of(context).pop();
             }
           },
           onRemovePressed: onRemovePressed,
+          defaultColor: defaultColor,
+          showColorChooser: showColorChooser,
         );
       },
     );
@@ -63,11 +81,13 @@ class GamePreviewDialog extends StatefulWidget {
 
 class _GamePreviewDialogState extends State<GamePreviewDialog> {
   late final IChessService _chessService;
+  late final ValueNotifier<PlayerColor> _chosenColor;
 
   @override
   void initState() {
     super.initState();
     _chessService = ChessService(save: widget.save);
+    _chosenColor = ValueNotifier(widget.defaultColor);
   }
 
   @override
@@ -90,18 +110,16 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
             // The board
             _ChessBoard(
               chessService: _chessService,
-              onPlayPressed: widget.onPlayPressed,
+              onPlayPressed: () => widget.onPlayPressed(_chosenColor.value),
               size: size,
             ),
 
-            // turn status
-            const SizedBox(height: 8),
-            const AppPadding.card(vertical: 0).toWidget(
-              child: Text(
-                _turnStatusText,
-                style: Theme.of(context).textTheme.titleMedium,
+            // color chosen
+            if (widget.showColorChooser) const SizedBox(height: 8),
+            if (widget.showColorChooser)
+              const AppPadding.card(vertical: 0).toWidget(
+                child: _ColorChooser(chosenColor: _chosenColor),
               ),
-            ),
 
             // The game details
             const SizedBox(height: 4),
@@ -123,6 +141,12 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
               child: Text(
                 '${LocaleKeys.dialog_gamePreviewDialog_lastPlayed.tr()}'
                 '${widget.save.metaData?.updateAt.toVisualFormat}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            const AppPadding.card(vertical: 0).toWidget(
+              child: Text(
+                _turnStatusText,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -152,7 +176,7 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
 
                   // The play button
                   TextButton(
-                    onPressed: widget.onPlayPressed,
+                    onPressed: () => widget.onPlayPressed(_chosenColor.value),
                     child: const Text(
                       LocaleKeys.dialog_gamePreviewDialog_play,
                     ).tr(),
@@ -175,6 +199,41 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
           white: LocaleKeys.game_chessTurn_white.tr(),
         ) ??
         status.localized;
+  }
+}
+
+class _ColorChooser extends StatelessWidget {
+  const _ColorChooser({required this.chosenColor});
+
+  final ValueNotifier<PlayerColor> chosenColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return ValueListenableBuilder<PlayerColor>(
+      valueListenable: chosenColor,
+      builder: (context, color, child) {
+        return Row(
+          children: [
+            const Spacer(),
+            Text(
+              color.when(
+                black: LocaleKeys.dialog_gamePreviewDialog_playAsBlack,
+                white: LocaleKeys.dialog_gamePreviewDialog_playAsWhite,
+              ),
+              style: Theme.of(context).textTheme.titleMedium,
+            ).tr(),
+            Switch(
+              value: color.when(black: false, white: true),
+              onChanged: (isWhite) {
+                chosenColor.value =
+                    isWhite ? PlayerColor.white : PlayerColor.black;
+              },
+              activeColor: AppColorScheme.whitePieceColor,
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

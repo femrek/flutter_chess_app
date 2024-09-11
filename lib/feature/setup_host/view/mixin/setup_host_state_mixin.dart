@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:localchess/feature/setup_host/view/setup_host_screen.dart';
 import 'package:localchess/feature/setup_host/view_model/setup_host_view_model.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
+import 'package:localchess/product/data/player_color.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/navigation/app_route.gr.dart';
 import 'package:localchess/product/state/base/base_state.dart';
@@ -27,12 +28,22 @@ mixin SetupHostStateMixin on BaseState<SetupHostScreen> {
       if (name.isEmpty) return;
       final save = await viewModel.createGame(name);
 
-      if (mounted) await context.router.push(HostGameRoute(save: save));
+      if (mounted) {
+        await context.router.push(HostGameRoute(
+          save: save,
+          chosenColor: PlayerColor.white,
+        ));
+      }
     });
   }
 
-  Future<void> onPlayPressed(GameSaveCacheModel save) async {
-    if (mounted) await context.router.push(HostGameRoute(save: save));
+  Future<void> onPlayPressed(GameSaveCacheModel save, PlayerColor color) async {
+    if (mounted) {
+      await context.router.push(HostGameRoute(
+        save: save,
+        chosenColor: color,
+      ));
+    }
   }
 
   Future<void> onRemovePressed(GameSaveCacheModel save) async {

@@ -22,8 +22,9 @@ class SocketHostManager implements ISocketHostManager {
   /// Creates a new [SocketHostManager] instance. Starts the server on
   /// [address] and returns the [SocketHostManager] object.
   /// [onDataListeners] can not [IntroduceNetworkModel] data.
-  static Future<SocketHostManager> create({
+  static Future<SocketHostManager> hostGame({
     required AddressOnNetwork address,
+    required String gameName,
     SocketHostOnClientConnectListener? onClientConnectListener,
     SocketHostOnClientDisconnectListener? onClientDisconnectListener,
     List<SocketHostOnDataListener>? onDataListeners,
@@ -43,35 +44,42 @@ class SocketHostManager implements ISocketHostManager {
       );
 
       // initialize
-      await _init(i);
+      await _init(
+        instance: i,
+        gameName: gameName,
+      );
 
       return i;
     } on SocketException {
       if (!runRandomPortIfBusy) rethrow;
       G.logger.w('Port is busy, trying random port');
-      return create(
+      return hostGame(
         address: AddressOnNetwork(address: address.address, port: 0),
+        gameName: gameName,
       );
     }
   }
 
-  static Future<void> _init(SocketHostManager i) async {
-    i._serverSocket.listen((socket) async {
+  static Future<void> _init({
+    required SocketHostManager instance,
+    required String gameName,
+  }) async {
+    instance._serverSocket.listen((socket) async {
       final remoteAddress = '${socket.remoteAddress}:${socket.remotePort}';
       G.logger.d('Client connected: $remoteAddress');
 
       // trigger the listeners when data is received
-      i._onData(socket).listen((event) {
+      instance._onData(socket).listen((event) {
         if (event is IntroduceNetworkModel) {
           // trigger the introduce listener to establish the connection.
           _onConnectionIntroduceListener(
-            manager: i,
+            manager: instance,
             socket: socket,
             data: event,
           );
           return;
         }
-        for (final listener in i.onDataListeners) {
+        for (final listener in instance.onDataListeners) {
           listener(
             clientDeviceId: event.senderInformation.deviceId,
             data: event,
@@ -82,17 +90,20 @@ class SocketHostManager implements ISocketHostManager {
       // trigger the listeners when the connection is closed by the client
       unawaited(socket.done.then((_) {
         _onConnectionDoneListener(
-          manager: i,
+          manager: instance,
           socket: socket,
           remoteAddress: remoteAddress,
         );
       }));
 
       // add the socket to the waiting clients until it introduces itself
-      i._waitingClients.add(socket);
+      instance._waitingClients.add(socket);
 
       // add the introduce listener then send introduce data to the client
-      i._introduce(socket);
+      instance._introduce(
+        socket: socket,
+        gameName: gameName,
+      );
     });
   }
 
@@ -185,8 +196,11 @@ class SocketHostManager implements ISocketHostManager {
         return splitData.map((e) => configuration.modelFromJsonString(e));
       });
 
-  void _introduce(Socket socket) {
-    _send(socket, const IntroduceNetworkModel());
+  void _introduce({
+    required Socket socket,
+    required String gameName,
+  }) {
+    _send(socket, IntroduceNetworkModel(gameName: gameName));
   }
 
   static void _onConnectionIntroduceListener({

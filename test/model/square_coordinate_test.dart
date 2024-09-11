@@ -151,6 +151,36 @@ void main() {
     });
   });
 
+  group('create a coordinate object with fromIndexStartWithH1 constructor', () {
+    test('coordinate h1', () {
+      final coordinateA1 = SquareCoordinate.fromIndexStartWithH1(0);
+      expect(coordinateA1.x, 7);
+      expect(coordinateA1.y, 0);
+      expect(coordinateA1.nameLowerCase, 'h1');
+    });
+
+    test('coordinate a1', () {
+      final coordinateA8 = SquareCoordinate.fromIndexStartWithH1(7);
+      expect(coordinateA8.x, 0);
+      expect(coordinateA8.y, 0);
+      expect(coordinateA8.nameLowerCase, 'a1');
+    });
+
+    test('coordinate h8', () {
+      final coordinateH1 = SquareCoordinate.fromIndexStartWithH1(56);
+      expect(coordinateH1.x, 7);
+      expect(coordinateH1.y, 7);
+      expect(coordinateH1.nameLowerCase, 'h8');
+    });
+
+    test('coordinate a8', () {
+      final coordinateH8 = SquareCoordinate.fromIndexStartWithH1(63);
+      expect(coordinateH8.x, 0);
+      expect(coordinateH8.y, 7);
+      expect(coordinateH8.nameLowerCase, 'a8');
+    });
+  });
+
   group(
     'create a coordinate object with fromIndex constructor in portrait mode',
     () {

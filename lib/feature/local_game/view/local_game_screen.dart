@@ -3,7 +3,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/feature/local_game/view/mixin/local_game_state_mixin.dart';
-import 'package:localchess/feature/local_game/view/widget/local_game_header.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
@@ -20,6 +19,7 @@ import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
+import 'package:localchess/product/widget/header/game_screens_header.dart';
 import 'package:localchess/product/widget/player_information_section/captured_piece_indicator/captured_piece_indicator.dart';
 import 'package:localchess/product/widget/player_information_section/captured_piece_indicator/horizontal_direction.dart';
 import 'package:localchess/product/widget/player_information_section/turn_indicator.dart';
@@ -58,7 +58,7 @@ class _LocalGameScreenState extends BaseState<LocalGameScreen>
                 child: Column(
                   children: [
                     // the header
-                    LocalGameHeader(
+                    GameScreensHeader(
                       gameName: widget.save.gameSave.name,
                       frontColor: AppColorScheme.boardCoordinateTextColor,
                       undoButtonBuilder: (context) {

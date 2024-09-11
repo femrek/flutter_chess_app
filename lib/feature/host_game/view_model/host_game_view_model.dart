@@ -1,27 +1,28 @@
-import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
+import 'package:localchess/feature/host_game/view_model/host_game_state.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
+import 'package:localchess/product/data/player_color.dart';
 import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
-import 'package:localchess/product/service/impl/chess_service.dart';
+import 'package:localchess/product/service/impl/host_chess_service.dart';
 import 'package:localchess/product/state/base/base_cubit.dart';
 
-/// The view model for the local game screen
-class LocalGameViewModel extends BaseCubit<LocalGameState> {
-  /// The view model for the local game screen
-  LocalGameViewModel() : super(const LocalGameInitialState());
-
-  late IChessService _chessService;
+/// The view model for the host game screen
+class HostGameViewModel extends BaseCubit<HostGameState> {
+  /// Create the instance of [HostGameViewModel]
+  HostGameViewModel() : super(const HostGameInitialState());
 
   final _squareStates = <SquareCoordinate, SquareData>{
     for (var e in SquareCoordinate.boardSquares)
       e: const SquareData.withDefaultValues(),
   };
 
+  late IChessService _chessService;
+
   void _emitNormal() {
-    G.logger.t('LocalGameViewModel._emitStateCompletely');
+    G.logger.t('HostGameViewModel._emitState');
 
     final movablePiecesCoordinates =
         _chessService.moves().map((e) => e.from).toList();
@@ -43,7 +44,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
 
     final capturedPieces = _chessService.capturedPieces;
 
-    emit(LocalGameLoadedState(
+    emit(HostGameLoadedState(
       squareStates: _squareStates,
       isFocused: false,
       turnStatus: turnStatus,
@@ -52,11 +53,11 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       canRedo: _chessService.canRedo(),
     ));
 
-    G.logger.t('LocalGameViewModel._emitStateCompletely: Completely emitted');
+    G.logger.t('HostGameViewModel._emitState: Completely emitted');
   }
 
   void _emitFocus(SquareCoordinate focusedCoordinate) {
-    G.logger.t('LocalGameViewModel._emitStateWhenFocus: $focusedCoordinate');
+    G.logger.t('HostGameViewModel._emitFocus: $focusedCoordinate');
 
     final turnStatus = _chessService.turnStatus;
     {
@@ -88,38 +89,31 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       );
     }
 
-    emit(LocalGameLoadedState(
+    emit(HostGameLoadedState(
       squareStates: _squareStates,
       isFocused: true,
       turnStatus: turnStatus,
-      capturedPieces: (state as LocalGameLoadedState).capturedPieces,
+      capturedPieces: (state as HostGameLoadedState).capturedPieces,
       canUndo: _chessService.canUndo(),
       canRedo: _chessService.canRedo(),
     ));
 
-    G.logger.t('LocalGameViewModel._emitStateWhenFocus:'
-        ' Focused on $focusedCoordinate');
+    G.logger.t('HostGameViewModel._emitFocus: Focused on $focusedCoordinate');
   }
 
-  /// Initializes the view model
-  Future<void> init(GameSaveCacheModel save) async {
-    G.logger.t('LocalGameViewModel.init: $save');
-
-    _chessService = ChessService(save: save);
-
-    // emit
+  /// Load the game state with the given [save] and [color]
+  Future<void> init(GameSaveCacheModel save, PlayerColor color) async {
+    _chessService = HostChessService(save: save, hostColor: color);
     _emitNormal();
-
-    G.logger.t('LocalGameViewModel.init: Initialized');
   }
 
   /// Focuses on the piece at the given [coordinate]. Shows the possible moves
   /// for the piece.
   void focus(SquareCoordinate coordinate) {
-    G.logger.t('LocalGameViewModel.focus: $coordinate');
+    G.logger.t('HostGameViewModel.focus: $coordinate');
 
     final state = this.state;
-    if (state is! LocalGameLoadedState) throw Exception('Invalid state');
+    if (state is! HostGameLoadedState) throw Exception('Invalid state');
 
     final squareState = state.squareStates[coordinate];
 
@@ -141,20 +135,20 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     // emit
     _emitFocus(coordinate);
 
-    G.logger.t('LocalGameViewModel.focus: Focused on $coordinate.');
+    G.logger.t('HostGameViewModel.focus: Focused on $coordinate.');
   }
 
   /// Removes the focus from the focused piece.
   void removeFocus() {
-    G.logger.t('LocalGameViewModel.removeFocus');
+    G.logger.t('HostGameViewModel.removeFocus');
 
     final state = this.state;
-    if (state is! LocalGameLoadedState) throw Exception('Invalid state');
+    if (state is! HostGameLoadedState) throw Exception('Invalid state');
 
     // emit
     _emitNormal();
 
-    G.logger.t('LocalGameViewModel.removeFocus: Removed focus');
+    G.logger.t('HostGameViewModel.removeFocus: Removed focus');
   }
 
   /// Perform move according to [move]. if move has promotion [promotion] must
@@ -163,10 +157,10 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     required AppChessMove move,
     String? promotion,
   }) async {
-    G.logger.t('LocalGameViewModel.move: $move, promotion: $promotion');
+    G.logger.t('HostGameViewModel.move: $move, promotion: $promotion');
 
     final state = this.state;
-    if (state is! LocalGameLoadedState) throw Exception('Invalid state');
+    if (state is! HostGameLoadedState) throw Exception('Invalid state');
 
     // perform the move.
     await _chessService.move(move: move, promotion: promotion);
@@ -174,15 +168,15 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     // emit
     _emitNormal();
 
-    G.logger.t('LocalGameViewModel.move: Moved $move');
+    G.logger.t('HostGameViewModel.move: Moved $move');
   }
 
   /// Undoes the last move.
   Future<void> undo() async {
-    G.logger.t('LocalGameViewModel.undo');
+    G.logger.t('HostGameViewModel.undo');
 
     final state = this.state;
-    if (state is! LocalGameLoadedState) throw Exception('Invalid state');
+    if (state is! HostGameLoadedState) throw Exception('Invalid state');
 
     if (!_chessService.canUndo()) return;
 
@@ -192,15 +186,15 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     // emit
     _emitNormal();
 
-    G.logger.t('LocalGameViewModel.undo: Undone');
+    G.logger.t('HostGameViewModel.undo: Undone');
   }
 
   /// Redoes the last undone move.
   Future<void> redo() async {
-    G.logger.t('LocalGameViewModel.redo');
+    G.logger.t('HostGameViewModel.redo');
 
     final state = this.state;
-    if (state is! LocalGameLoadedState) throw Exception('Invalid state');
+    if (state is! HostGameLoadedState) throw Exception('Invalid state');
 
     if (!_chessService.canRedo()) return;
 
@@ -210,15 +204,15 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     // emit
     _emitNormal();
 
-    G.logger.t('LocalGameViewModel.redo: Redone');
+    G.logger.t('HostGameViewModel.redo: Redone');
   }
 
   /// Resets the game.
   Future<void> reset() async {
-    G.logger.t('LocalGameViewModel.reset');
+    G.logger.t('HostGameViewModel.reset');
 
     final state = this.state;
-    if (state is! LocalGameLoadedState) throw Exception('Invalid state');
+    if (state is! HostGameLoadedState) throw Exception('Invalid state');
 
     // perform the reset.
     await _chessService.reset();
@@ -226,6 +220,6 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
     // emit
     _emitNormal();
 
-    G.logger.t('LocalGameViewModel.reset: Reset');
+    G.logger.t('HostGameViewModel.reset: Reset');
   }
 }

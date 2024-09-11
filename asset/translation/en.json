@@ -44,6 +44,8 @@
       "cancelButton": "Cancel"
     },
     "gamePreviewDialog": {
+      "playAsWhite": "Play as White",
+      "playAsBlack": "Play as Black",
       "lastPlayed": "Last Played: ",
       "created": "Started: ",
       "play": "Play",

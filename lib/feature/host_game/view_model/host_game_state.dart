@@ -5,16 +5,16 @@ import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/data/square_data.dart';
 
-abstract class LocalGameState {
-  const LocalGameState();
+abstract class HostGameState {
+  const HostGameState();
 }
 
-class LocalGameInitialState extends LocalGameState {
-  const LocalGameInitialState();
+class HostGameInitialState extends HostGameState {
+  const HostGameInitialState();
 }
 
-class LocalGameLoadedState extends LocalGameState {
-  const LocalGameLoadedState({
+class HostGameLoadedState extends HostGameState {
+  const HostGameLoadedState({
     required this.squareStates,
     required this.isFocused,
     required this.turnStatus,

@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 
 /// The header of the local game screen.
-class LocalGameHeader extends StatelessWidget implements PreferredSizeWidget {
+class GameScreensHeader extends StatelessWidget implements PreferredSizeWidget {
   /// Creates the local game header.
-  const LocalGameHeader({
+  const GameScreensHeader({
     required this.gameName,
     required this.frontColor,
     required this.undoButtonBuilder,
     required this.redoButtonBuilder,
     required this.onRestartPressed,
+    this.showRestartButton = true,
     super.key,
   });
 
@@ -28,6 +29,9 @@ class LocalGameHeader extends StatelessWidget implements PreferredSizeWidget {
 
   /// The callback when the restart button is pressed.
   final VoidCallback onRestartPressed;
+
+  /// Whether to show the restart button.
+  final bool showRestartButton;
 
   @override
   Widget build(BuildContext context) {

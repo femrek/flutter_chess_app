@@ -126,7 +126,7 @@ class SocketClientManager implements ISocketClientManager {
     required IntroduceNetworkModel data,
   }) {
     G.logger.t('_onConnectionIntroduceListener: Introduce data received: '
-        '${data.senderInformation}');
+        '$data');
 
     manager
       // save the server information
@@ -136,7 +136,10 @@ class SocketClientManager implements ISocketClientManager {
       .._connected = true
 
       // trigger the onConnectClientListener
-      ..onConnectedListener?.call(data.senderInformation);
+      ..onConnectedListener?.call(
+        data.senderInformation,
+        data.gameName,
+      );
 
     G.logger.t('_onConnectionIntroduceListener: end: Client connected: '
         '${data.senderInformation}');

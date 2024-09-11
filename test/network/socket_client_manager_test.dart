@@ -79,7 +79,12 @@ void main() async {
         if (--requestCount == 0) manager.disconnect();
       }
 
-      void onConnected(SenderInformation serverInformation) {
+      void onConnected(
+        SenderInformation serverInformation,
+
+        // game name is not used in this test because of the dummy host.
+        String? gameName,
+      ) {
         expect(
           serverInformation,
           const IntroduceNetworkModel().senderInformation,

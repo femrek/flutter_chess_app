@@ -9,7 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i8;
-import 'package:flutter/material.dart' as _i10;
+import 'package:flutter/material.dart' as _i11;
 import 'package:localchess/feature/guest_game/view/guest_game_screen.dart'
     as _i1;
 import 'package:localchess/feature/home/view/home_screen.dart' as _i2;
@@ -24,6 +24,7 @@ import 'package:localchess/feature/setup_local/view/setup_local_screen.dart'
     as _i7;
 import 'package:localchess/product/cache/model/game_save_cache_model.dart'
     as _i9;
+import 'package:localchess/product/data/player_color.dart' as _i10;
 
 /// generated route for
 /// [_i1.GuestGameScreen]
@@ -68,12 +69,14 @@ class HomeRoute extends _i8.PageRouteInfo<void> {
 class HostGameRoute extends _i8.PageRouteInfo<HostGameRouteArgs> {
   HostGameRoute({
     required _i9.GameSaveCacheModel save,
-    _i10.Key? key,
+    required _i10.PlayerColor chosenColor,
+    _i11.Key? key,
     List<_i8.PageRouteInfo>? children,
   }) : super(
           HostGameRoute.name,
           args: HostGameRouteArgs(
             save: save,
+            chosenColor: chosenColor,
             key: key,
           ),
           initialChildren: children,
@@ -87,6 +90,7 @@ class HostGameRoute extends _i8.PageRouteInfo<HostGameRouteArgs> {
       final args = data.argsAs<HostGameRouteArgs>();
       return _i3.HostGameScreen(
         save: args.save,
+        chosenColor: args.chosenColor,
         key: args.key,
       );
     },
@@ -96,16 +100,19 @@ class HostGameRoute extends _i8.PageRouteInfo<HostGameRouteArgs> {
 class HostGameRouteArgs {
   const HostGameRouteArgs({
     required this.save,
+    required this.chosenColor,
     this.key,
   });
 
   final _i9.GameSaveCacheModel save;
 
-  final _i10.Key? key;
+  final _i10.PlayerColor chosenColor;
+
+  final _i11.Key? key;
 
   @override
   String toString() {
-    return 'HostGameRouteArgs{save: $save, key: $key}';
+    return 'HostGameRouteArgs{save: $save, chosenColor: $chosenColor, key: $key}';
   }
 }
 
@@ -114,7 +121,7 @@ class HostGameRouteArgs {
 class LocalGameRoute extends _i8.PageRouteInfo<LocalGameRouteArgs> {
   LocalGameRoute({
     required _i9.GameSaveCacheModel save,
-    _i10.Key? key,
+    _i11.Key? key,
     List<_i8.PageRouteInfo>? children,
   }) : super(
           LocalGameRoute.name,
@@ -147,7 +154,7 @@ class LocalGameRouteArgs {
 
   final _i9.GameSaveCacheModel save;
 
-  final _i10.Key? key;
+  final _i11.Key? key;
 
   @override
   String toString() {

@@ -24,7 +24,7 @@ class SetupHostSaveList extends StatelessWidget {
   final double bottomPadding;
 
   /// The callback when clicked on play button of a save.
-  final OnPressedWithGameSave onPlayPressed;
+  final OnPressedPlaySave onPlayPressed;
 
   /// The callback when clicked on remove button of a save.
   final OnPressedWithGameSave onRemovePressed;
@@ -50,6 +50,7 @@ class SetupHostSaveList extends StatelessWidget {
                 data: saveList[index],
                 onPlayPressed: onPlayPressed,
                 onRemovePressed: onRemovePressed,
+                showColorChooser: true,
               );
             },
           ),

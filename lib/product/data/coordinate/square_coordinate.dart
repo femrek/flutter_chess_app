@@ -76,6 +76,20 @@ class SquareCoordinate {
   }
 
   /// Creates a square coordinate from an index. valid distance is between
+  /// 0 and 63. Use if the top left square of gridview is H1.
+  /// (landscape upside down board uses this notation.)
+  factory SquareCoordinate.fromIndexStartWithH1(int index) {
+    assert(
+      index >= 0 && index < 64,
+      'Invalid index. It must be between 0 and 63',
+    );
+
+    final column = 7 - index % 8;
+    final row = index ~/ 8;
+    return SquareCoordinate(column, row);
+  }
+
+  /// Creates a square coordinate from an index. valid distance is between
   /// 0 and 63. Use if the top left square of gridview is A8 or A1 depending on
   /// the orientation.
   factory SquareCoordinate.fromIndex({
@@ -85,6 +99,8 @@ class SquareCoordinate {
     switch (orientation) {
       case BoardOrientationEnum.portrait:
         return SquareCoordinate.fromIndexStartWithA8(index);
+      case BoardOrientationEnum.portraitUpsideDown:
+        return SquareCoordinate.fromIndexStartWithH1(index);
       case BoardOrientationEnum.landscapeLeftBased:
         return SquareCoordinate.fromIndexStartWithA1(index);
     }

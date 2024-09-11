@@ -118,8 +118,9 @@ void main() async {
           expectCheck_clientDisconnect_server = true;
         }
 
-        serverManager = await SocketHostManager.create(
+        serverManager = await SocketHostManager.hostGame(
           address: _serverAddress,
+          gameName: gameSaveCacheModel_serverToClient.gameSave.name,
           onDataListeners: [onData],
           onClientConnectListener: onClientConnect,
           onClientDisconnectListener: onClientDisconnect,
@@ -149,11 +150,15 @@ void main() async {
           }
         }
 
-        void onConnected(SenderInformation serverInformation) {
+        void onConnected(
+          SenderInformation serverInformation,
+          String? gameName,
+        ) {
           expect(
             serverInformation,
             const IntroduceNetworkModel().senderInformation,
           );
+          expect(gameName, gameSaveCacheModel_serverToClient.gameSave.name);
           expectCheck_introduceDataReceived_client = true;
         }
 

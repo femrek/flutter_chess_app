@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:get_it/get_it.dart';
+import 'package:localchess/feature/host_game/view_model/host_game_view_model.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
 import 'package:localchess/feature/setup_host/view_model/setup_host_view_model.dart';
 import 'package:localchess/feature/setup_local/view_model/setup_local_view_model.dart';
@@ -50,6 +51,7 @@ abstract final class AppGetItConfigurer {
       ..registerLazySingleton<SetupHostViewModel>(() => SetupHostViewModel(
             appCache: GetIt.I<IAppCache>(),
           ))
-      ..registerLazySingleton(LocalGameViewModel.new);
+      ..registerLazySingleton(LocalGameViewModel.new)
+      ..registerLazySingleton(HostGameViewModel.new);
   }
 }

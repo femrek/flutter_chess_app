@@ -6,6 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:localchess/feature/setup_local/view/setup_local_screen.dart';
 import 'package:localchess/feature/setup_local/view_model/setup_local_view_model.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
+import 'package:localchess/product/data/player_color.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/navigation/app_route.gr.dart';
 import 'package:localchess/product/state/base/base_state.dart';
@@ -33,7 +34,7 @@ mixin SetupLocalStateMixin on BaseState<SetupLocalScreen> {
     });
   }
 
-  Future<void> onPlayPressed(GameSaveCacheModel save) async {
+  Future<void> onPlayPressed(GameSaveCacheModel save, PlayerColor _) async {
     await context.router.push(LocalGameRoute(save: save));
   }
 

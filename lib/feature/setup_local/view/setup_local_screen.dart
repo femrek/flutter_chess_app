@@ -56,7 +56,7 @@ class _SaveList extends StatelessWidget {
     required this.onRemovePressed,
   });
 
-  final OnPressedWithGameSave onPlayPressed;
+  final OnPressedPlaySave onPlayPressed;
   final OnPressedWithGameSave onRemovePressed;
 
   @override
