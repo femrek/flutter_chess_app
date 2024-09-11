@@ -21,7 +21,6 @@ import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
 import 'package:localchess/product/widget/header/game_screens_header.dart';
 import 'package:localchess/product/widget/player_information_section/captured_piece_indicator/captured_piece_indicator.dart';
-import 'package:localchess/product/widget/player_information_section/captured_piece_indicator/horizontal_direction.dart';
 import 'package:localchess/product/widget/player_information_section/turn_indicator.dart';
 
 /// Host Screen widget
@@ -221,11 +220,9 @@ class _CapturedPieceIndicator extends StatelessWidget {
       },
       builder: (context, pieces) {
         return CapturedPieceIndicator(
-            pieces: pieces,
-            pieceSize: MediaQuery.of(context).size.width / 8,
-            direction: playerColor.when(
-                black: HorizontalDirection.rightToLeft,
-                white: HorizontalDirection.leftToRight));
+          pieces: pieces,
+          pieceSize: MediaQuery.of(context).size.width / 8,
+        );
       },
     );
   }
