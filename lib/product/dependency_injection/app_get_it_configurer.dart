@@ -40,6 +40,7 @@ abstract final class AppGetItConfigurer {
 
       // network
       ..registerLazySingleton<ISocketConfiguration>(AppSocketConfiguration.new)
+      ..registerLazySingleton<INetworkInfoProvider>(NetworkInfoProvider.new)
 
       // configuration
       ..registerLazySingleton<IDeviceProperties>(AppDeviceProperties.new)

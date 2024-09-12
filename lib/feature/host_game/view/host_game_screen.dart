@@ -99,11 +99,40 @@ class _HostGameScreenState extends BaseState<HostGameScreen>
               ),
               _CapturedPieceIndicator(playerColor: widget.chosenColor),
 
+              const SizedBox(height: 8),
+
+              // network information
+              _NetworkManagementSection(),
+
               const Spacer(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _NetworkManagementSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocSelector<HostGameViewModel, HostGameState, HostGameNetworkState>(
+      selector: (state) {
+        if (state is HostGameLoadedState) {
+          return state.networkState;
+        }
+        return const HostGameNetworkState.initial();
+      },
+      builder: (context, networkState) {
+        return Column(
+          children: [
+            Text('connect to: ${networkState.runningHost}'
+                ':${networkState.runningPort}'),
+            Text('server running: ${networkState.isServerRunning}'),
+            Text('clients: ${networkState.connectedClients}'),
+          ],
+        );
+      },
     );
   }
 }
@@ -122,7 +151,7 @@ class _UndoButtonBuilder extends StatelessWidget {
     return BlocSelector<HostGameViewModel, HostGameState, bool>(
       selector: (state) {
         if (state is HostGameLoadedState) {
-          return state.canUndo;
+          return state.gameState.canUndo;
         }
         return false;
       },
@@ -154,7 +183,7 @@ class _RedoButtonBuilder extends StatelessWidget {
     return BlocSelector<HostGameViewModel, HostGameState, bool>(
       selector: (state) {
         if (state is HostGameLoadedState) {
-          return state.canRedo;
+          return state.gameState.canRedo;
         }
         return false;
       },
@@ -184,7 +213,7 @@ class _TurnIndicator extends StatelessWidget {
     return BlocSelector<HostGameViewModel, HostGameState, AppChessTurnStatus?>(
       selector: (state) {
         if (state is HostGameLoadedState) {
-          return state.turnStatus;
+          return state.gameState.turnStatus;
         }
         return null;
       },
@@ -212,7 +241,7 @@ class _CapturedPieceIndicator extends StatelessWidget {
     return BlocSelector<HostGameViewModel, HostGameState, List<AppPiece>>(
       selector: (state) {
         if (state is HostGameLoadedState) {
-          return state.capturedPieces
+          return state.gameState.capturedPieces
               .where((e) => playerColor != e.color)
               .toList();
         }
@@ -261,7 +290,7 @@ class _Board extends StatelessWidget {
       onTap: () {
         final state = context.read<HostGameViewModel>().state;
         if (state is! HostGameLoadedState) return;
-        if (state.isFocused) {
+        if (state.gameState.isFocused) {
           onMoveTried(coordinate);
         } else {
           onFocusTried(coordinate);
@@ -281,7 +310,7 @@ class _Board extends StatelessWidget {
             child: BlocSelector<HostGameViewModel, HostGameState, SquareData>(
               selector: (state) {
                 if (state is HostGameLoadedState) {
-                  return state.squareStates[coordinate] ??
+                  return state.gameState.squareStates[coordinate] ??
                       const SquareData.withDefaultValues();
                 }
                 return const SquareData.withDefaultValues();

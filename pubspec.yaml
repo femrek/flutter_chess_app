@@ -22,7 +22,6 @@ dependencies:
   chess: ^0.8.0
   equatable: ^2.0.5
   url_launcher: ^6.1.9
-  network_info_plus: ^4.0.2
   easy_localization: ^3.0.7
   get_it: ^7.7.0
   logger: ^2.4.0

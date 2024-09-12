@@ -77,7 +77,7 @@ void main() async {
 
         // define the onData listener
         void onData({
-          required String clientDeviceId,
+          required SenderInformation senderInformation,
           required NetworkModel data,
         }) {
           G.logger.d('Server: Received data: $data');

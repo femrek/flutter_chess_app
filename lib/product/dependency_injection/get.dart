@@ -38,6 +38,9 @@ abstract final class G {
   static ISocketConfiguration get socketConfiguration =>
       _getIt<ISocketConfiguration>();
 
+  static INetworkInfoProvider get networkInfoProvider =>
+      _getIt<INetworkInfoProvider>();
+
   // device properties
   static IDeviceProperties get deviceProperties => _getIt<IDeviceProperties>();
 

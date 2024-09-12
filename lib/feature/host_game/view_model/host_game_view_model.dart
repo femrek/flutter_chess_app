@@ -1,10 +1,13 @@
+import 'package:core/core.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_state.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
+import 'package:localchess/product/constant/host_constant.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
 import 'package:localchess/product/data/player_color.dart';
 import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/impl/socket_host_manager.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
 import 'package:localchess/product/service/impl/host_chess_service.dart';
 import 'package:localchess/product/state/base/base_cubit.dart';
@@ -20,6 +23,8 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
   };
 
   late IChessService _chessService;
+  late ISocketHostManager _hostManager;
+  late String _inet;
 
   void _emitNormal() {
     G.logger.t('HostGameViewModel._emitState');
@@ -44,13 +49,19 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
 
     final capturedPieces = _chessService.capturedPieces;
 
+    final state = this.state;
     emit(HostGameLoadedState(
-      squareStates: _squareStates,
-      isFocused: false,
-      turnStatus: turnStatus,
-      capturedPieces: capturedPieces,
-      canUndo: _chessService.canUndo(),
-      canRedo: _chessService.canRedo(),
+      gameState: HostGameGameState(
+        squareStates: _squareStates,
+        isFocused: false,
+        turnStatus: turnStatus,
+        capturedPieces: capturedPieces,
+        canUndo: _chessService.canUndo(),
+        canRedo: _chessService.canRedo(),
+      ),
+      networkState: (state is HostGameLoadedState)
+          ? state.networkState
+          : const HostGameNetworkState.initial(),
     ));
 
     G.logger.t('HostGameViewModel._emitState: Completely emitted');
@@ -89,22 +100,60 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
       );
     }
 
-    emit(HostGameLoadedState(
-      squareStates: _squareStates,
-      isFocused: true,
-      turnStatus: turnStatus,
-      capturedPieces: (state as HostGameLoadedState).capturedPieces,
-      canUndo: _chessService.canUndo(),
-      canRedo: _chessService.canRedo(),
+    final state = this.state;
+    emit((state as HostGameLoadedState).copyWith(
+      gameState: state.gameState.copyWith(
+        squareStates: _squareStates,
+        isFocused: true,
+        turnStatus: turnStatus,
+        canUndo: _chessService.canUndo(),
+        canRedo: _chessService.canRedo(),
+      ),
     ));
 
     G.logger.t('HostGameViewModel._emitFocus: Focused on $focusedCoordinate');
+  }
+
+  void _emitNetwork() {
+    G.logger.t('HostGameViewModel._emitNetwork');
+
+    emit((state as HostGameLoadedState).copyWith(
+      networkState: HostGameNetworkState(
+        isServerRunning: _hostManager.isAlive,
+        connectedClients: _hostManager.clientsInformation,
+        runningHost: _inet,
+        runningPort: _hostManager.server.port,
+      ),
+    ));
+
+    G.logger.t('HostGameViewModel._emitNetwork: Completely emitted');
   }
 
   /// Load the game state with the given [save] and [color]
   Future<void> init(GameSaveCacheModel save, PlayerColor color) async {
     _chessService = HostChessService(save: save, hostColor: color);
     _emitNormal();
+
+    final networkPromise = await Future.wait([
+      SocketHostManager.hostGame(
+        address: HostConstant.addressOnNetwork,
+        gameName: save.gameSave.name,
+        runRandomPortIfBusy: true,
+        onClientConnectListener: _onClientConnect,
+        onClientDisconnectListener: _onClientDisconnect,
+        onDataListeners: [_onDataReceived],
+      ),
+      G.networkInfoProvider.inetAddress,
+    ]);
+    _hostManager = networkPromise[0]! as ISocketHostManager;
+    _inet = networkPromise[1] as String? ?? 'no inet address';
+    _emitNetwork();
+  }
+
+  /// Stops the server.
+  Future<void> stopServer() async {
+    await _hostManager.stopServer();
+    _emitNetwork();
   }
 
   /// Focuses on the piece at the given [coordinate]. Shows the possible moves
@@ -115,7 +164,7 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
     final state = this.state;
     if (state is! HostGameLoadedState) throw Exception('Invalid state');
 
-    final squareState = state.squareStates[coordinate];
+    final squareState = state.gameState.squareStates[coordinate];
 
     // check if the square could not be found.
     if (squareState == null) {
@@ -221,5 +270,22 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
     _emitNormal();
 
     G.logger.t('HostGameViewModel.reset: Reset');
+  }
+
+  void _onDataReceived({
+    required SenderInformation senderInformation,
+    required NetworkModel data,
+  }) {
+    G.logger.t('HostGameViewModel._onDataReceived: $data');
+  }
+
+  void _onClientConnect(SenderInformation clientInformation) {
+    G.logger.t('HostGameViewModel._onClientConnect: $clientInformation');
+    _emitNetwork();
+  }
+
+  void _onClientDisconnect(SenderInformation clientInformation) {
+    G.logger.t('HostGameViewModel._onClientDisconnect: $clientInformation');
+    _emitNetwork();
   }
 }

@@ -81,7 +81,7 @@ class SocketHostManager implements ISocketHostManager {
         }
         for (final listener in instance.onDataListeners) {
           listener(
-            clientDeviceId: event.senderInformation.deviceId,
+            senderInformation: event.senderInformation,
             data: event,
           );
         }

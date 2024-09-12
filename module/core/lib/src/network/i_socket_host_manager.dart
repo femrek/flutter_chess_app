@@ -6,7 +6,7 @@ import 'package:core/src/network/sender_information.dart';
 
 /// The onData event listener for the socket host.
 typedef SocketHostOnDataListener = void Function({
-  required String clientDeviceId,
+  required SenderInformation senderInformation,
   required NetworkModel data,
 });
 

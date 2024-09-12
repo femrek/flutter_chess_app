@@ -19,6 +19,12 @@ mixin HostGameStateMixin on BaseState<HostGameScreen> {
     viewModel.init(widget.save, widget.chosenColor);
   }
 
+  @override
+  void dispose() {
+    viewModel.stopServer();
+    super.dispose();
+  }
+
   HostGameViewModel get viewModel => G.hostGameViewModel;
 
   void onFocusTried(SquareCoordinate coordinate) {
@@ -28,12 +34,12 @@ mixin HostGameStateMixin on BaseState<HostGameScreen> {
       G.logger.w('Invalid state');
       return;
     }
-    if (state.isFocused) {
+    if (state.gameState.isFocused) {
       G.logger.w('A piece is already focused');
       return;
     }
 
-    final squareState = state.squareStates[coordinate];
+    final squareState = state.gameState.squareStates[coordinate];
     if (squareState == null) {
       G.logger.w('Invalid coordinate when focusing. No square state found');
       return;
@@ -59,10 +65,10 @@ mixin HostGameStateMixin on BaseState<HostGameScreen> {
 
     // validate state.
     if (state is! HostGameLoadedState) return;
-    if (!state.isFocused) return;
+    if (!state.gameState.isFocused) return;
 
     // get square state data
-    final squareState = state.squareStates[targetCoordinate];
+    final squareState = state.gameState.squareStates[targetCoordinate];
 
     // cancel if the square could not be found.
     if (squareState == null) {
@@ -91,7 +97,7 @@ mixin HostGameStateMixin on BaseState<HostGameScreen> {
         context: context,
 
         // if the moving piece is null, default to dark.
-        color: state.turnStatus.turn ?? PlayerColor.black,
+        color: state.gameState.turnStatus.turn ?? PlayerColor.black,
       );
 
       // cancel the move if dialog is dismissed.
