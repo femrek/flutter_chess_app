@@ -1,5 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:localchess/product/constant/padding/app_padding.dart';
+import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
+import 'package:localchess/product/constant/radius/app_radius_constant.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 
 /// Dialog for entering a name. The dialog returns the entered text when pop.
@@ -59,36 +62,52 @@ class _EnterGameNameDialogState extends State<EnterGameNameDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleDialog(
-      title: Text(widget.title),
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: TextField(
-            controller: _nameController,
-            decoration: InputDecoration(
-              hintText: widget.hintText,
-            ),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+    return Dialog(
+      child: const AppPadding.card().toWidget(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(widget.cancelText),
+            Padding(
+              padding: const EdgeInsets.only(left: 12),
+              child: Text(
+                widget.title,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                final enteredText = _nameController.text;
-                if (enteredText.isEmpty) return;
-                Navigator.of(context).pop(enteredText);
-              },
-              child: Text(widget.confirmText),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                hintText: widget.hintText,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    AppRadiusConstant.inputFieldCornerRadius,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text(widget.cancelText),
+                ),
+                TextButton(
+                  onPressed: () {
+                    final enteredText = _nameController.text;
+                    if (enteredText.isEmpty) return;
+                    Navigator.of(context).pop(enteredText);
+                  },
+                  child: Text(widget.confirmText),
+                ),
+              ],
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 }

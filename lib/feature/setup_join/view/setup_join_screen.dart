@@ -1,5 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:localchess/feature/setup_join/view/mixin/setup_join_state_mixin.dart';
+import 'package:localchess/feature/setup_join/view/widget/setup_join_header.dart';
+import 'package:localchess/feature/setup_join/view/widget/setup_join_host_address.dart';
+import 'package:localchess/product/constant/padding/app_padding.dart';
+import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
+import 'package:localchess/product/state/base/base_state.dart';
 
 /// Join Screen widget
 @RoutePage()
@@ -11,12 +17,23 @@ class SetupJoinScreen extends StatefulWidget {
   State<SetupJoinScreen> createState() => _SetupJoinScreenState();
 }
 
-class _SetupJoinScreenState extends State<SetupJoinScreen> {
+class _SetupJoinScreenState extends BaseState<SetupJoinScreen>
+    with SetupJoinStateMixin {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Setup Join Screen'),
+    return Scaffold(
+      appBar: const SetupJoinHeader(),
+      body: const AppPadding.screen(horizontal: 0).toWidget(
+        child: Column(
+          children: [
+            // enter ip address section
+            const AppPadding.screen(vertical: 0).toWidget(
+              child: SetupJoinHostAddress(
+                onPressedJoin: onPressedJoinWithAddress,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

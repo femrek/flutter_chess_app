@@ -34,6 +34,15 @@
       "title": "Host a Game",
       "newGameButton": "New Game",
       "listTitle": "Saved Games"
+    },
+    "setupJoin": {
+      "title": "Join a Game",
+      "enterHostAddress": {
+        "title": "Enter Host Address",
+        "hintHost": "Host IP Address",
+        "hintPort": "Host Port",
+        "joinButton": "Join"
+      }
     }
   },
   "dialog": {
@@ -69,6 +78,10 @@
       "title": "An Error Occurred",
       "content": "Error: {}",
       "closeButton": "Close"
+    },
+    "joinLoadingDialog": {
+      "title": "Joining Game",
+      "error": "An error occurred while joining the game"
     }
   },
   "widget": {

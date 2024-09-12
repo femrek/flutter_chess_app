@@ -27,6 +27,13 @@ abstract class  LocaleKeys {
   static const screen_setupHost_newGameButton = 'screen.setupHost.newGameButton';
   static const screen_setupHost_listTitle = 'screen.setupHost.listTitle';
   static const screen_setupHost = 'screen.setupHost';
+  static const screen_setupJoin_title = 'screen.setupJoin.title';
+  static const screen_setupJoin_enterHostAddress_title = 'screen.setupJoin.enterHostAddress.title';
+  static const screen_setupJoin_enterHostAddress_hintHost = 'screen.setupJoin.enterHostAddress.hintHost';
+  static const screen_setupJoin_enterHostAddress_hintPort = 'screen.setupJoin.enterHostAddress.hintPort';
+  static const screen_setupJoin_enterHostAddress_joinButton = 'screen.setupJoin.enterHostAddress.joinButton';
+  static const screen_setupJoin_enterHostAddress = 'screen.setupJoin.enterHostAddress';
+  static const screen_setupJoin = 'screen.setupJoin';
   static const screen = 'screen';
   static const dialog_createGameDialog_title = 'dialog.createGameDialog.title';
   static const dialog_createGameDialog_hint = 'dialog.createGameDialog.hint';
@@ -55,6 +62,9 @@ abstract class  LocaleKeys {
   static const dialog_errorDialog_content = 'dialog.errorDialog.content';
   static const dialog_errorDialog_closeButton = 'dialog.errorDialog.closeButton';
   static const dialog_errorDialog = 'dialog.errorDialog';
+  static const dialog_joinLoadingDialog_title = 'dialog.joinLoadingDialog.title';
+  static const dialog_joinLoadingDialog_error = 'dialog.joinLoadingDialog.error';
+  static const dialog_joinLoadingDialog = 'dialog.joinLoadingDialog';
   static const dialog = 'dialog';
   static const widget_saveListTile_lastPlayed = 'widget.saveListTile.lastPlayed';
   static const widget_saveListTile = 'widget.saveListTile';

@@ -34,6 +34,15 @@
       "title": "Oyun Oluştur",
       "newGameButton": "Yeni Oyun Oluştur",
       "listTitle": "Kayıtlı Oyunlar"
+    },
+    "setupJoin": {
+      "title": "Oyuna Katıl",
+      "enterHostAddress": {
+        "title": "Sunucu Adresini Girin",
+        "hintHost": "Sunucu IP Adresi",
+        "hintPort": "Sunucu Portu",
+        "joinButton": "Katıl"
+      }
     }
   },
   "dialog": {
@@ -69,6 +78,10 @@
       "title": "Bir Hata Oluştu",
       "content": "Hata: {}",
       "closeButton": "Kapat"
+    },
+    "joinLoadingDialog": {
+      "title": "Oyuna Katılıyor",
+      "error": "Oyun katılırken bir hata oluştu"
     }
   },
   "widget": {
