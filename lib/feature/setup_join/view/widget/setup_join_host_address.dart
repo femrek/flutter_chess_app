@@ -14,20 +14,25 @@ class SetupJoinHostAddress extends StatefulWidget {
   /// Creates [SetupJoinHostAddress] widget.
   const SetupJoinHostAddress({
     required this.onPressedJoin,
+    required this.hostController,
+    required this.portController,
     super.key,
   });
 
   /// The callback when the join button is pressed.
   final OnJoinPressedWithAddress onPressedJoin;
 
+  /// The controller for the host address input field.
+  final TextEditingController hostController;
+
+  /// The controller for the port input field.
+  final TextEditingController portController;
+
   @override
   State<SetupJoinHostAddress> createState() => _SetupJoinHostAddressState();
 }
 
 class _SetupJoinHostAddressState extends State<SetupJoinHostAddress> {
-  final TextEditingController _hostController = TextEditingController();
-  final TextEditingController _portController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -49,7 +54,7 @@ class _SetupJoinHostAddressState extends State<SetupJoinHostAddress> {
                 Expanded(
                   flex: 2,
                   child: TextField(
-                    controller: _hostController,
+                    controller: widget.hostController,
                     decoration: InputDecoration(
                       hintText: LocaleKeys
                           .screen_setupJoin_enterHostAddress_hintHost
@@ -68,7 +73,7 @@ class _SetupJoinHostAddressState extends State<SetupJoinHostAddress> {
                 const Text(' : '),
                 Expanded(
                   child: TextField(
-                    controller: _portController,
+                    controller: widget.portController,
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       hintText: LocaleKeys
@@ -93,8 +98,8 @@ class _SetupJoinHostAddressState extends State<SetupJoinHostAddress> {
             // join button
             AppButton(
               onPressed: () {
-                final address = _hostController.text;
-                final port = int.tryParse(_portController.text) ?? 0;
+                final address = widget.hostController.text;
+                final port = int.tryParse(widget.portController.text) ?? 0;
                 widget.onPressedJoin(address, port);
               },
               fullWidth: true,

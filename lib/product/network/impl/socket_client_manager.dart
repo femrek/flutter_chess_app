@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/model/disconnect_network_model.dart';
 import 'package:localchess/product/network/model/introduce_network_model.dart';
 
 /// The implementation of the [ISocketClientManager] interface.
@@ -9,6 +10,7 @@ class SocketClientManager implements ISocketClientManager {
   SocketClientManager._internal({
     required Socket socket,
     this.onConnectedListener,
+    this.onKickedListener,
     List<SocketClientOnDataListener>? onDataListeners,
   }) : _socket = socket {
     if (onDataListeners != null) _onDataListeners.addAll(onDataListeners);
@@ -20,6 +22,7 @@ class SocketClientManager implements ISocketClientManager {
   static Future<SocketClientManager> connect({
     required AddressOnNetwork address,
     SocketClientOnConnectedListener? onConnectedListener,
+    SocketClientOnKickedListener? onKickedListener,
     List<SocketClientOnDataListener>? onDataListeners,
   }) async {
     // create the instance
@@ -27,6 +30,7 @@ class SocketClientManager implements ISocketClientManager {
     final i = SocketClientManager._internal(
       socket: socket,
       onDataListeners: onDataListeners,
+      onKickedListener: onKickedListener,
       onConnectedListener: onConnectedListener,
     );
 
@@ -38,10 +42,20 @@ class SocketClientManager implements ISocketClientManager {
 
   static Future<void> _init(SocketClientManager i) async {
     i._onData.listen((data) {
+      // trigger the introduce listener to establish the connection.
       if (data is IntroduceNetworkModel) {
         _onConnectionIntroduceListener(
           manager: i,
-          socket: i.socket,
+          data: data,
+        );
+        return;
+      }
+
+      // trigger connection done listener when the connection is closed by the
+      // client
+      if (data is DisconnectNetworkModel) {
+        _onKickedListener(
+          manager: i,
           data: data,
         );
         return;
@@ -77,6 +91,9 @@ class SocketClientManager implements ISocketClientManager {
   SocketClientOnConnectedListener? onConnectedListener;
 
   @override
+  SocketClientOnKickedListener? onKickedListener;
+
+  @override
   SenderInformation? get remoteInfo => _serverInfo;
 
   @override
@@ -100,6 +117,7 @@ class SocketClientManager implements ISocketClientManager {
   @override
   void disconnect() {
     G.logger.t('Disconnecting from server');
+    send(data: const DisconnectNetworkModel());
     _socket.destroy();
     _connected = false;
     G.logger.t('Disconnected from server');
@@ -122,7 +140,6 @@ class SocketClientManager implements ISocketClientManager {
 
   static void _onConnectionIntroduceListener({
     required SocketClientManager manager,
-    required Socket socket,
     required IntroduceNetworkModel data,
   }) {
     G.logger.t('_onConnectionIntroduceListener: Introduce data received: '
@@ -143,5 +160,14 @@ class SocketClientManager implements ISocketClientManager {
 
     G.logger.t('_onConnectionIntroduceListener: end: Client connected: '
         '${data.senderInformation}');
+  }
+
+  static void _onKickedListener({
+    required SocketClientManager manager,
+    required DisconnectNetworkModel data,
+  }) {
+    G.logger.t('onKickedListener: Kicked by server: $data');
+
+    manager.socket.destroy();
   }
 }

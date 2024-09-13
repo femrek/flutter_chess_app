@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/model/disconnect_network_model.dart';
 import 'package:localchess/product/network/model/introduce_network_model.dart';
 
 /// The implementation of the [ISocketHostManager] interface.
@@ -70,8 +71,8 @@ class SocketHostManager implements ISocketHostManager {
 
       // trigger the listeners when data is received
       instance._onData(socket).listen((event) {
+        // trigger the introduce listener to establish the connection.
         if (event is IntroduceNetworkModel) {
-          // trigger the introduce listener to establish the connection.
           _onConnectionIntroduceListener(
             manager: instance,
             socket: socket,
@@ -79,6 +80,18 @@ class SocketHostManager implements ISocketHostManager {
           );
           return;
         }
+
+        // trigger connection done listener when the connection is closed by the
+        // client
+        if (event is DisconnectNetworkModel) {
+          _onConnectionDoneListener(
+            manager: instance,
+            socket: socket,
+            remoteAddress: remoteAddress,
+          );
+          return;
+        }
+
         for (final listener in instance.onDataListeners) {
           listener(
             senderInformation: event.senderInformation,
@@ -86,15 +99,6 @@ class SocketHostManager implements ISocketHostManager {
           );
         }
       });
-
-      // trigger the listeners when the connection is closed by the client
-      unawaited(socket.done.then((_) {
-        _onConnectionDoneListener(
-          manager: instance,
-          socket: socket,
-          remoteAddress: remoteAddress,
-        );
-      }));
 
       // add the socket to the waiting clients until it introduces itself
       instance._waitingClients.add(socket);

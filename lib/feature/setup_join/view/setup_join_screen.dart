@@ -30,6 +30,8 @@ class _SetupJoinScreenState extends BaseState<SetupJoinScreen>
             const AppPadding.screen(vertical: 0).toWidget(
               child: SetupJoinHostAddress(
                 onPressedJoin: onPressedJoinWithAddress,
+                hostController: addressController,
+                portController: portController,
               ),
             ),
           ],

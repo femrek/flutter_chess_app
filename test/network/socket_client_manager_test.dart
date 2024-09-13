@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:core/core.dart';
@@ -49,13 +50,18 @@ void main() async {
       expect(testServer, isNotNull);
 
       // listen to the server. send the received data back to the client.
-      testServer!.listen((socket) {
-        socket.listen((data) async {
-          final receivedData = String.fromCharCodes(data);
-          G.logger.d('Server: Received data: $receivedData');
-          socket.write(receivedData);
-        });
-      });
+      runZonedGuarded(
+        () {
+          testServer!.listen((socket) {
+            socket.listen((data) async {
+              final receivedData = String.fromCharCodes(data);
+              G.logger.d('Server: Received data: $receivedData');
+              socket.write(receivedData);
+            });
+          });
+        },
+        (_, __) {},
+      );
 
       // define the manager to be tested.
       late final SocketClientManager manager;
