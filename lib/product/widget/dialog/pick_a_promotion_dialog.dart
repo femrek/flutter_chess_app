@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:localchess/product/constant/radius/app_radius_constant.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 
 /// Dialog for picking a promotion piece. The dialog returns the selected piece
 /// code name when pop. [q, r, b, n]

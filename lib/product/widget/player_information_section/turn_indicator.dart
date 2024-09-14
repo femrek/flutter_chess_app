@@ -4,7 +4,7 @@ import 'package:localchess/product/constant/radius/app_radius_constant.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_winner.dart';
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 
 /// A widget that displays the current turn status.

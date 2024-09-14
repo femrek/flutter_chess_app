@@ -6,7 +6,7 @@ import 'package:localchess/product/constant/padding/padding_widget_extension.dar
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
 import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/data/piece/app_piece_widget_extension.dart';
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
 import 'package:localchess/product/service/impl/chess_service.dart';
@@ -86,7 +86,7 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
   @override
   void initState() {
     super.initState();
-    _chessService = ChessService(save: widget.save);
+    _chessService = ChessService(save: widget.save, keepSaveUpdated: false);
     _chosenColor = ValueNotifier(widget.defaultColor);
   }
 

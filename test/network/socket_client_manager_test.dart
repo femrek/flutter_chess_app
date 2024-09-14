@@ -60,7 +60,9 @@ void main() async {
             });
           });
         },
-        (_, __) {},
+        (e, __) {
+          G.logger.e('Server error: $e');
+        },
       );
 
       // define the manager to be tested.
@@ -87,9 +89,6 @@ void main() async {
 
       void onConnected(
         SenderInformation serverInformation,
-
-        // game name is not used in this test because of the dummy host.
-        String? gameName,
       ) {
         expect(
           serverInformation,

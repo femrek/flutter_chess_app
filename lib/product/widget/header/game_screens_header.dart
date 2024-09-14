@@ -54,14 +54,15 @@ class GameScreensHeader extends StatelessWidget implements PreferredSizeWidget {
         ),
 
         // The restart button
-        IconButton(
-          tooltip: LocaleKeys.game_restart.tr(),
-          onPressed: onRestartPressed,
-          icon: Icon(
-            Icons.restart_alt,
-            color: frontColor,
+        if (showRestartButton)
+          IconButton(
+            tooltip: LocaleKeys.game_restart.tr(),
+            onPressed: onRestartPressed,
+            icon: Icon(
+              Icons.restart_alt,
+              color: frontColor,
+            ),
           ),
-        ),
 
         // The undo button
         undoButtonBuilder(context),

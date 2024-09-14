@@ -25,7 +25,7 @@ import 'package:localchess/feature/setup_local/view/setup_local_screen.dart'
     as _i7;
 import 'package:localchess/product/cache/model/game_save_cache_model.dart'
     as _i11;
-import 'package:localchess/product/data/player_color.dart' as _i12;
+import 'package:localchess/product/data/player_color/player_color.dart' as _i12;
 
 /// generated route for
 /// [_i1.GuestGameScreen]

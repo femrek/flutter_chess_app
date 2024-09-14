@@ -8,6 +8,16 @@ enum PlayerColor {
   white,
   ;
 
+  /// Returns the opposite color.
+  PlayerColor get opposite {
+    switch (this) {
+      case PlayerColor.black:
+        return PlayerColor.white;
+      case PlayerColor.white:
+        return PlayerColor.black;
+    }
+  }
+
   /// if this is [PlayerColor.black] return [black], if [PlayerColor.white]
   /// return [white]
   T when<T>({

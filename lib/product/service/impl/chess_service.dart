@@ -15,6 +15,7 @@ class ChessService implements IChessService {
   /// game. The service performs operations on this save.
   ChessService({
     required GameSaveCacheModel save,
+    this.keepSaveUpdated = true,
   }) : _save = save {
     try {
       final currentFEN = save.gameSave.currentStateFen;
@@ -25,6 +26,10 @@ class ChessService implements IChessService {
     }
   }
 
+  /// The flag to keep the save updated with the game state. If true, the save
+  /// will be updated after each move, reset, undo, etc. operation.
+  final bool keepSaveUpdated;
+
   GameSaveCacheModel _save;
 
   late ch.Chess _chess;
@@ -33,6 +38,8 @@ class ChessService implements IChessService {
 
   /// Updates the save with the new save. also updates the [_save] field.
   Future<void> _updateSave(GameSave newSave) async {
+    if (!keepSaveUpdated) return;
+
     // check and update if game over status is changed.
     late final GameSave newSaveResult;
     if (_chess.game_over != newSave.isGameOver) {
@@ -51,7 +58,7 @@ class ChessService implements IChessService {
   }
 
   @override
-  GameSaveCacheModel get save => _save;
+  String get currentFen => _save.gameSave.currentStateFen;
 
   @override
   AppPiece? getPieceAt(SquareCoordinate coordinate) {
@@ -70,7 +77,7 @@ class ChessService implements IChessService {
     G.logger.t('ChessService.lastMoveFrom');
 
     final result = SquareCoordinate.fromNameOrNull(
-        save.gameSave.currentState?.lastMoveFrom);
+        _save.gameSave.currentState?.lastMoveFrom);
 
     G.logger.t('ChessService.lastMoveFrom: $result');
 
@@ -81,8 +88,8 @@ class ChessService implements IChessService {
   SquareCoordinate? get lastMoveTo {
     G.logger.t('ChessService.lastMoveTo');
 
-    final result =
-        SquareCoordinate.fromNameOrNull(save.gameSave.currentState?.lastMoveTo);
+    final result = SquareCoordinate.fromNameOrNull(
+        _save.gameSave.currentState?.lastMoveTo);
 
     G.logger.t('ChessService.lastMoveTo: $result');
 
@@ -136,7 +143,7 @@ class ChessService implements IChessService {
 
   @override
   List<AppPiece> get capturedPieces {
-    final capturedPieces = save.gameSave.history
+    final capturedPieces = _save.gameSave.history
         .map<AppPiece?>((e) {
           final name = e.capturedPiece;
           if (name == null) return null;
@@ -220,7 +227,7 @@ class ChessService implements IChessService {
 
     _undoHistory.clear();
 
-    await _updateSave(save.gameSave.addHistory(
+    await _updateSave(_save.gameSave.addHistory(
       BoardStatusAndLastMove(
         fen: _chess.fen,
         lastMoveFrom: from,
@@ -235,7 +242,7 @@ class ChessService implements IChessService {
 
   @override
   bool canUndo() {
-    return save.gameSave.history.isNotEmpty;
+    return _save.gameSave.history.isNotEmpty;
   }
 
   @override
@@ -243,18 +250,18 @@ class ChessService implements IChessService {
     G.logger.t('ChessService.undo');
 
     // get history and validate
-    final history = save.gameSave.history;
+    final history = _save.gameSave.history;
     if (history.isEmpty) throw Exception('No history to undo');
 
     // get and validate last status
-    final undoState = save.gameSave.currentState;
+    final undoState = _save.gameSave.currentState;
     if (undoState == null) {
       G.logger.e('currentState is null when undoing and history is not empty');
       return;
     }
 
     // undo and save state
-    final newSave = save.gameSave.popHistory();
+    final newSave = _save.gameSave.popHistory();
     _chess = ch.Chess.fromFEN(newSave.currentStateFen);
     await _updateSave(newSave);
 
@@ -282,7 +289,7 @@ class ChessService implements IChessService {
     final redoState = _undoHistory.removeLast();
 
     // redo and save state
-    final newSave = save.gameSave.addHistory(redoState);
+    final newSave = _save.gameSave.addHistory(redoState);
     _chess = ch.Chess.fromFEN(newSave.currentStateFen);
     await _updateSave(newSave);
 
@@ -297,7 +304,7 @@ class ChessService implements IChessService {
     _undoHistory.clear();
 
     // reset and save state
-    final newSave = save.gameSave.copyWith(history: []);
+    final newSave = _save.gameSave.copyWith(history: []);
     _chess.load(newSave.currentStateFen);
     await _updateSave(newSave);
 

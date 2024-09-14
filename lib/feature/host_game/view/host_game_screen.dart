@@ -12,7 +12,7 @@ import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/state/base/base_state.dart';

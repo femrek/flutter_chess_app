@@ -5,7 +5,7 @@ import 'package:localchess/feature/host_game/view/host_game_screen.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_state.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_view_model.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/state/base/base_state.dart';

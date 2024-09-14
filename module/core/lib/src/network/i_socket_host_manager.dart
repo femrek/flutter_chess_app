@@ -62,4 +62,7 @@ abstract interface class ISocketHostManager {
     required SenderInformation clientInformation,
     required NetworkModel data,
   });
+
+  /// Sends data to all connected clients.
+  void sendAll(NetworkModel data);
 }

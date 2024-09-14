@@ -303,12 +303,12 @@ void main() async {
       expect(chessService.canUndo(), isTrue);
 
       // save the status before undo
-      final statusBeforeUndo = chessService.save.gameSave.currentState;
+      final statusBeforeUndo = chessService.currentFen;
 
       // undo
       await chessService.undo();
       {
-        final currentStatus = chessService.save.gameSave.currentState;
+        final currentStatus = chessService.currentFen;
         expect(chessService.canRedo(), isTrue);
         expect(chessService.canUndo(), isTrue);
         expect(currentStatus, isNot(statusBeforeUndo));
@@ -317,7 +317,7 @@ void main() async {
       // redo
       await chessService.redo();
       {
-        final currentStatus = chessService.save.gameSave.currentState;
+        final currentStatus = chessService.currentFen;
         expect(chessService.canRedo(), isFalse);
         expect(chessService.canUndo(), isTrue);
         expect(currentStatus, statusBeforeUndo);
@@ -328,14 +328,14 @@ void main() async {
       final chessService = ChessService(save: _savePlayed);
 
       // save status before reset
-      final statusBeforeReset = chessService.save.gameSave.currentState;
+      final statusBeforeReset = chessService.currentFen;
 
       // reset
       await chessService.reset();
 
       // check the status is changed after reset
       {
-        final currentStatus = chessService.save.gameSave.currentState;
+        final currentStatus = chessService.currentFen;
         expect(chessService.canRedo(), isFalse);
         expect(chessService.canUndo(), isFalse);
         expect(currentStatus, isNot(statusBeforeReset));

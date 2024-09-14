@@ -155,7 +155,6 @@ class SocketClientManager implements ISocketClientManager {
       // trigger the onConnectClientListener
       ..onConnectedListener?.call(
         data.senderInformation,
-        data.gameName,
       );
 
     G.logger.t('_onConnectionIntroduceListener: end: Client connected: '

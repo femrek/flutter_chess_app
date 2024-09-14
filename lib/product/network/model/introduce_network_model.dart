@@ -5,24 +5,16 @@ import 'package:localchess/product/dependency_injection/get.dart';
 /// client. Can not be listened to by the on data listeners.
 class IntroduceNetworkModel implements NetworkModel {
   /// Creates a new [IntroduceNetworkModel]
-  const IntroduceNetworkModel({
-    this.gameName,
-  }) : _senderInformation = null;
+  const IntroduceNetworkModel() : _senderInformation = null;
 
   IntroduceNetworkModel._internal({
     required SenderInformation senderInformation,
-    this.gameName,
   }) : _senderInformation = senderInformation;
 
   /// Creates an empty [IntroduceNetworkModel]
-  const IntroduceNetworkModel.empty()
-      : _senderInformation = null,
-        gameName = null;
+  const IntroduceNetworkModel.empty() : _senderInformation = null;
 
   final SenderInformation? _senderInformation;
-
-  /// If this data sent by the host, keeps the name of the game. Otherwise null.
-  final String? gameName;
 
   /// The type identifier for the [IntroduceNetworkModel]
   static const String type = 'IntroduceNetworkModel';
@@ -57,15 +49,8 @@ class IntroduceNetworkModel implements NetworkModel {
       throw Exception('senderInformation is not a Map<String, dynamic>');
     }
 
-    // validate gameName
-    final gameName = json['gameName'];
-    if (gameName is! String?) {
-      throw Exception('gameName is not a String');
-    }
-
     return IntroduceNetworkModel._internal(
       senderInformation: SenderInformation.fromJson(senderInformation),
-      gameName: gameName,
     );
   }
 
@@ -74,7 +59,6 @@ class IntroduceNetworkModel implements NetworkModel {
     return {
       'senderInformation': senderInformation.toJson(),
       'typeId': typeId,
-      'gameName': gameName,
     };
   }
 

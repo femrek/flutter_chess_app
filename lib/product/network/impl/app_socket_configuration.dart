@@ -2,8 +2,11 @@ import 'dart:convert';
 
 import 'package:core/core.dart';
 import 'package:localchess/product/network/model/disconnect_network_model.dart';
+import 'package:localchess/product/network/model/game_introduce_network_model.dart';
+import 'package:localchess/product/network/model/game_network_model.dart';
 import 'package:localchess/product/network/model/game_save_network_model.dart';
 import 'package:localchess/product/network/model/introduce_network_model.dart';
+import 'package:localchess/product/network/model/move_network_model.dart';
 
 /// App Configuration for the socket.
 final class AppSocketConfiguration implements ISocketConfiguration {
@@ -11,6 +14,9 @@ final class AppSocketConfiguration implements ISocketConfiguration {
     GameSaveNetworkModel.type: GameSaveNetworkModel.empty(),
     IntroduceNetworkModel.type: const IntroduceNetworkModel.empty(),
     DisconnectNetworkModel.type: const DisconnectNetworkModel.empty(),
+    GameIntroduceNetworkModel.type: const GameIntroduceNetworkModel.empty(),
+    GameNetworkModel.type: const GameNetworkModel.empty(),
+    MoveNetworkModel.type: const MoveNetworkModel.empty(),
   };
 
   @override

@@ -79,7 +79,6 @@ void main() async {
 
         manager = await SocketHostManager.hostGame(
           address: _serverAddress,
-          gameName: _gameSaveCacheModel.gameSave.name,
           onDataListeners: [onData],
           onClientConnectListener: onClientConnect,
         );
@@ -121,11 +120,6 @@ void main() async {
 
         expect(data, isA<IntroduceNetworkModel>());
         expect((data as IntroduceNetworkModel).senderInformation, isNotNull);
-        expect(
-          data.gameName,
-          _gameSaveCacheModel.gameSave.name,
-          reason: 'Game name should be sent by the host',
-        );
       }
 
       // wait until the server is stopped.

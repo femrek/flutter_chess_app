@@ -1,4 +1,4 @@
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 
 /// Defined the orientation of the board
 enum BoardOrientationEnum {

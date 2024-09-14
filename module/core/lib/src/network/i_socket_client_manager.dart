@@ -10,12 +10,11 @@ typedef SocketClientOnDataListener = void Function(NetworkModel data);
 /// The onConnected event listener to trigger when the information data is
 /// received from the host.
 typedef SocketClientOnConnectedListener = void Function(
-    SenderInformation hostInfo, String? gameName);
+    SenderInformation hostInfo);
 
 /// The onKicked event listener to trigger when the client is kicked from the
 /// server.
-typedef SocketClientOnKickedListener = void Function(
-    SenderInformation remoteInfo);
+typedef SocketClientOnKickedListener = void Function();
 
 /// Interface for managing operations on a client side socket.
 abstract interface class ISocketClientManager {

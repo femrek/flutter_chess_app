@@ -1,6 +1,6 @@
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/service/impl/chess_service.dart';
 
@@ -11,7 +11,7 @@ class HostChessService extends ChessService {
   HostChessService({
     required super.save,
     required this.hostColor,
-  });
+  }) : super(keepSaveUpdated: true);
 
   /// The color of the host player.
   final PlayerColor hostColor;

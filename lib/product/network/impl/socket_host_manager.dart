@@ -25,7 +25,6 @@ class SocketHostManager implements ISocketHostManager {
   /// [onDataListeners] can not [IntroduceNetworkModel] data.
   static Future<SocketHostManager> hostGame({
     required AddressOnNetwork address,
-    required String gameName,
     SocketHostOnClientConnectListener? onClientConnectListener,
     SocketHostOnClientDisconnectListener? onClientDisconnectListener,
     List<SocketHostOnDataListener>? onDataListeners,
@@ -47,7 +46,6 @@ class SocketHostManager implements ISocketHostManager {
       // initialize
       await _init(
         instance: i,
-        gameName: gameName,
       );
 
       return i;
@@ -56,58 +54,64 @@ class SocketHostManager implements ISocketHostManager {
       G.logger.w('Port is busy, trying random port');
       return hostGame(
         address: AddressOnNetwork(address: address.address, port: 0),
-        gameName: gameName,
       );
     }
   }
 
   static Future<void> _init({
     required SocketHostManager instance,
-    required String gameName,
   }) async {
-    instance._serverSocket.listen((socket) async {
-      final remoteAddress = '${socket.remoteAddress}:${socket.remotePort}';
-      G.logger.d('Client connected: $remoteAddress');
+    runZonedGuarded(() {
+      instance._serverSocket.listen((socket) async {
+        final remoteAddress = '${socket.remoteAddress}:${socket.remotePort}';
+        G.logger.d('Client connected: $remoteAddress');
 
-      // trigger the listeners when data is received
-      instance._onData(socket).listen((event) {
-        // trigger the introduce listener to establish the connection.
-        if (event is IntroduceNetworkModel) {
-          _onConnectionIntroduceListener(
-            manager: instance,
-            socket: socket,
-            data: event,
-          );
-          return;
-        }
+        // trigger the listeners when data is received
+        instance._onData(socket).listen((event) {
+          // trigger the introduce listener to establish the connection.
+          if (event is IntroduceNetworkModel) {
+            _onConnectionIntroduceListener(
+              manager: instance,
+              socket: socket,
+              data: event,
+            );
+            return;
+          }
 
-        // trigger connection done listener when the connection is closed by the
-        // client
-        if (event is DisconnectNetworkModel) {
-          _onConnectionDoneListener(
-            manager: instance,
-            socket: socket,
-            remoteAddress: remoteAddress,
-          );
-          return;
-        }
+          // trigger connection done listener when the connection is closed by
+          // the client
+          if (event is DisconnectNetworkModel) {
+            _onConnectionDoneListener(
+              manager: instance,
+              socket: socket,
+              remoteAddress: remoteAddress,
+            );
+            return;
+          }
 
-        for (final listener in instance.onDataListeners) {
-          listener(
-            senderInformation: event.senderInformation,
-            data: event,
-          );
-        }
+          for (final listener in instance.onDataListeners) {
+            listener(
+              senderInformation: event.senderInformation,
+              data: event,
+            );
+          }
+        });
+
+        // add the socket to the waiting clients until it introduces itself
+        instance._waitingClients.add(socket);
+
+        // add the introduce listener then send introduce data to the client
+        instance._introduce(
+          socket: socket,
+        );
       });
-
-      // add the socket to the waiting clients until it introduces itself
-      instance._waitingClients.add(socket);
-
-      // add the introduce listener then send introduce data to the client
-      instance._introduce(
-        socket: socket,
-        gameName: gameName,
-      );
+    }, (error, stackTrace) {
+      if (error is SocketException) {
+        G.logger.w('SocketException in serverSocket.listen');
+      } else {
+        // ignore: only_throw_errors
+        throw error;
+      }
     });
   }
 
@@ -167,6 +171,15 @@ class SocketHostManager implements ISocketHostManager {
     return true;
   }
 
+  @override
+  void sendAll(NetworkModel data) {
+    G.logger.t('Sending data to all clients');
+    for (final client in _clients.values) {
+      _send(client, data);
+    }
+    G.logger.t('Data sent to all clients');
+  }
+
   void _send(Socket client, NetworkModel data) {
     final dataString = configuration.jsonStringFromModel(data);
     G.logger.d('Host: Data to send: $dataString');
@@ -202,9 +215,8 @@ class SocketHostManager implements ISocketHostManager {
 
   void _introduce({
     required Socket socket,
-    required String gameName,
   }) {
-    _send(socket, IntroduceNetworkModel(gameName: gameName));
+    _send(socket, const IntroduceNetworkModel());
   }
 
   static void _onConnectionIntroduceListener({

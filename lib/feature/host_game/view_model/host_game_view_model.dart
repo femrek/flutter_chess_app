@@ -4,10 +4,13 @@ import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/host_constant.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/network/impl/socket_host_manager.dart';
+import 'package:localchess/product/network/model/game_introduce_network_model.dart';
+import 'package:localchess/product/network/model/game_network_model.dart';
+import 'package:localchess/product/network/model/move_network_model.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
 import 'package:localchess/product/service/impl/host_chess_service.dart';
 import 'package:localchess/product/state/base/base_cubit.dart';
@@ -25,8 +28,9 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
   late IChessService _chessService;
   late ISocketHostManager _hostManager;
   late String _inet;
+  late GameIntroduceNetworkModel _gameIntroduceNetworkModel;
 
-  void _emitNormal() {
+  void _emitNormal({bool sendNetwork = true}) {
     G.logger.t('HostGameViewModel._emitState');
 
     final movablePiecesCoordinates =
@@ -63,6 +67,8 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
           ? state.networkState
           : const HostGameNetworkState.initial(),
     ));
+
+    if (sendNetwork) _hostManager.sendAll(_getGameNetworkModel());
 
     G.logger.t('HostGameViewModel._emitState: Completely emitted');
   }
@@ -132,12 +138,12 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
   /// Load the game state with the given [save] and [color]
   Future<void> init(GameSaveCacheModel save, PlayerColor color) async {
     _chessService = HostChessService(save: save, hostColor: color);
-    _emitNormal();
+    _emitNormal(sendNetwork: false);
 
+    // run the server and get the inet address
     final networkPromise = await Future.wait([
       SocketHostManager.hostGame(
         address: HostConstant.addressOnNetwork,
-        gameName: save.gameSave.name,
         runRandomPortIfBusy: true,
         onClientConnectListener: _onClientConnect,
         onClientDisconnectListener: _onClientDisconnect,
@@ -147,6 +153,13 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
     ]);
     _hostManager = networkPromise[0]! as ISocketHostManager;
     _inet = networkPromise[1] as String? ?? 'no inet address';
+
+    // initialize the game introduce network model
+    _gameIntroduceNetworkModel = GameIntroduceNetworkModel(
+      gameName: save.gameSave.name,
+      hostColor: color,
+    );
+
     _emitNetwork();
   }
 
@@ -195,7 +208,7 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
     if (state is! HostGameLoadedState) throw Exception('Invalid state');
 
     // emit
-    _emitNormal();
+    _emitNormal(sendNetwork: false);
 
     G.logger.t('HostGameViewModel.removeFocus: Removed focus');
   }
@@ -277,15 +290,42 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
     required NetworkModel data,
   }) {
     G.logger.t('HostGameViewModel._onDataReceived: $data');
+
+    if (data is MoveNetworkModel) {
+      move(move: data.move);
+    }
   }
 
   void _onClientConnect(SenderInformation clientInformation) {
     G.logger.t('HostGameViewModel._onClientConnect: $clientInformation');
     _emitNetwork();
+
+    _hostManager
+      ..send(
+        clientInformation: clientInformation,
+        data: _getGameNetworkModel(),
+      )
+      ..send(
+        clientInformation: clientInformation,
+        data: _gameIntroduceNetworkModel,
+      );
   }
 
   void _onClientDisconnect(SenderInformation clientInformation) {
     G.logger.t('HostGameViewModel._onClientDisconnect: $clientInformation');
     _emitNetwork();
+  }
+
+  GameNetworkModel _getGameNetworkModel() {
+    final state = this.state;
+    if (state is! HostGameLoadedState) throw Exception('Invalid state');
+
+    return GameNetworkModel(
+      gameFen: _chessService.currentFen,
+      lastMoveFrom: _chessService.lastMoveFrom?.nameLowerCase,
+      lastMoveTo: _chessService.lastMoveTo?.nameLowerCase,
+      isGameOver: _chessService.turnStatus.isGameOver,
+      capturedPieces: state.gameState.capturedPieces,
+    );
   }
 }

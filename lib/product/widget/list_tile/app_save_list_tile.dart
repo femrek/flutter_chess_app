@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/util/date_extension.dart';
 import 'package:localchess/product/widget/dialog/game_preview_dialog.dart';

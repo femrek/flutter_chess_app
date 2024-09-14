@@ -1,4 +1,3 @@
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
@@ -6,9 +5,8 @@ import 'package:localchess/product/data/piece/app_piece.dart';
 
 /// The service interface for performing chess operations.
 abstract interface class IChessService {
-  /// The local game save for performing operations on it. The instance of the
-  /// game.
-  GameSaveCacheModel get save;
+  /// Gets the current game board FEN.
+  String get currentFen;
 
   /// Gets the piece at the given [coordinate]. Returns `null` if no piece is
   /// found at the coordinate.

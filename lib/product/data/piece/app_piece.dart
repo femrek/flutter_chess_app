@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:gen/gen.dart';
-import 'package:localchess/product/data/player_color.dart';
+import 'package:localchess/product/data/player_color/player_color.dart';
 
 /// Types of the pieces in the chess game.
 enum AppPiece {
@@ -87,6 +87,35 @@ enum AppPiece {
 
   /// The code of the piece. (e.g. 'p', 'n', 'b', 'r', 'q', 'k')
   final String name;
+
+  String get nameCaseSensitive {
+    switch (this) {
+      case AppPiece.pawnB:
+        return 'p';
+      case AppPiece.rookB:
+        return 'r';
+      case AppPiece.knightB:
+        return 'n';
+      case AppPiece.bishopB:
+        return 'b';
+      case AppPiece.queenB:
+        return 'q';
+      case AppPiece.kingB:
+        return 'k';
+      case AppPiece.pawnW:
+        return 'P';
+      case AppPiece.rookW:
+        return 'R';
+      case AppPiece.knightW:
+        return 'N';
+      case AppPiece.bishopW:
+        return 'B';
+      case AppPiece.queenW:
+        return 'Q';
+      case AppPiece.kingW:
+        return 'K';
+    }
+  }
 
   /// The image of the piece.
   SvgGenImage get image {
