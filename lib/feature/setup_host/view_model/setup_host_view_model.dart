@@ -6,6 +6,7 @@ import 'package:gen/gen.dart';
 import 'package:localchess/feature/setup_host/view_model/setup_host_state.dart';
 import 'package:localchess/product/cache/i_app_cache.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
+import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/state/base/base_cubit.dart';
 import 'package:uuid/uuid.dart';
 
@@ -21,10 +22,21 @@ class SetupHostViewModel extends BaseCubit<SetupHostState> {
 
   /// fetch saves and emit state.
   Future<void> loadSaves() async {
-    final saves = await appCache.gameSaveOperator.getAll(
+    final saves = appCache.gameSaveOperator.getAll(
       sort: GetAllSortEnum.updateAtDesc,
     );
     emit(state.copyWith(saves: saves));
+  }
+
+  /// Returns the device name.
+  String getDeviceName() {
+    return G.deviceProperties.deviceName;
+  }
+
+  /// Updates the device name.
+  // ignore: use_setters_to_change_properties
+  void updateName(String name) {
+    G.deviceProperties.deviceName = name;
   }
 
   /// Creates a new game save and returns the created cache model.
@@ -39,7 +51,7 @@ class SetupHostViewModel extends BaseCubit<SetupHostState> {
       ),
     );
 
-    final savedSave = await appCache.gameSaveOperator.save(newSave);
+    final savedSave = appCache.gameSaveOperator.save(newSave);
 
     emit(state.copyWith(
       saves: [savedSave, ...state.saves],
@@ -52,7 +64,7 @@ class SetupHostViewModel extends BaseCubit<SetupHostState> {
 
   /// Removes the save permanently from the cache.
   Future<void> removeSave(GameSaveCacheModel save) async {
-    final removed = await appCache.gameSaveOperator.remove(save.id);
+    final removed = appCache.gameSaveOperator.remove(save.id);
 
     if (removed) await loadSaves();
   }

@@ -84,6 +84,9 @@ abstract class  LocaleKeys {
   static const dialog = 'dialog';
   static const widget_saveListTile_lastPlayed = 'widget.saveListTile.lastPlayed';
   static const widget_saveListTile = 'widget.saveListTile';
+  static const widget_deviceNameInput_title = 'widget.deviceNameInput.title';
+  static const widget_deviceNameInput_hint = 'widget.deviceNameInput.hint';
+  static const widget_deviceNameInput = 'widget.deviceNameInput';
   static const widget = 'widget';
   static const game_undo = 'game.undo';
   static const game_redo = 'game.redo';

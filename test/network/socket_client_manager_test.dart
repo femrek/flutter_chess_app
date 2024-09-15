@@ -105,7 +105,7 @@ void main() async {
       );
 
       // send data to the server.
-      final sampleData = await G.appCache.gameSaveOperator.get('test_game');
+      final sampleData = G.appCache.gameSaveOperator.get('test_game');
       expect(sampleData, isNotNull);
       manager.send(
         data: GameSaveNetworkModel(

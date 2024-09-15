@@ -8,7 +8,9 @@ import 'package:localchess/feature/setup_host/view_model/setup_host_state.dart';
 import 'package:localchess/feature/setup_host/view_model/setup_host_view_model.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
+import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
 import 'package:localchess/product/state/base/base_state.dart';
+import 'package:localchess/product/widget/device_name_input/device_name_input.dart';
 import 'package:localchess/product/widget/list_tile/app_save_list_tile.dart';
 
 /// Setup Host Screen widget
@@ -32,8 +34,22 @@ class _SetupHostScreenState extends BaseState<SetupHostScreen>
           bottom: false,
           child: Column(
             children: [
+              // header
               SetupHostHeader(onPressedNewGame: onPressedNewGame),
+
               const SizedBox(height: 8),
+
+              // the card for the device name input
+              const AppPadding.screen(vertical: 0).toWidget(
+                child: DeviceNameInput(
+                  controller: nameController,
+                  onChanged: onNameChanged,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              // the list of saves
               Expanded(
                 child: _SaveList(
                   onPlayPressed: onPlayPressed,

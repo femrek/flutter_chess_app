@@ -12,4 +12,15 @@ class SetupJoinViewModel extends BaseCubit<SetupJoinState> {
     final networkInfo = await G.networkInfoProvider.inetAddress;
     return networkInfo;
   }
+
+  /// Get the device name from manager component.
+  String getDeviceName() {
+    return G.deviceProperties.deviceName;
+  }
+
+  /// Update the device name in the manager component.
+  // ignore: use_setters_to_change_properties
+  void updateName(String value) {
+    G.deviceProperties.deviceName = value;
+  }
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:core/src/cache/core/cache_model.dart';
 import 'package:core/src/cache/core/cache_model_meta_data.dart';
 import 'package:core/src/cache/core/cache_operator.dart';
@@ -23,7 +21,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   final Logger log;
 
   @override
-  FutureOr<T?> get(String id) {
+  T? get(String id) {
     log.t('Getting item <$T> with id $id');
     final item = _box.get(id);
     if (item == null) {
@@ -35,7 +33,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<List<T>> getAll({GetAllSortEnum sort = GetAllSortEnum.none}) {
+  List<T> getAll({GetAllSortEnum sort = GetAllSortEnum.none}) {
     log.t('Getting all items <$T>');
 
     var result = <T>[];
@@ -62,7 +60,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<bool> remove(String id) {
+  bool remove(String id) {
     log.t('Removing item <$T> with id $id');
 
     final result = _box.delete(id);
@@ -76,7 +74,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<void> removeAll() {
+  void removeAll() {
     log.t('Removing all items <$T>');
 
     _box.deleteAll(_box.keys);
@@ -85,7 +83,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<T> save(T item) {
+  T save(T item) {
     log.t('Saving item <$T> with id ${item.id}');
 
     // Check if the item already exists
@@ -112,7 +110,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<List<T>> saveAll(List<T> items) {
+  List<T> saveAll(List<T> items) {
     log.t('Saving ${items.length} items <$T>');
 
     // validate the items
@@ -145,7 +143,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<T> update(T item) {
+  T update(T item) {
     log.t('Updating item <$T> with id ${item.id}');
 
     final savedItem = _box.get(item.id);
@@ -174,7 +172,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
   }
 
   @override
-  FutureOr<List<T>> updateAll(List<T> items) {
+  List<T> updateAll(List<T> items) {
     log.t('Updating ${items.length} items <$T>');
 
     // validate the items

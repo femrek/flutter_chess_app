@@ -6,6 +6,7 @@ import 'package:localchess/feature/setup_join/view/widget/setup_join_host_addres
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
 import 'package:localchess/product/state/base/base_state.dart';
+import 'package:localchess/product/widget/device_name_input/device_name_input.dart';
 
 /// Join Screen widget
 @RoutePage()
@@ -26,6 +27,13 @@ class _SetupJoinScreenState extends BaseState<SetupJoinScreen>
       body: const AppPadding.screen(horizontal: 0).toWidget(
         child: Column(
           children: [
+            const AppPadding.screen(vertical: 0).toWidget(
+              child: DeviceNameInput(
+                controller: nameController,
+                onChanged: onNameChanged,
+              ),
+            ),
+
             // enter ip address section
             const AppPadding.screen(vertical: 0).toWidget(
               child: SetupJoinHostAddress(

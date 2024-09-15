@@ -31,15 +31,15 @@ void main() async {
         id: 'id1',
         gameSave: _sampleModel_1,
       );
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
       final secondModel = GameSaveCacheModel(
         id: 'id2',
         gameSave: _sampleModel_2,
       );
-      await G.appCache.gameSaveOperator.save(secondModel);
+      G.appCache.gameSaveOperator.save(secondModel);
 
-      final readModels = await G.appCache.gameSaveOperator.getAll();
+      final readModels = G.appCache.gameSaveOperator.getAll();
       expect(readModels.length, 2);
     });
 
@@ -48,9 +48,9 @@ void main() async {
         id: 'id1',
         gameSave: _sampleModel_1,
       );
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
-      final readModel = await G.appCache.gameSaveOperator.get('id1');
+      final readModel = G.appCache.gameSaveOperator.get('id1');
       expect(readModel, isNotNull);
     });
 
@@ -59,10 +59,10 @@ void main() async {
         id: 'id1',
         gameSave: _sampleModel_1,
       );
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
-      await G.appCache.gameSaveOperator.remove('id1');
-      final readModel = await G.appCache.gameSaveOperator.get('id1');
+      G.appCache.gameSaveOperator.remove('id1');
+      final readModel = G.appCache.gameSaveOperator.get('id1');
       expect(readModel, isNull);
     });
 
@@ -71,16 +71,16 @@ void main() async {
         id: 'id1',
         gameSave: _sampleModel_1,
       );
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
       final secondModel = GameSaveCacheModel(
         id: 'id2',
         gameSave: _sampleModel_2,
       );
-      await G.appCache.gameSaveOperator.save(secondModel);
+      G.appCache.gameSaveOperator.save(secondModel);
 
-      await G.appCache.gameSaveOperator.removeAll();
-      final readModels = await G.appCache.gameSaveOperator.getAll();
+      G.appCache.gameSaveOperator.removeAll();
+      final readModels = G.appCache.gameSaveOperator.getAll();
       expect(readModels.length, 0);
     });
 
@@ -89,11 +89,11 @@ void main() async {
         id: 'id1',
         gameSave: _sampleModel_1,
       );
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
       expect(
         () async {
-          await G.appCache.gameSaveOperator.save(model);
+          G.appCache.gameSaveOperator.save(model);
         },
         throwsA(isA<ElementAlreadyExitsError>()),
       );
@@ -107,10 +107,10 @@ void main() async {
         id: 'id1',
         gameSave: _sampleModel_1,
       );
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
       final afterSave = DateTime.now().microsecondsSinceEpoch;
 
-      final readModel = await G.appCache.gameSaveOperator.get('id1');
+      final readModel = G.appCache.gameSaveOperator.get('id1');
 
       // Check if the read model is not null
       expect(readModel, isNotNull);
@@ -128,8 +128,8 @@ void main() async {
         id: 'id1',
         gameSave: _sampleModel_1,
       );
-      await G.appCache.gameSaveOperator.save(model);
-      final readModel = await G.appCache.gameSaveOperator.get('id1');
+      G.appCache.gameSaveOperator.save(model);
+      final readModel = G.appCache.gameSaveOperator.get('id1');
       final createdAt = readModel!.metaData!.createAt.microsecondsSinceEpoch;
 
       final modelToUpdate = GameSaveCacheModel(
@@ -137,10 +137,10 @@ void main() async {
         gameSave: _sampleModel_1_v2,
       );
       final beforeUpdate = DateTime.now().microsecondsSinceEpoch;
-      await G.appCache.gameSaveOperator.update(modelToUpdate);
+      G.appCache.gameSaveOperator.update(modelToUpdate);
       final afterUpdate = DateTime.now().microsecondsSinceEpoch;
 
-      final readModelAfterUpdate = await G.appCache.gameSaveOperator.get('id1');
+      final readModelAfterUpdate = G.appCache.gameSaveOperator.get('id1');
 
       // Check if the read model after update is not null
       expect(readModelAfterUpdate, isNotNull);
@@ -162,16 +162,16 @@ void main() async {
     test('sort by createAtAsc with two elements', () async {
       // Save the first model
       final model = GameSaveCacheModel(id: 'id1', gameSave: _sampleModel_1);
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
       // Save the second model
       final secondModel =
           GameSaveCacheModel(id: 'id2', gameSave: _sampleModel_2);
-      await G.appCache.gameSaveOperator.save(secondModel);
+      G.appCache.gameSaveOperator.save(secondModel);
 
       // Get all the models with sort by createAtAsc
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.createAtAsc,
         );
         expect(savedModels.length, 2);
@@ -183,16 +183,16 @@ void main() async {
     test('sort by createAtDesc with two elements', () async {
       // Save the first model
       final model = GameSaveCacheModel(id: 'id1', gameSave: _sampleModel_1);
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
       // Save the second model
       final secondModel =
           GameSaveCacheModel(id: 'id2', gameSave: _sampleModel_2);
-      await G.appCache.gameSaveOperator.save(secondModel);
+      G.appCache.gameSaveOperator.save(secondModel);
 
       // Get all the models with sort by createAtDesc
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.createAtDesc,
         );
         expect(savedModels.length, 2);
@@ -204,16 +204,16 @@ void main() async {
     test('sort by updateAtAcs with two elements', () async {
       // Save the first model
       final model = GameSaveCacheModel(id: 'id1', gameSave: _sampleModel_1);
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
       // Save the second model
       final secondModel =
           GameSaveCacheModel(id: 'id2', gameSave: _sampleModel_2);
-      await G.appCache.gameSaveOperator.save(secondModel);
+      G.appCache.gameSaveOperator.save(secondModel);
 
       // Get all the models with sort by updateAtAcs
       {
-        final firstRead = await G.appCache.gameSaveOperator.getAll(
+        final firstRead = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.updateAtAcs,
         );
         expect(firstRead.length, 2);
@@ -222,13 +222,13 @@ void main() async {
       }
 
       // Update the first model
-      await G.appCache.gameSaveOperator.update(
+      G.appCache.gameSaveOperator.update(
         GameSaveCacheModel(id: 'id1', gameSave: _sampleModel_1_v2),
       );
 
       // Get all the models with sort by updateAtAcs after update operation.
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.updateAtAcs,
         );
         expect(savedModels.length, 2);
@@ -243,18 +243,18 @@ void main() async {
         id: 'id1',
         gameSave: _sampleModel_1,
       );
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
       // Save the second model
       final secondModel = GameSaveCacheModel(
         id: 'id2',
         gameSave: _sampleModel_2,
       );
-      await G.appCache.gameSaveOperator.save(secondModel);
+      G.appCache.gameSaveOperator.save(secondModel);
 
       // Get all the models with sort by updateAtDesc
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.updateAtDesc,
         );
         expect(savedModels.length, 2);
@@ -263,13 +263,13 @@ void main() async {
       }
 
       // Update the first model
-      await G.appCache.gameSaveOperator.update(
+      G.appCache.gameSaveOperator.update(
         GameSaveCacheModel(id: 'id1', gameSave: _sampleModel_1_v2),
       );
 
       // Get all the models with sort by updateAtDesc after update operation.
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.updateAtDesc,
         );
         expect(savedModels.length, 2);
@@ -284,18 +284,18 @@ void main() async {
         id: 'id1',
         gameSave: _sampleModel_1,
       );
-      await G.appCache.gameSaveOperator.save(model);
+      G.appCache.gameSaveOperator.save(model);
 
       // Save the second model
       final secondModel = GameSaveCacheModel(
         id: 'id2',
         gameSave: _sampleModel_2,
       );
-      await G.appCache.gameSaveOperator.save(secondModel);
+      G.appCache.gameSaveOperator.save(secondModel);
 
       // Get all the models with sort by none
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.none,
         );
         expect(savedModels.length, 2);
@@ -306,11 +306,11 @@ void main() async {
 
     test('sort with element list', () async {
       // save all the models
-      await G.appCache.gameSaveOperator.saveAll(_sampleModels);
+      G.appCache.gameSaveOperator.saveAll(_sampleModels);
 
       // Get all the models with sort by updateAtDesc
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.updateAtDesc,
         );
         expect(savedModels.length, 4);
@@ -321,13 +321,13 @@ void main() async {
       }
 
       // Update the first model
-      await G.appCache.gameSaveOperator.update(
+      G.appCache.gameSaveOperator.update(
         GameSaveCacheModel(id: 'id1', gameSave: _sampleModel_1_v2),
       );
 
       // Get all the models with sort by updateAtDesc after update operation.
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.updateAtDesc,
         );
         expect(savedModels.length, 4);
@@ -338,13 +338,13 @@ void main() async {
       }
 
       // save fifth model
-      await G.appCache.gameSaveOperator.save(
+      G.appCache.gameSaveOperator.save(
         GameSaveCacheModel(id: 'id5', gameSave: _sampleModel_5),
       );
 
       // Get all the models with sort by updateAtDesc after save operation.
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.updateAtDesc,
         );
         expect(savedModels.length, 5);
@@ -357,7 +357,7 @@ void main() async {
 
       // Get all the models with sort by updateAtAsc after save operation.
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.updateAtAcs,
         );
         expect(savedModels.length, 5);
@@ -370,7 +370,7 @@ void main() async {
 
       // Get all the models with sort by createAsc after save operation.
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.createAtAsc,
         );
         expect(savedModels.length, 5);
@@ -383,7 +383,7 @@ void main() async {
 
       // Get all the models with sort by createDesc after save operation.
       {
-        final savedModels = await G.appCache.gameSaveOperator.getAll(
+        final savedModels = G.appCache.gameSaveOperator.getAll(
           sort: GetAllSortEnum.createAtDesc,
         );
         expect(savedModels.length, 5);

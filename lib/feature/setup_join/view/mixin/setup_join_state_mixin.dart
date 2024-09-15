@@ -18,10 +18,12 @@ mixin SetupJoinStateMixin on BaseState<SetupJoinScreen> {
   void initState() {
     super.initState();
     fillAddressFields();
+    fillNameField();
   }
 
   SetupJoinViewModel get viewModel => G.setupJoinViewModel;
 
+  TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController portController = TextEditingController();
 
@@ -31,6 +33,14 @@ mixin SetupJoinStateMixin on BaseState<SetupJoinScreen> {
       addressController.text = address;
     }
     portController.text = HostConstant.addressOnNetwork.port.toString();
+  }
+
+  void fillNameField() {
+    nameController.text = viewModel.getDeviceName();
+  }
+
+  void onNameChanged(String value) {
+    viewModel.updateName(value);
   }
 
   void onPressedJoinWithAddress(String address, int port) {

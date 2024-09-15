@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:localchess/feature/setup_host/view/setup_host_screen.dart';
 import 'package:localchess/feature/setup_host/view_model/setup_host_view_model.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
@@ -18,6 +19,19 @@ mixin SetupHostStateMixin on BaseState<SetupHostScreen> {
   void initState() {
     super.initState();
     viewModel.loadSaves();
+    fillNameField();
+  }
+
+  final TextEditingController nameController = TextEditingController();
+
+  /// Fills the address fields at the beginning of the screen.
+  void fillNameField() {
+    nameController.text = viewModel.getDeviceName();
+  }
+
+  /// onChanged function of device name input.
+  void onNameChanged(String name) {
+    viewModel.updateName(name);
   }
 
   /// onPressed function of new game button. Do not return [Future], because

@@ -107,6 +107,10 @@
   "widget": {
     "saveListTile": {
       "lastPlayed": "Last Played: "
+    },
+    "deviceNameInput": {
+      "title": "Enter Device Name",
+      "hint": "Enter name"
     }
   },
   "game": {

@@ -4,7 +4,10 @@ import 'package:core/core.dart';
 /// device id.
 abstract interface class IDeviceProperties {
   /// Fetch or create the device id.
-  Future<void> init();
+  void init();
+
+  /// Get the device information as a [SenderInformation] object.
+  SenderInformation get senderInformation;
 
   /// Get the device id.
   String get deviceId;
@@ -12,6 +15,6 @@ abstract interface class IDeviceProperties {
   /// Get the device name taken from the user.
   String get deviceName;
 
-  /// Get the device information as a [SenderInformation] object.
-  SenderInformation get senderInformation;
+  /// Update the device name.
+  set deviceName(String name);
 }

@@ -24,7 +24,7 @@ class SetupLocalViewModel extends BaseCubit<SetupLocalState> {
   /// Loads the local game saves.
   Future<void> loadSaves() async {
     emit(state.copyWith(
-      saves: await appCache.gameSaveOperator.getAll(
+      saves: appCache.gameSaveOperator.getAll(
         sort: GetAllSortEnum.updateAtDesc,
       ),
     ));
@@ -42,7 +42,7 @@ class SetupLocalViewModel extends BaseCubit<SetupLocalState> {
       ),
     );
 
-    final savedSave = await appCache.gameSaveOperator.save(newSave);
+    final savedSave = appCache.gameSaveOperator.save(newSave);
 
     emit(state.copyWith(
       saves: [savedSave, ...state.saves],
@@ -55,7 +55,7 @@ class SetupLocalViewModel extends BaseCubit<SetupLocalState> {
 
   /// Removes the save permanently from the cache.
   Future<void> removeSave(GameSaveCacheModel save) async {
-    final removed = await appCache.gameSaveOperator.remove(save.id);
+    final removed = appCache.gameSaveOperator.remove(save.id);
 
     if (removed) await loadSaves();
   }

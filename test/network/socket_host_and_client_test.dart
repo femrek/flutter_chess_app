@@ -50,12 +50,10 @@ void main() async {
       ),
     );
 
-    await G.appCache.gameSaveOperator
-        .save(gameSaveCacheModel_serverToClient_raw);
+    G.appCache.gameSaveOperator.save(gameSaveCacheModel_serverToClient_raw);
     gameSaveCacheModel_serverToClient = gameSaveCacheModel_serverToClient_raw;
 
-    await G.appCache.gameSaveOperator
-        .save(gameSaveCacheModel_clientToServer_raw);
+    G.appCache.gameSaveOperator.save(gameSaveCacheModel_clientToServer_raw);
     gameSaveCacheModel_clientToServer = gameSaveCacheModel_clientToServer_raw;
   }
 

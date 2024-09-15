@@ -31,7 +31,7 @@ abstract final class TestInit {
     // Initialize the cache
     await initHiveTests();
     await G.appCache.init();
-    await G.deviceProperties.init();
+    G.deviceProperties.init();
   }
 
   static Future<void> initWithHiveImpl() async {
@@ -53,6 +53,6 @@ abstract final class TestInit {
     // Initialize the cache
     await initHiveTests();
     await G.appCache.init();
-    await G.deviceProperties.init();
+    G.deviceProperties.init();
   }
 }

@@ -55,6 +55,18 @@ class SenderInformation {
     };
   }
 
+  /// Creates a copy of this object with the given fields replaced by the new
+  /// values.
+  SenderInformation copyWith({
+    String? deviceId,
+    String? deviceName,
+  }) {
+    return SenderInformation(
+      deviceId: deviceId ?? this.deviceId,
+      deviceName: deviceName ?? this.deviceName,
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

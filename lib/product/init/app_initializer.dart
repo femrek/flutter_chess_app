@@ -28,7 +28,7 @@ abstract final class AppInitializer {
     await G.appCache.init();
 
     // device id
-    await G.deviceProperties.init();
+    G.deviceProperties.init();
 
     Logger.level = Level.trace;
     G.logger.d('App initialized.');

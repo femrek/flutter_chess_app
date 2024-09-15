@@ -5,12 +5,12 @@ import 'package:uuid/uuid.dart';
 
 /// To provide the device id, use this class.
 class AppDeviceProperties implements IDeviceProperties {
-  late final SenderInformation _senderInformation;
+  late SenderInformation _senderInformation;
 
   @override
-  Future<void> init() async {
+  void init() {
     // fetch the device info from cache.
-    final deviceInfoSaves = await G.appCache.senderInformationOperator.getAll();
+    final deviceInfoSaves = G.appCache.senderInformationOperator.getAll();
 
     // If there are more than one device info, log an error and remove all
     // except the first one.
@@ -54,4 +54,15 @@ class AppDeviceProperties implements IDeviceProperties {
 
   @override
   SenderInformation get senderInformation => _senderInformation;
+
+  @override
+  set deviceName(String name) {
+    G.appCache.senderInformationOperator.update(
+      SenderInformationCacheModel(
+        senderInformation: _senderInformation = _senderInformation.copyWith(
+          deviceName: name,
+        ),
+      ),
+    );
+  }
 }

@@ -49,7 +49,7 @@ class ChessService implements IChessService {
     }
 
     // update the save in the cache.
-    _save = await G.appCache.gameSaveOperator.update(
+    _save = G.appCache.gameSaveOperator.update(
       GameSaveCacheModel(
         id: _save.id,
         gameSave: newSaveResult,
