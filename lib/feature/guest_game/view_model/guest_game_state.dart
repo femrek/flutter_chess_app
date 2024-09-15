@@ -12,24 +12,35 @@ import 'package:localchess/product/data/square_data.dart';
 @immutable
 class GuestGameState {
   const GuestGameState({
+    required this.isAllowedToGame,
     this.gameState,
-    this.networkState,
     this.gameMetadata,
+    this.serverInformation,
   });
 
+  /// The status of the game. (board, turn, etc.)
   final GuestGameGameState? gameState;
-  final GuestGameNetworkState? networkState;
+
+  /// The mata information about the game.
   final GuestGameGameMetadata? gameMetadata;
+
+  /// The information about the server.
+  final SenderInformation? serverInformation;
+
+  /// Whether the guest player is allowed to play the game.
+  final bool isAllowedToGame;
 
   GuestGameState copyWith({
     GuestGameGameState? gameState,
-    GuestGameNetworkState? networkState,
     GuestGameGameMetadata? gameMetadata,
+    SenderInformation? serverInformation,
+    bool? isAllowedToGame,
   }) {
     return GuestGameState(
       gameState: gameState ?? this.gameState,
-      networkState: networkState ?? this.networkState,
       gameMetadata: gameMetadata ?? this.gameMetadata,
+      serverInformation: serverInformation ?? this.serverInformation,
+      isAllowedToGame: isAllowedToGame ?? this.isAllowedToGame,
     );
   }
 }
@@ -83,15 +94,4 @@ class GuestGameGameState {
       canRedo: canRedo ?? this.canRedo,
     );
   }
-}
-
-@immutable
-class GuestGameNetworkState {
-  const GuestGameNetworkState({
-    required this.serverInformation,
-  });
-
-  const GuestGameNetworkState.initial() : serverInformation = null;
-
-  final SenderInformation? serverInformation;
 }

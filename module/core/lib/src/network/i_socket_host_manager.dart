@@ -64,5 +64,8 @@ abstract interface class ISocketHostManager {
   });
 
   /// Sends data to all connected clients.
-  void sendAll(NetworkModel data);
+  void sendAll(NetworkModel data, {List<SenderInformation> exclude = const []});
+
+  /// Kicks the client with the given [clientInformation] from the server.
+  void kick(SenderInformation clientInformation);
 }

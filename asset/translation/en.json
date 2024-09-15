@@ -43,6 +43,18 @@
         "hintPort": "Host Port",
         "joinButton": "Join"
       }
+    },
+    "hostGame": {
+      "guestEntry": {
+        "label": "Guest: {}",
+        "currentlyPlaying": "Currently playing",
+        "allowButton": "Allow",
+        "kickButton": "Kick"
+      },
+      "noGuest": "No guest is connected"
+    },
+    "guestGame": {
+      "youAreNotAllowed": "You are not allowed to play. Hit the allow button in the host device."
     }
   },
   "dialog": {
@@ -82,6 +94,12 @@
     "joinLoadingDialog": {
       "title": "Joining Game",
       "error": "An error occurred while joining the game"
+    },
+    "hostInfoDialog": {
+      "title": "Host Information",
+      "hostAddress": "Host Address: {}",
+      "hostPort": "Host Port: {}",
+      "closeButton": "Close"
     }
   },
   "widget": {

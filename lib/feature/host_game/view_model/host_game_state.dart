@@ -93,13 +93,13 @@ class HostGameNetworkState {
         );
 
   final bool isServerRunning;
-  final List<SenderInformation> connectedClients;
+  final List<HostGameClientState> connectedClients;
   final String runningHost;
   final int runningPort;
 
   HostGameNetworkState copyWith({
     bool? isServerRunning,
-    List<SenderInformation>? connectedClients,
+    List<HostGameClientState>? connectedClients,
     String? runningHost,
     int? runningPort,
   }) {
@@ -108,6 +108,31 @@ class HostGameNetworkState {
       connectedClients: connectedClients ?? this.connectedClients,
       runningHost: runningHost ?? this.runningHost,
       runningPort: runningPort ?? this.runningPort,
+    );
+  }
+}
+
+@immutable
+class HostGameClientState {
+  const HostGameClientState({
+    required this.clientInformation,
+    required this.isAllowed,
+  });
+
+  /// The information of the guest player.
+  final SenderInformation clientInformation;
+
+  /// Whether the guest player is allowed to play the game.
+  /// (True if this is the opponent currently)
+  final bool isAllowed;
+
+  HostGameClientState copyWith({
+    SenderInformation? clientInformation,
+    bool? isAllowed,
+  }) {
+    return HostGameClientState(
+      clientInformation: clientInformation ?? this.clientInformation,
+      isAllowed: isAllowed ?? this.isAllowed,
     );
   }
 }

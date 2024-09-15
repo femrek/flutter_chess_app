@@ -10,6 +10,7 @@ import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/widget/dialog/confirmation_dialog.dart';
+import 'package:localchess/product/widget/dialog/host_info_dialog.dart';
 import 'package:localchess/product/widget/dialog/pick_a_promotion_dialog.dart';
 
 mixin HostGameStateMixin on BaseState<HostGameScreen> {
@@ -152,5 +153,35 @@ mixin HostGameStateMixin on BaseState<HostGameScreen> {
     await viewModel.reset();
 
     G.logger.t('HostGameStateMixin.onRestartPressed: Restarted');
+  }
+
+  void onAllowGuestPressed(HostGameClientState client) {
+    G.logger.t('HostGameStateMixin.onAllowGuestPressed');
+    viewModel.allowGuest(client);
+    G.logger.t('HostGameStateMixin.onAllowGuestPressed: Allowed guest');
+  }
+
+  void onKickGuestPressed(HostGameClientState client) {
+    G.logger.t('HostGameStateMixin.onKickGuestPressed');
+    viewModel.kickGuest(client);
+    G.logger.t('HostGameStateMixin.onKickGuestPressed: Kicked guest');
+  }
+
+  void onNetworkPropertiesPressed() {
+    G.logger.t('HostGameStateMixin.onNetworkRestartPressed');
+
+    final state = viewModel.state;
+    if (state is! HostGameLoadedState) {
+      G.logger.w('Invalid state');
+      return;
+    }
+
+    HostInfoDialog.show(
+      context: context,
+      inet: state.networkState.runningHost,
+      port: state.networkState.runningPort,
+    );
+
+    G.logger.t('HostGameStateMixin.onNetworkRestartPressed: Restarted network');
   }
 }

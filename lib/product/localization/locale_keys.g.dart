@@ -34,6 +34,15 @@ abstract class  LocaleKeys {
   static const screen_setupJoin_enterHostAddress_joinButton = 'screen.setupJoin.enterHostAddress.joinButton';
   static const screen_setupJoin_enterHostAddress = 'screen.setupJoin.enterHostAddress';
   static const screen_setupJoin = 'screen.setupJoin';
+  static const screen_hostGame_guestEntry_label = 'screen.hostGame.guestEntry.label';
+  static const screen_hostGame_guestEntry_currentlyPlaying = 'screen.hostGame.guestEntry.currentlyPlaying';
+  static const screen_hostGame_guestEntry_allowButton = 'screen.hostGame.guestEntry.allowButton';
+  static const screen_hostGame_guestEntry_kickButton = 'screen.hostGame.guestEntry.kickButton';
+  static const screen_hostGame_guestEntry = 'screen.hostGame.guestEntry';
+  static const screen_hostGame_noGuest = 'screen.hostGame.noGuest';
+  static const screen_hostGame = 'screen.hostGame';
+  static const screen_guestGame_youAreNotAllowed = 'screen.guestGame.youAreNotAllowed';
+  static const screen_guestGame = 'screen.guestGame';
   static const screen = 'screen';
   static const dialog_createGameDialog_title = 'dialog.createGameDialog.title';
   static const dialog_createGameDialog_hint = 'dialog.createGameDialog.hint';
@@ -65,6 +74,11 @@ abstract class  LocaleKeys {
   static const dialog_joinLoadingDialog_title = 'dialog.joinLoadingDialog.title';
   static const dialog_joinLoadingDialog_error = 'dialog.joinLoadingDialog.error';
   static const dialog_joinLoadingDialog = 'dialog.joinLoadingDialog';
+  static const dialog_hostInfoDialog_title = 'dialog.hostInfoDialog.title';
+  static const dialog_hostInfoDialog_hostAddress = 'dialog.hostInfoDialog.hostAddress';
+  static const dialog_hostInfoDialog_hostPort = 'dialog.hostInfoDialog.hostPort';
+  static const dialog_hostInfoDialog_closeButton = 'dialog.hostInfoDialog.closeButton';
+  static const dialog_hostInfoDialog = 'dialog.hostInfoDialog';
   static const dialog = 'dialog';
   static const widget_saveListTile_lastPlayed = 'widget.saveListTile.lastPlayed';
   static const widget_saveListTile = 'widget.saveListTile';

@@ -3,10 +3,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/feature/host_game/view/mixin/host_game_mixin.dart';
+import 'package:localchess/feature/host_game/view/widget/host_game_guest_entry.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_state.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_view_model.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
+import 'package:localchess/product/constant/padding/app_padding_constant.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
@@ -91,20 +93,22 @@ class _HostGameScreenState extends BaseState<HostGameScreen>
                 ),
               ),
 
-              const SizedBox(height: 8),
-
               // the player information section
+              _CapturedPieceIndicator(playerColor: widget.chosenColor),
               const AppPadding.screen(vertical: 0).toWidget(
                 child: _TurnIndicator(side: widget.chosenColor),
               ),
-              _CapturedPieceIndicator(playerColor: widget.chosenColor),
 
               const SizedBox(height: 8),
 
               // network information
-              _NetworkManagementSection(),
-
-              const Spacer(),
+              Expanded(
+                child: _NetworkManagementSection(
+                  onAllowPressed: onAllowGuestPressed,
+                  onKickPressed: onKickGuestPressed,
+                  onNetworkPropertiesPressed: onNetworkPropertiesPressed,
+                ),
+              ),
             ],
           ),
         ),
@@ -114,6 +118,16 @@ class _HostGameScreenState extends BaseState<HostGameScreen>
 }
 
 class _NetworkManagementSection extends StatelessWidget {
+  const _NetworkManagementSection({
+    required this.onAllowPressed,
+    required this.onKickPressed,
+    required this.onNetworkPropertiesPressed,
+  });
+
+  final void Function(HostGameClientState) onAllowPressed;
+  final void Function(HostGameClientState) onKickPressed;
+  final VoidCallback onNetworkPropertiesPressed;
+
   @override
   Widget build(BuildContext context) {
     return BlocSelector<HostGameViewModel, HostGameState, HostGameNetworkState>(
@@ -124,12 +138,33 @@ class _NetworkManagementSection extends StatelessWidget {
         return const HostGameNetworkState.initial();
       },
       builder: (context, networkState) {
-        return Column(
+        return Row(
           children: [
-            Text('connect to: ${networkState.runningHost}'
-                ':${networkState.runningPort}'),
-            Text('server running: ${networkState.isServerRunning}'),
-            Text('clients: ${networkState.connectedClients}'),
+            const SizedBox(width: AppPaddingConstant.screenHorizontal),
+            IconButton(
+              onPressed: onNetworkPropertiesPressed,
+              icon: const Icon(Icons.settings_ethernet),
+            ),
+            if (networkState.connectedClients.isNotEmpty)
+              Expanded(
+                child: ListView.builder(
+                  padding: const AppPadding.scrollable(vertical: 0),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: networkState.connectedClients.length,
+                  itemBuilder: (context, index) {
+                    final client = networkState.connectedClients[index];
+                    return HostGameGuestEntry(
+                      state: client,
+                      onAllowPressed: () => onAllowPressed(client),
+                      onKickPressed: () => onKickPressed(client),
+                    );
+                  },
+                ),
+              )
+            else
+              const Text(
+                LocaleKeys.screen_hostGame_noGuest,
+              ).tr(),
           ],
         );
       },

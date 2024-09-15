@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:core/core.dart';
+import 'package:localchess/product/network/model/allowing_status_network_model.dart';
 import 'package:localchess/product/network/model/disconnect_network_model.dart';
 import 'package:localchess/product/network/model/game_introduce_network_model.dart';
 import 'package:localchess/product/network/model/game_network_model.dart';
@@ -17,6 +18,7 @@ final class AppSocketConfiguration implements ISocketConfiguration {
     GameIntroduceNetworkModel.type: const GameIntroduceNetworkModel.empty(),
     GameNetworkModel.type: const GameNetworkModel.empty(),
     MoveNetworkModel.type: const MoveNetworkModel.empty(),
+    AllowingStatusNetworkModel.type: const AllowingStatusNetworkModel.empty(),
   };
 
   @override

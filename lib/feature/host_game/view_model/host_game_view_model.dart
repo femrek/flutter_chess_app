@@ -8,6 +8,7 @@ import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/network/impl/socket_host_manager.dart';
+import 'package:localchess/product/network/model/allowing_status_network_model.dart';
 import 'package:localchess/product/network/model/game_introduce_network_model.dart';
 import 'package:localchess/product/network/model/game_network_model.dart';
 import 'package:localchess/product/network/model/move_network_model.dart';
@@ -25,115 +26,12 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
       e: const SquareData.withDefaultValues(),
   };
 
+  SenderInformation? _playingClient;
+
   late IChessService _chessService;
   late ISocketHostManager _hostManager;
   late String _inet;
   late GameIntroduceNetworkModel _gameIntroduceNetworkModel;
-
-  void _emitNormal({bool sendNetwork = true}) {
-    G.logger.t('HostGameViewModel._emitState');
-
-    final movablePiecesCoordinates =
-        _chessService.moves().map((e) => e.from).toList();
-    final turnStatus = _chessService.turnStatus;
-
-    for (final coordinate in _squareStates.keys) {
-      final piece = _chessService.getPieceAt(coordinate);
-
-      _squareStates[coordinate] = SquareData(
-        piece: piece,
-        canMove: movablePiecesCoordinates.contains(coordinate),
-        isThisCheck: piece != null && turnStatus.isCheckOn(piece),
-        isLastMoveFromThis: coordinate == _chessService.lastMoveFrom,
-        isLastMoveToThis: coordinate == _chessService.lastMoveTo,
-        isFocusedOnThis: false,
-        isSyncInProcess: false,
-      );
-    }
-
-    final capturedPieces = _chessService.capturedPieces;
-
-    final state = this.state;
-    emit(HostGameLoadedState(
-      gameState: HostGameGameState(
-        squareStates: _squareStates,
-        isFocused: false,
-        turnStatus: turnStatus,
-        capturedPieces: capturedPieces,
-        canUndo: _chessService.canUndo(),
-        canRedo: _chessService.canRedo(),
-      ),
-      networkState: (state is HostGameLoadedState)
-          ? state.networkState
-          : const HostGameNetworkState.initial(),
-    ));
-
-    if (sendNetwork) _hostManager.sendAll(_getGameNetworkModel());
-
-    G.logger.t('HostGameViewModel._emitState: Completely emitted');
-  }
-
-  void _emitFocus(SquareCoordinate focusedCoordinate) {
-    G.logger.t('HostGameViewModel._emitFocus: $focusedCoordinate');
-
-    final turnStatus = _chessService.turnStatus;
-    {
-      final piece = _chessService.getPieceAt(focusedCoordinate);
-      _squareStates[focusedCoordinate] = SquareData(
-        piece: piece,
-        canMove: false,
-        isThisCheck: piece != null && turnStatus.isCheckOn(piece),
-        isLastMoveFromThis: false,
-        isLastMoveToThis: false,
-        isFocusedOnThis: true,
-        isSyncInProcess: false,
-      );
-    }
-
-    for (final move in _chessService.moves(from: focusedCoordinate)) {
-      final piece = _chessService.getPieceAt(move.to);
-
-      _squareStates[move.to] = SquareData(
-        piece: _chessService.getPieceAt(move.to),
-        canMove: false,
-        isThisCheck: false,
-        isLastMoveFromThis: _chessService.lastMoveFrom == move.to,
-        isLastMoveToThis: _chessService.lastMoveTo == move.to,
-        isFocusedOnThis: false,
-        isSyncInProcess: false,
-        moveToThis: piece == null ? move : null,
-        captureToThis: piece != null ? move : null,
-      );
-    }
-
-    final state = this.state;
-    emit((state as HostGameLoadedState).copyWith(
-      gameState: state.gameState.copyWith(
-        squareStates: _squareStates,
-        isFocused: true,
-        turnStatus: turnStatus,
-        canUndo: _chessService.canUndo(),
-        canRedo: _chessService.canRedo(),
-      ),
-    ));
-
-    G.logger.t('HostGameViewModel._emitFocus: Focused on $focusedCoordinate');
-  }
-
-  void _emitNetwork() {
-    G.logger.t('HostGameViewModel._emitNetwork');
-
-    emit((state as HostGameLoadedState).copyWith(
-      networkState: HostGameNetworkState(
-        isServerRunning: _hostManager.isAlive,
-        connectedClients: _hostManager.clientsInformation,
-        runningHost: _inet,
-        runningPort: _hostManager.server.port,
-      ),
-    ));
-
-    G.logger.t('HostGameViewModel._emitNetwork: Completely emitted');
-  }
 
   /// Load the game state with the given [save] and [color]
   Future<void> init(GameSaveCacheModel save, PlayerColor color) async {
@@ -285,6 +183,153 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
     G.logger.t('HostGameViewModel.reset: Reset');
   }
 
+  /// Kicks the given [client] from the game.
+  void allowGuest(HostGameClientState client) {
+    G.logger.t('HostGameViewModel.allowGuest: $client');
+
+    if (client.isAllowed) {
+      G.logger.d('HostGameViewModel.allowGuest: Guest is already allowed');
+      return;
+    }
+
+    _playingClient = client.clientInformation;
+
+    _hostManager
+      ..sendAll(
+        const AllowingStatusNetworkModel(allowed: false),
+        exclude: [client.clientInformation],
+      )
+      ..send(
+        clientInformation: client.clientInformation,
+        data: const AllowingStatusNetworkModel(allowed: true),
+      );
+
+    _emitNetwork();
+
+    G.logger.t('HostGameViewModel.allowGuest: Allowed guest');
+  }
+
+  /// Kicks the given [client] from the game. The [client] cant see the game
+  /// board anymore. does not kicks permanently.
+  void kickGuest(HostGameClientState client) {
+    G.logger.t('HostGameViewModel.kickGuest: $client');
+
+    if (_playingClient == client.clientInformation) {
+      _playingClient = null;
+    }
+
+    _hostManager.kick(client.clientInformation);
+
+    _emitNetwork();
+
+    G.logger.t('HostGameViewModel.kickGuest: Kicked guest');
+  }
+
+  void _emitNormal({bool sendNetwork = true}) {
+    G.logger.t('HostGameViewModel._emitState');
+
+    final movablePiecesCoordinates =
+        _chessService.moves().map((e) => e.from).toList();
+    final turnStatus = _chessService.turnStatus;
+
+    for (final coordinate in _squareStates.keys) {
+      final piece = _chessService.getPieceAt(coordinate);
+
+      _squareStates[coordinate] = SquareData(
+        piece: piece,
+        canMove: movablePiecesCoordinates.contains(coordinate),
+        isThisCheck: piece != null && turnStatus.isCheckOn(piece),
+        isLastMoveFromThis: coordinate == _chessService.lastMoveFrom,
+        isLastMoveToThis: coordinate == _chessService.lastMoveTo,
+        isFocusedOnThis: false,
+        isSyncInProcess: false,
+      );
+    }
+
+    final capturedPieces = _chessService.capturedPieces;
+
+    final state = this.state;
+    emit(HostGameLoadedState(
+      gameState: HostGameGameState(
+        squareStates: _squareStates,
+        isFocused: false,
+        turnStatus: turnStatus,
+        capturedPieces: capturedPieces,
+        canUndo: _chessService.canUndo(),
+        canRedo: _chessService.canRedo(),
+      ),
+      networkState: (state is HostGameLoadedState)
+          ? state.networkState
+          : const HostGameNetworkState.initial(),
+    ));
+
+    if (sendNetwork) _hostManager.sendAll(_getGameNetworkModel());
+
+    G.logger.t('HostGameViewModel._emitState: Completely emitted');
+  }
+
+  void _emitFocus(SquareCoordinate focusedCoordinate) {
+    G.logger.t('HostGameViewModel._emitFocus: $focusedCoordinate');
+
+    final turnStatus = _chessService.turnStatus;
+    {
+      final piece = _chessService.getPieceAt(focusedCoordinate);
+      _squareStates[focusedCoordinate] = SquareData(
+        piece: piece,
+        canMove: false,
+        isThisCheck: piece != null && turnStatus.isCheckOn(piece),
+        isLastMoveFromThis: false,
+        isLastMoveToThis: false,
+        isFocusedOnThis: true,
+        isSyncInProcess: false,
+      );
+    }
+
+    for (final move in _chessService.moves(from: focusedCoordinate)) {
+      final piece = _chessService.getPieceAt(move.to);
+
+      _squareStates[move.to] = SquareData(
+        piece: _chessService.getPieceAt(move.to),
+        canMove: false,
+        isThisCheck: false,
+        isLastMoveFromThis: _chessService.lastMoveFrom == move.to,
+        isLastMoveToThis: _chessService.lastMoveTo == move.to,
+        isFocusedOnThis: false,
+        isSyncInProcess: false,
+        moveToThis: piece == null ? move : null,
+        captureToThis: piece != null ? move : null,
+      );
+    }
+
+    final state = this.state;
+    emit((state as HostGameLoadedState).copyWith(
+      gameState: state.gameState.copyWith(
+        squareStates: _squareStates,
+        isFocused: true,
+        turnStatus: turnStatus,
+        canUndo: _chessService.canUndo(),
+        canRedo: _chessService.canRedo(),
+      ),
+    ));
+
+    G.logger.t('HostGameViewModel._emitFocus: Focused on $focusedCoordinate');
+  }
+
+  void _emitNetwork() {
+    G.logger.t('HostGameViewModel._emitNetwork');
+
+    emit((state as HostGameLoadedState).copyWith(
+      networkState: HostGameNetworkState(
+        isServerRunning: _hostManager.isAlive,
+        connectedClients: _getHostGameClientStates(),
+        runningHost: _inet,
+        runningPort: _hostManager.server.port,
+      ),
+    ));
+
+    G.logger.t('HostGameViewModel._emitNetwork: Completely emitted');
+  }
+
   void _onDataReceived({
     required SenderInformation senderInformation,
     required NetworkModel data,
@@ -298,7 +343,6 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
 
   void _onClientConnect(SenderInformation clientInformation) {
     G.logger.t('HostGameViewModel._onClientConnect: $clientInformation');
-    _emitNetwork();
 
     _hostManager
       ..send(
@@ -309,10 +353,17 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
         clientInformation: clientInformation,
         data: _gameIntroduceNetworkModel,
       );
+
+    _emitNetwork();
   }
 
   void _onClientDisconnect(SenderInformation clientInformation) {
     G.logger.t('HostGameViewModel._onClientDisconnect: $clientInformation');
+
+    if (_playingClient == clientInformation) {
+      _playingClient = null;
+    }
+
     _emitNetwork();
   }
 
@@ -327,5 +378,14 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
       isGameOver: _chessService.turnStatus.isGameOver,
       capturedPieces: state.gameState.capturedPieces,
     );
+  }
+
+  List<HostGameClientState> _getHostGameClientStates() {
+    return _hostManager.clientsInformation.map<HostGameClientState>((e) {
+      return HostGameClientState(
+        clientInformation: e,
+        isAllowed: _playingClient == e,
+      );
+    }).toList();
   }
 }

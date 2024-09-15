@@ -172,12 +172,31 @@ class SocketHostManager implements ISocketHostManager {
   }
 
   @override
-  void sendAll(NetworkModel data) {
+  void sendAll(
+    NetworkModel data, {
+    List<SenderInformation> exclude = const [],
+  }) {
     G.logger.t('Sending data to all clients');
-    for (final client in _clients.values) {
-      _send(client, data);
+    for (final entry in _clients.entries) {
+      final socket = entry.value;
+      final client = entry.key;
+      if (exclude.contains(client)) continue;
+      _send(socket, data);
     }
     G.logger.t('Data sent to all clients');
+  }
+
+  @override
+  void kick(SenderInformation senderInformation) {
+    final client = _clients[senderInformation];
+    if (client == null) {
+      G.logger.e('Client not found with device id: $senderInformation');
+      return;
+    }
+
+    _send(client, const DisconnectNetworkModel());
+
+    _clients.remove(senderInformation);
   }
 
   void _send(Socket client, NetworkModel data) {

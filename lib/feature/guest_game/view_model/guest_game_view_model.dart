@@ -5,6 +5,8 @@ import 'package:localchess/product/data/move/app_chess_move.dart';
 import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/network/impl/socket_client_manager.dart';
+import 'package:localchess/product/network/model/allowing_status_network_model.dart';
+import 'package:localchess/product/network/model/disconnect_network_model.dart';
 import 'package:localchess/product/network/model/game_introduce_network_model.dart';
 import 'package:localchess/product/network/model/game_network_model.dart';
 import 'package:localchess/product/network/model/move_network_model.dart';
@@ -15,7 +17,7 @@ import 'package:localchess/product/state/base/base_cubit.dart';
 /// The view model for the Guest Game Screen.
 class GuestGameViewModel extends BaseCubit<GuestGameState> {
   /// Creates the [GuestGameViewModel] instance.
-  GuestGameViewModel() : super(const GuestGameState());
+  GuestGameViewModel() : super(const GuestGameState(isAllowedToGame: false));
 
   final _squareStates = <SquareCoordinate, SquareData>{
     for (var e in SquareCoordinate.boardSquares)
@@ -26,15 +28,28 @@ class GuestGameViewModel extends BaseCubit<GuestGameState> {
 
   IChessService? _chessService;
   GameNetworkModel? _snapshot;
+  SocketClientOnConnectedListener? _onClientConnectListener;
+  SocketClientOnKickedListener? _onClientDisconnectListener;
 
   /// Initializes the view model. connect the game.
-  Future<void> init(AddressOnNetwork address) async {
+  Future<void> init({
+    required AddressOnNetwork address,
+    SocketClientOnConnectedListener? onClientConnectListener,
+    SocketClientOnKickedListener? onClientKickedListener,
+  }) async {
+    G.logger.t('GuestGameViewModel.init: start');
+
+    _onClientConnectListener = onClientConnectListener;
+    _onClientDisconnectListener = onClientKickedListener;
+
     _clientManager = await SocketClientManager.connect(
       address: address,
       onConnectedListener: _onConnectedListener,
       onKickedListener: _onKickedListener,
       onDataListeners: [_onDataListener],
     );
+
+    G.logger.t('GuestGameViewModel.init: end');
   }
 
   /// Disconnects the game.
@@ -143,27 +158,30 @@ class GuestGameViewModel extends BaseCubit<GuestGameState> {
         '$serverInformation, '
         'manager = $_clientManager');
 
-    emit(GuestGameState(
-      networkState: GuestGameNetworkState(
-        serverInformation: serverInformation,
-      ),
-    ));
+    _emitReset(serverInformation);
 
-    G.logger.t('SetupJoinScreen.onConnectedListener: end');
+    _onClientConnectListener?.call(serverInformation);
   }
 
   void _onKickedListener() {
     G.logger.t('SetupJoinScreen.onKickedListener: manager = $_clientManager');
+
+    _onClientDisconnectListener?.call();
   }
 
   void _onDataListener(NetworkModel data) {
-    G.logger.t('GuestGameViewModel._onDataListener: $data');
+    G.logger
+        .t('GuestGameViewModel._onDataListener: ${data.runtimeType}: $data');
 
     // process the received data
     if (data is GameNetworkModel) {
       _snapshot = data;
     } else if (data is GameIntroduceNetworkModel) {
       _emitGameMetadata(data);
+    } else if (data is AllowingStatusNetworkModel) {
+      _emitAllowToPlayStatus(data.allowed);
+    } else if (data is DisconnectNetworkModel) {
+      _onKickedListener();
     }
 
     // update the board when data is received
@@ -185,12 +203,14 @@ class GuestGameViewModel extends BaseCubit<GuestGameState> {
   }
 
   void _emitGameFromNetwork() {
-    G.logger.t('GuestGameViewModel._emitGame: start');
+    G.logger.t('GuestGameViewModel._emitGame: start.'
+        ' snapshot = $_snapshot '
+        'gameMetadata = ${state.gameMetadata}');
 
     // validate if snapshot is loaded
     final snapshot = _snapshot;
     if (snapshot == null) {
-      G.logger.e('GuestGameViewModel._emitState: no snapshot');
+      G.logger.d('GuestGameViewModel._emitState: no snapshot');
       return;
     }
 
@@ -198,13 +218,14 @@ class GuestGameViewModel extends BaseCubit<GuestGameState> {
     final gameIntroduceNetworkModel = state.gameMetadata;
     if (gameIntroduceNetworkModel == null) {
       G.logger
-          .e('GuestGameViewModel._emitState: no game introduce network model');
+          .d('GuestGameViewModel._emitState: no game introduce network model');
       return;
     }
 
     final chessService = _chessService = GuestChessService(
       snapshot: snapshot,
       guestColor: gameIntroduceNetworkModel.playerColor,
+      canPlay: state.isAllowedToGame,
     );
 
     _emitGame(chessService: chessService);
@@ -306,5 +327,18 @@ class GuestGameViewModel extends BaseCubit<GuestGameState> {
     ));
 
     G.logger.t('GuestGameViewModel._emitFocus: Focused on $focusedCoordinate');
+  }
+
+  void _emitAllowToPlayStatus(bool allowed) {
+    emit(state.copyWith(
+      isAllowedToGame: allowed,
+    ));
+  }
+
+  void _emitReset(SenderInformation serverInformation) {
+    emit(GuestGameState(
+      isAllowedToGame: false,
+      serverInformation: serverInformation,
+    ));
   }
 }

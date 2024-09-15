@@ -16,6 +16,7 @@ class GuestChessService implements IChessService {
   GuestChessService({
     required this.snapshot,
     required this.guestColor,
+    required this.canPlay,
   }) {
     _chess = ch.Chess.fromFEN(snapshot.gameFen);
     _lastMoveFrom = SquareCoordinate.fromNameOrNull(snapshot.lastMoveFrom);
@@ -27,6 +28,9 @@ class GuestChessService implements IChessService {
 
   /// The snapshot of the game.
   final GameNetworkModel snapshot;
+
+  /// Whether the guest player can play the game.
+  final bool canPlay;
 
   late final ch.Chess _chess;
   SquareCoordinate? _lastMoveFrom;
@@ -77,6 +81,11 @@ class GuestChessService implements IChessService {
   @override
   Set<AppChessMove> moves({SquareCoordinate? from}) {
     G.logger.t('GuestChessService.moves: from: $from');
+
+    if (!canPlay) {
+      G.logger.t('GuestChessService.moves: Guest cannot play, no moves');
+      return {};
+    }
 
     if (_chess.game_over) {
       G.logger.t('GuestChessService.moves: Game is over, no moves');

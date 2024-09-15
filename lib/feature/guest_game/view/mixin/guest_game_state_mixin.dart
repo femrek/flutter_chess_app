@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs
 
+import 'package:auto_route/auto_route.dart';
 import 'package:localchess/feature/guest_game/view/guest_game_screen.dart';
 import 'package:localchess/feature/guest_game/view_model/guest_game_view_model.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
@@ -13,7 +14,10 @@ mixin GuestGameStateMixin on BaseState<GuestGameScreen> {
   void initState() {
     super.initState();
     G.logger.t('GuestGameScreenStateMixin.initState');
-    viewModel.init(widget.hostAddress);
+    viewModel.init(
+      address: widget.hostAddress,
+      onClientKickedListener: _onKickedListener,
+    );
   }
 
   @override
@@ -25,9 +29,10 @@ mixin GuestGameStateMixin on BaseState<GuestGameScreen> {
 
   GuestGameViewModel get viewModel => G.guestGameViewModel;
 
-  void disconnect() {
+  void disconnectPressed() {
     G.logger.t('GuestGameScreenStateMixin.disconnect');
     viewModel.disconnect();
+    if (mounted) context.router.maybePop();
   }
 
   void onFocusTried(SquareCoordinate coordinate) {
@@ -117,5 +122,19 @@ mixin GuestGameStateMixin on BaseState<GuestGameScreen> {
     );
 
     G.logger.t('onMoveTried: Moved to $target');
+  }
+
+  void _onKickedListener() {
+    G.logger.t('GuestGameScreenStateMixin._onKickedListener: start');
+
+    if (mounted) {
+      G.logger.d('popping the guest game screen, kicked from the game');
+      context.router.maybePop();
+    } else {
+      G.logger.w('GuestGameScreenStateMixin._onKickedListener: '
+          'screen is not mounted');
+    }
+
+    G.logger.t('GuestGameScreenStateMixin._onKickedListener: end');
   }
 }

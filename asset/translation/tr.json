@@ -43,6 +43,18 @@
         "hintPort": "Sunucu Portu",
         "joinButton": "Katıl"
       }
+    },
+    "hostGame": {
+      "guestEntry": {
+        "label": "Konuk: {}",
+        "currentlyPlaying": "Şu anda oynuyor",
+        "allowButton": "Oyuna Al",
+        "kickButton": "At"
+      },
+      "noGuest": "Bağlı oyuncu yok"
+    },
+    "guestGame": {
+      "youAreNotAllowed": "Oynamanıza izin verilmiyor. Sunucu cihazında izin ver düğmesine basın."
     }
   },
   "dialog": {
@@ -82,6 +94,12 @@
     "joinLoadingDialog": {
       "title": "Oyuna Katılıyor",
       "error": "Oyun katılırken bir hata oluştu"
+    },
+    "hostInfoDialog": {
+      "title": "Sunucu Bilgileri",
+      "hostAddress": "Sunucu Adresi: {}",
+      "hostPort": "Sunucu Portu: {}",
+      "closeButton": "Kapat"
     }
   },
   "widget": {

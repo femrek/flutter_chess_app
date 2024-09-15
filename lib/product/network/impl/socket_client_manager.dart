@@ -167,6 +167,8 @@ class SocketClientManager implements ISocketClientManager {
   }) {
     G.logger.t('onKickedListener: Kicked by server: $data');
 
+    manager.onKickedListener?.call();
+
     manager.socket.destroy();
   }
 }
