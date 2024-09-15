@@ -37,6 +37,7 @@ abstract class  LocaleKeys {
   static const screen_hostGame_guestEntry_label = 'screen.hostGame.guestEntry.label';
   static const screen_hostGame_guestEntry_currentlyPlaying = 'screen.hostGame.guestEntry.currentlyPlaying';
   static const screen_hostGame_guestEntry_allowButton = 'screen.hostGame.guestEntry.allowButton';
+  static const screen_hostGame_guestEntry_makeSpecButton = 'screen.hostGame.guestEntry.makeSpecButton';
   static const screen_hostGame_guestEntry_kickButton = 'screen.hostGame.guestEntry.kickButton';
   static const screen_hostGame_guestEntry = 'screen.hostGame.guestEntry';
   static const screen_hostGame_noGuest = 'screen.hostGame.noGuest';

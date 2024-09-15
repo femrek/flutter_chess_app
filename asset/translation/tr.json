@@ -49,6 +49,7 @@
         "label": "Konuk: {}",
         "currentlyPlaying": "Şu anda oynuyor",
         "allowButton": "Oyuna Al",
+        "makeSpecButton": "İzleyici Yap",
         "kickButton": "At"
       },
       "noGuest": "Bağlı oyuncu yok"

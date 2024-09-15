@@ -13,6 +13,7 @@ class HostGameGuestEntry extends StatelessWidget {
   const HostGameGuestEntry({
     required this.state,
     required this.onAllowPressed,
+    required this.onMakeSpecPressed,
     required this.onKickPressed,
     super.key,
   });
@@ -22,6 +23,9 @@ class HostGameGuestEntry extends StatelessWidget {
 
   /// The callback that is called when pressing the allow button.
   final VoidCallback onAllowPressed;
+
+  /// The callback that is called when pressing the make spec button.
+  final VoidCallback onMakeSpecPressed;
 
   /// The callback that is called when pressing the kick button.
   final VoidCallback onKickPressed;
@@ -38,14 +42,21 @@ class HostGameGuestEntry extends StatelessWidget {
                 state.clientInformation.deviceName,
               ]),
             ),
+            if (state.isAllowed)
+              const Text(
+                LocaleKeys.screen_hostGame_guestEntry_currentlyPlaying,
+              ).tr(),
 
             const Spacer(),
 
             // allow button if the client is not allowed
             if (state.isAllowed)
-              const Text(
-                LocaleKeys.screen_hostGame_guestEntry_currentlyPlaying,
-              ).tr()
+              AppButton(
+                onPressed: onMakeSpecPressed,
+                child: const Text(
+                  LocaleKeys.screen_hostGame_guestEntry_makeSpecButton,
+                ).tr(),
+              )
             else
               AppButton(
                 onPressed: onAllowPressed,

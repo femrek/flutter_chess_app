@@ -209,6 +209,24 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
     G.logger.t('HostGameViewModel.allowGuest: Allowed guest');
   }
 
+  /// Removes the allow from the guest.
+  void removeAllow() {
+    G.logger.t('HostGameViewModel.removeAllow');
+
+    if (_playingClient == null) {
+      G.logger.d('HostGameViewModel.removeAllow: No guest is allowed');
+      return;
+    }
+
+    _hostManager.sendAll(const AllowingStatusNetworkModel(allowed: false));
+
+    _playingClient = null;
+
+    _emitNetwork();
+
+    G.logger.t('HostGameViewModel.removeAllow: Removed allow');
+  }
+
   /// Kicks the given [client] from the game. The [client] cant see the game
   /// board anymore. does not kicks permanently.
   void kickGuest(HostGameClientState client) {

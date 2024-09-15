@@ -48,7 +48,8 @@
       "guestEntry": {
         "label": "Guest: {}",
         "currentlyPlaying": "Currently playing",
-        "allowButton": "Allow",
+        "allowButton": "Play",
+        "makeSpecButton": "Make Spectator",
         "kickButton": "Kick"
       },
       "noGuest": "No guest is connected"

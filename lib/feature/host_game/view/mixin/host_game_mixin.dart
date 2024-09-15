@@ -161,6 +161,12 @@ mixin HostGameStateMixin on BaseState<HostGameScreen> {
     G.logger.t('HostGameStateMixin.onAllowGuestPressed: Allowed guest');
   }
 
+  void onMakeSpecPressed() {
+    G.logger.t('HostGameStateMixin.onMakeSpecPressed');
+    viewModel.removeAllow();
+    G.logger.t('HostGameStateMixin.onMakeSpecPressed: Made spec');
+  }
+
   void onKickGuestPressed(HostGameClientState client) {
     G.logger.t('HostGameStateMixin.onKickGuestPressed');
     viewModel.kickGuest(client);

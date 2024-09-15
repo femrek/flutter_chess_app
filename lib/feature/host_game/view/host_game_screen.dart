@@ -105,6 +105,7 @@ class _HostGameScreenState extends BaseState<HostGameScreen>
               Expanded(
                 child: _NetworkManagementSection(
                   onAllowPressed: onAllowGuestPressed,
+                  onMakeSpecPressed: onMakeSpecPressed,
                   onKickPressed: onKickGuestPressed,
                   onNetworkPropertiesPressed: onNetworkPropertiesPressed,
                 ),
@@ -120,11 +121,13 @@ class _HostGameScreenState extends BaseState<HostGameScreen>
 class _NetworkManagementSection extends StatelessWidget {
   const _NetworkManagementSection({
     required this.onAllowPressed,
+    required this.onMakeSpecPressed,
     required this.onKickPressed,
     required this.onNetworkPropertiesPressed,
   });
 
   final void Function(HostGameClientState) onAllowPressed;
+  final void Function() onMakeSpecPressed;
   final void Function(HostGameClientState) onKickPressed;
   final VoidCallback onNetworkPropertiesPressed;
 
@@ -156,6 +159,7 @@ class _NetworkManagementSection extends StatelessWidget {
                     return HostGameGuestEntry(
                       state: client,
                       onAllowPressed: () => onAllowPressed(client),
+                      onMakeSpecPressed: onMakeSpecPressed,
                       onKickPressed: () => onKickPressed(client),
                     );
                   },
