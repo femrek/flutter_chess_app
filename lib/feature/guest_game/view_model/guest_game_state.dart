@@ -95,3 +95,10 @@ class GuestGameGameState {
     );
   }
 }
+
+class GuestGameNoHostErrorState extends GuestGameState {
+  const GuestGameNoHostErrorState()
+      : super(
+          isAllowedToGame: false,
+        );
+}

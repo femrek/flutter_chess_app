@@ -20,6 +20,7 @@ import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
+import 'package:localchess/product/widget/button/app_button/app_button.dart';
 import 'package:localchess/product/widget/header/game_screens_header.dart';
 import 'package:localchess/product/widget/player_information_section/captured_piece_indicator/captured_piece_indicator.dart';
 import 'package:localchess/product/widget/player_information_section/turn_indicator.dart';
@@ -47,31 +48,62 @@ class _GuestGameScreenState extends BaseState<GuestGameScreen>
     return BlocProvider.value(
       value: G.guestGameViewModel,
       child: Scaffold(
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ColoredBox(
-              color: AppColorScheme.boardBackgroundColor,
-              child: SafeArea(
-                bottom: false,
-                child: Column(
-                  children: [
-                    _Header(),
-                    _Board(
-                      onFocusTried: onFocusTried,
-                      onMoveTried: onMoveTried,
+        body: BlocBuilder<GuestGameViewModel, GuestGameState>(
+          buildWhen: (previous, current) {
+            return previous.runtimeType != current.runtimeType;
+          },
+          builder: (context, state) {
+            if (state is GuestGameNoHostErrorState) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(width: double.infinity),
+                  const AppPadding.screen().toWidget(
+                    child: Text(
+                      LocaleKeys.screen_guestGame_noHostError,
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.error,
+                              ),
+                    ).tr(),
+                  ),
+                  AppButton(
+                    onPressed: () {
+                      context.router.maybePop();
+                    },
+                    child: const Text(LocaleKeys.screen_guestGame_back).tr(),
+                  ),
+                ],
+              );
+            }
+
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ColoredBox(
+                  color: AppColorScheme.boardBackgroundColor,
+                  child: SafeArea(
+                    bottom: false,
+                    child: Column(
+                      children: [
+                        _Header(),
+                        _Board(
+                          onFocusTried: onFocusTried,
+                          onMoveTried: onMoveTried,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
 
-            // information about the game status. (turn, captured pieces)
-            const AppPadding.screen(vertical: 0)
-                .toWidget(child: _InfoSection()),
+                // information about the game status. (turn, captured pieces)
+                const AppPadding.screen(vertical: 0)
+                    .toWidget(child: _InfoSection()),
 
-            const Spacer(),
-          ],
+                const Spacer(),
+              ],
+            );
+          },
         ),
       ),
     );

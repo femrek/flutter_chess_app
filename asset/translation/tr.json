@@ -54,7 +54,9 @@
       "noGuest": "Bağlı oyuncu yok"
     },
     "guestGame": {
-      "youAreNotAllowed": "Oynamanıza izin verilmiyor. Sunucu cihazında izin ver düğmesine basın."
+      "youAreNotAllowed": "Oynamanıza izin verilmiyor. Sunucu cihazında izin ver düğmesine basın.",
+      "noHostError": "Sunucu mevcut değil",
+      "back" : "Kapat"
     }
   },
   "dialog": {

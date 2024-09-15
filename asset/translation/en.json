@@ -54,7 +54,9 @@
       "noGuest": "No guest is connected"
     },
     "guestGame": {
-      "youAreNotAllowed": "You are not allowed to play. Hit the allow button in the host device."
+      "youAreNotAllowed": "You are not allowed to play. Hit the allow button in the host device.",
+      "noHostError": "Host is not available",
+      "back" : "Go Back"
     }
   },
   "dialog": {

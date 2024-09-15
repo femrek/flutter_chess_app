@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:core/core.dart';
 import 'package:localchess/feature/guest_game/view_model/guest_game_state.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
@@ -42,24 +44,37 @@ class GuestGameViewModel extends BaseCubit<GuestGameState> {
     _onClientConnectListener = onClientConnectListener;
     _onClientDisconnectListener = onClientKickedListener;
 
-    _clientManager = await SocketClientManager.connect(
-      address: address,
-      onConnectedListener: _onConnectedListener,
-      onKickedListener: _onKickedListener,
-      onDataListeners: [_onDataListener],
-    );
+    try {
+      _clientManager = await SocketClientManager.connect(
+        address: address,
+        onConnectedListener: _onConnectedListener,
+        onKickedListener: _onKickedListener,
+        onDataListeners: [_onDataListener],
+      );
+    } on SocketException catch (e) {
+      G.logger.d('GuestGameViewModel.init: socket error', error: e);
+      emit(const GuestGameNoHostErrorState());
+      return;
+    }
 
     G.logger.t('GuestGameViewModel.init: end');
   }
 
   /// Disconnects the game.
   Future<void> disconnect() async {
-    G.logger.t('GuestGameViewModel.disconnect: start: $_clientManager');
+    G.logger.t('GuestGameViewModel.disconnect: start');
+
+    if (state is GuestGameNoHostErrorState) {
+      G.logger.t('GuestGameViewModel.disconnect: already disconnected');
+      return;
+    }
+
     if (!_clientManager.isConnected) {
       G.logger.t('GuestGameViewModel.disconnect: already disconnected');
       return;
     }
     _clientManager.disconnect();
+
     G.logger.t('GuestGameViewModel.disconnect: end: $_clientManager');
   }
 

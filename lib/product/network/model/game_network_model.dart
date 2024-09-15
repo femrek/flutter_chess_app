@@ -73,19 +73,13 @@ class GameNetworkModel implements NetworkModel {
 
     // validate lastMoveFrom
     final lastMoveFromJson = json['lastMoveFrom'];
-    if (lastMoveFromJson == null) {
-      throw Exception('lastMoveFrom is null');
-    }
-    if (lastMoveFromJson is! String) {
+    if (lastMoveFromJson is! String?) {
       throw Exception('lastMoveFrom is not a String');
     }
 
     // validate lastMoveTo
     final lastMoveToJson = json['lastMoveTo'];
-    if (lastMoveToJson == null) {
-      throw Exception('lastMoveTo is null');
-    }
-    if (lastMoveToJson is! String) {
+    if (lastMoveToJson is! String?) {
       throw Exception('lastMoveTo is not a String');
     }
 

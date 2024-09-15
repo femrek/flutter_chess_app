@@ -42,6 +42,8 @@ abstract class  LocaleKeys {
   static const screen_hostGame_noGuest = 'screen.hostGame.noGuest';
   static const screen_hostGame = 'screen.hostGame';
   static const screen_guestGame_youAreNotAllowed = 'screen.guestGame.youAreNotAllowed';
+  static const screen_guestGame_noHostError = 'screen.guestGame.noHostError';
+  static const screen_guestGame_back = 'screen.guestGame.back';
   static const screen_guestGame = 'screen.guestGame';
   static const screen = 'screen';
   static const dialog_createGameDialog_title = 'dialog.createGameDialog.title';
