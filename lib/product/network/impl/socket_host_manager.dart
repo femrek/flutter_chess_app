@@ -214,6 +214,7 @@ class SocketHostManager implements ISocketHostManager {
       socket.destroy();
     }
     for (final socket in _clients.values) {
+      _send(socket, const DisconnectNetworkModel());
       socket.destroy();
     }
 
