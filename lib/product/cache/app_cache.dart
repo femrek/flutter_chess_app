@@ -24,8 +24,8 @@ class AppCache implements IAppCache {
 
     _cacheManager
       ..registerCacheModel<GameSaveCacheModel>(GameSaveCacheModel.empty())
-      ..registerCacheModel<SenderInformationCacheModel>(
-          SenderInformationCacheModel.empty());
+      ..registerCacheModel<DevicePropertiesCacheModel>(
+          DevicePropertiesCacheModel.empty());
   }
 
   @override
@@ -33,7 +33,7 @@ class AppCache implements IAppCache {
       HiveCacheOperator<GameSaveCacheModel>(logger: _logger);
 
   @override
-  late final CacheOperator<SenderInformationCacheModel>
+  late final CacheOperator<DevicePropertiesCacheModel>
       senderInformationOperator =
-      HiveCacheOperator<SenderInformationCacheModel>(logger: _logger);
+      HiveCacheOperator<DevicePropertiesCacheModel>(logger: _logger);
 }

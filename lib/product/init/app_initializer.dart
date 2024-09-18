@@ -30,6 +30,9 @@ abstract final class AppInitializer {
     // device id
     G.deviceProperties.init();
 
+    // app view model
+    G.appViewModel.init();
+
     Logger.level = Level.trace;
     G.logger.d('App initialized.');
   }

@@ -16,5 +16,5 @@ final class TestCache implements IAppCache {
   CacheOperator<GameSaveCacheModel> gameSaveOperator;
 
   @override
-  CacheOperator<SenderInformationCacheModel> senderInformationOperator;
+  CacheOperator<DevicePropertiesCacheModel> senderInformationOperator;
 }

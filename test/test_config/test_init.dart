@@ -22,7 +22,7 @@ abstract final class TestInit {
     final cache = TestCache(
       gameSaveOperator: TestCacheOperator<GameSaveCacheModel>(),
       senderInformationOperator:
-          TestCacheOperator<SenderInformationCacheModel>(),
+          TestCacheOperator<DevicePropertiesCacheModel>(),
     );
 
     await GetIt.I.reset();

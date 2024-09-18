@@ -12,6 +12,6 @@ abstract interface class IAppCache {
   CacheOperator<GameSaveCacheModel> get gameSaveOperator;
 
   /// The operator instance for performing cache operations over
-  /// [SenderInformationCacheModel].
-  CacheOperator<SenderInformationCacheModel> get senderInformationOperator;
+  /// [DevicePropertiesCacheModel].
+  CacheOperator<DevicePropertiesCacheModel> get senderInformationOperator;
 }

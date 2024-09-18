@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:flutter/material.dart';
 
 /// Interface for initializing and getting the device properties such as the
 /// device id.
@@ -15,6 +16,12 @@ abstract interface class IDeviceProperties {
   /// Get the device name taken from the user.
   String get deviceName;
 
+  /// Get the saved theme mode.
+  ThemeMode get themeMode;
+
   /// Update the device name.
   set deviceName(String name);
+
+  /// Update the theme mode.
+  set themeMode(ThemeMode theme);
 }

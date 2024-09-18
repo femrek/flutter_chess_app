@@ -1,11 +1,12 @@
 import 'package:core/core.dart';
+import 'package:flutter/material.dart';
 import 'package:localchess/product/cache/model/sender_information_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:uuid/uuid.dart';
 
 /// To provide the device id, use this class.
 class AppDeviceProperties implements IDeviceProperties {
-  late SenderInformation _senderInformation;
+  late DevicePropertiesCacheModel _cacheModel;
 
   @override
   void init() {
@@ -26,42 +27,54 @@ class AppDeviceProperties implements IDeviceProperties {
 
     // If there are no device ids, create a new one and save it.
     if (deviceInfoSaves.isEmpty) {
-      _senderInformation = SenderInformation(
-        deviceId: const Uuid().v4(),
-        deviceName: '',
+      _cacheModel = DevicePropertiesCacheModel(
+        senderInformation: SenderInformation(
+          deviceId: const Uuid().v4(),
+          deviceName: '',
+        ),
+        themeMode: ThemeMode.system,
       );
 
       G.logger.i('No device info found in cache, creating new one: '
-          '$_senderInformation');
-      G.appCache.senderInformationOperator.save(
-        SenderInformationCacheModel(
-          senderInformation: _senderInformation,
-        ),
-      );
+          '$_cacheModel');
+
+      G.appCache.senderInformationOperator.save(_cacheModel);
       return;
     }
 
     // If there is exactly one device id, use it.
-    _senderInformation = deviceInfoSaves.first.senderInformation;
-    G.logger.i('Device id found in cache: $_senderInformation');
+    _cacheModel = deviceInfoSaves.first;
+    G.logger.i('Device id found in cache: $_cacheModel');
   }
 
   @override
-  String get deviceId => _senderInformation.deviceId;
+  String get deviceId => _cacheModel.senderInformation.deviceId;
 
   @override
-  String get deviceName => _senderInformation.deviceName;
+  String get deviceName => _cacheModel.senderInformation.deviceName;
 
   @override
-  SenderInformation get senderInformation => _senderInformation;
+  SenderInformation get senderInformation => _cacheModel.senderInformation;
+
+  @override
+  ThemeMode get themeMode => _cacheModel.themeMode;
 
   @override
   set deviceName(String name) {
     G.appCache.senderInformationOperator.update(
-      SenderInformationCacheModel(
-        senderInformation: _senderInformation = _senderInformation.copyWith(
+      _cacheModel = _cacheModel.copyWith(
+        senderInformation: _cacheModel.senderInformation.copyWith(
           deviceName: name,
         ),
+      ),
+    );
+  }
+
+  @override
+  set themeMode(ThemeMode theme) {
+    G.appCache.senderInformationOperator.update(
+      _cacheModel = _cacheModel.copyWith(
+        themeMode: theme,
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/state/app_view_model/app_state.dart';
 import 'package:localchess/product/state/base/base_cubit.dart';
 
@@ -6,6 +7,13 @@ import 'package:localchess/product/state/base/base_cubit.dart';
 class AppViewModel extends BaseCubit<AppState> {
   /// The view model for the app.
   AppViewModel() : super(const AppState());
+
+  /// Initializes the view model.
+  void init() {
+    emit(AppState(
+      themeMode: G.deviceProperties.themeMode,
+    ));
+  }
 
   /// Toggles the theme mode.
   void toggleThemeMode(BuildContext context) {
@@ -20,10 +28,12 @@ class AppViewModel extends BaseCubit<AppState> {
       newThemeMode = ThemeMode.light;
     }
     emit(AppState(themeMode: newThemeMode));
+    G.deviceProperties.themeMode = newThemeMode;
   }
 
   /// Sets the theme mode.
   void setThemeMode(ThemeMode themeMode) {
     emit(AppState(themeMode: themeMode));
+    G.deviceProperties.themeMode = themeMode;
   }
 }
