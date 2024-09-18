@@ -4,9 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/constant/padding/app_padding_constant.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
+import 'package:localchess/product/constant/privacy_policy_constant.dart';
 import 'package:localchess/product/localization/app_locale.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// The drawer menu of the home screen.
 class HomeScreenDrawer extends StatelessWidget {
@@ -20,6 +22,7 @@ class HomeScreenDrawer extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.zero,
         children: [
+          // title
           AppPadding(
             top: MediaQuery.of(context).padding.top,
             left: AppPaddingConstant.scrollableHorizontal,
@@ -30,7 +33,10 @@ class HomeScreenDrawer extends StatelessWidget {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ),
+
           const SizedBox(height: 16),
+
+          // theme mode
           ListTile(
             title: const Text(LocaleKeys.screen_home_drawer_toggleTheme).tr(),
             onTap: () {
@@ -38,15 +44,23 @@ class HomeScreenDrawer extends StatelessWidget {
               Navigator.pop(context);
             },
           ),
+
+          // privacy policy
           ListTile(
             title: const Text(
               LocaleKeys.screen_home_drawer_privacyPolicy,
             ).tr(),
             onTap: () {
-              Navigator.pop(context);
+              launchUrl(
+                Uri.parse(PrivacyPolicyConstant.privacyPolicyUrl),
+                mode: LaunchMode.inAppWebView,
+              );
             },
           ),
+
           const SizedBox(height: 12),
+
+          // localization
           const AppPadding.scrollable(vertical: 0).toWidget(
             child: DropdownMenu<AppLocale>(
               width: double.infinity,

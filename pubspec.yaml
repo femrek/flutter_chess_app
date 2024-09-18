@@ -21,7 +21,7 @@ dependencies:
   # Util
   chess: ^0.8.0
   equatable: ^2.0.5
-  url_launcher: ^6.1.9
+  url_launcher: ^6.3.0
   easy_localization: ^3.0.7
   get_it: ^7.7.0
   logger: ^2.4.0
