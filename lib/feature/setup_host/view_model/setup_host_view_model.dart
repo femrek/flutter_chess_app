@@ -1,0 +1,71 @@
+import 'dart:async';
+
+import 'package:chess/chess.dart' as ch;
+import 'package:core/core.dart';
+import 'package:gen/gen.dart';
+import 'package:localchess/feature/setup_host/view_model/setup_host_state.dart';
+import 'package:localchess/product/cache/i_app_cache.dart';
+import 'package:localchess/product/cache/model/game_save_cache_model.dart';
+import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/state/base/base_cubit.dart';
+import 'package:uuid/uuid.dart';
+
+/// View Model for Setup Host Screen
+class SetupHostViewModel extends BaseCubit<SetupHostState> {
+  /// Creates [SetupHostViewModel] instance.
+  SetupHostViewModel({
+    required this.appCache,
+  }) : super(const SetupHostState(saves: []));
+
+  /// Cache operator for performing operations on saves.
+  final IAppCache appCache;
+
+  /// fetch saves and emit state.
+  Future<void> loadSaves() async {
+    final saves = appCache.gameSaveOperator.getAll(
+      sort: GetAllSortEnum.updateAtDesc,
+    );
+    emit(state.copyWith(saves: saves));
+  }
+
+  /// Returns the device name.
+  String getDeviceName() {
+    return G.deviceProperties.deviceName;
+  }
+
+  /// Updates the device name.
+  // ignore: use_setters_to_change_properties
+  void updateName(String name) {
+    G.deviceProperties.deviceName = name;
+  }
+
+  /// Creates a new game save and returns the created cache model.
+  Future<GameSaveCacheModel> createGame(String name) async {
+    final newSave = GameSaveCacheModel(
+      id: const Uuid().v4(),
+      gameSave: GameSave(
+        name: name,
+        history: [],
+        defaultPosition: ch.Chess.DEFAULT_POSITION,
+        isGameOver: false,
+      ),
+    );
+
+    final savedSave = appCache.gameSaveOperator.save(newSave);
+
+    emit(state.copyWith(
+      saves: [savedSave, ...state.saves],
+    ));
+
+    unawaited(loadSaves());
+
+    return savedSave;
+  }
+
+  /// Removes the save permanently from the cache.
+  Future<void> removeSave(GameSaveCacheModel save) async {
+    final removed = appCache.gameSaveOperator.remove(save.id);
+
+    if (removed) await loadSaves();
+  }
+}

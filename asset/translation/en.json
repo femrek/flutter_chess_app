@@ -1,0 +1,147 @@
+{
+  "screen": {
+    "home": {
+      "title": "Local Chess",
+      "playTwoPlayer": {
+        "title": "Play chess with only this device",
+        "button": "Play Two Player"
+      },
+      "playOverNetwork": {
+        "title": "Play chess with another device at the same network",
+        "createGame": {
+          "description": "Host a game in this device",
+          "button": "Create a Game"
+        },
+        "joinGame": {
+          "description": "Join a game in the local network",
+          "button": "Join a Game"
+        }
+      },
+      "drawer": {
+        "title": "Local Chess",
+        "toggleTheme": "Change Theme",
+        "privacyPolicy": "Privacy Policy",
+        "language": {
+          "title": "Language"
+        }
+      }
+    },
+    "setupLocal": {
+      "title": "Saved Games",
+      "newGameButton": "New Game"
+    },
+    "setupHost": {
+      "title": "Host a Game",
+      "newGameButton": "New Game",
+      "listTitle": "Saved Games"
+    },
+    "setupJoin": {
+      "title": "Join a Game",
+      "enterHostAddress": {
+        "title": "Enter Host Address",
+        "hintHost": "Host IP Address",
+        "hintPort": "Host Port",
+        "joinButton": "Join"
+      },
+      "scanNetwork": {
+        "title": "Scan Network",
+        "scanButton": "Scan",
+        "noGameFound": "No game found in the network",
+        "initialState": "Press the 'Scan' button to find games",
+        "scanningState": "Scanning... {}/{}",
+        "noNetworkError": "Network properties could not be found. Are you connected to a network?",
+        "unknownError": "An unknown error occurred",
+        "foundGame": {
+          "title": "{}'s Game",
+          "description": "Tab to Join"
+        }
+      }
+    },
+    "hostGame": {
+      "guestEntry": {
+        "label": "Guest: {}",
+        "currentlyPlaying": "Currently playing",
+        "allowButton": "Play",
+        "makeSpecButton": "Make Spectator",
+        "kickButton": "Kick"
+      },
+      "noGuest": "No guest is connected"
+    },
+    "guestGame": {
+      "youAreNotAllowed": "You are not allowed to play. Hit the allow button in the host device.",
+      "noHostError": "Host is not available",
+      "back" : "Go Back"
+    }
+  },
+  "dialog": {
+    "createGameDialog": {
+      "title": "Enter Game Name",
+      "hint": "Game Name",
+      "createButton": "Create",
+      "cancelButton": "Cancel"
+    },
+    "gamePreviewDialog": {
+      "playAsWhite": "Play as White",
+      "playAsBlack": "Play as Black",
+      "lastPlayed": "Last Played: ",
+      "created": "Started: ",
+      "play": "Play",
+      "delete": "Delete"
+    },
+    "confirmationDialog": {
+      "restartLocalGame": {
+        "title": "Restart Game",
+        "content": "Are you sure you want to restart the game?",
+        "confirmButton": "Restart",
+        "cancelButton": "Cancel"
+      },
+      "deleteLocalGame": {
+        "title": "Delete Game",
+        "content": "Are you sure you want to delete the game: '{}'?",
+        "confirmButton": "Delete",
+        "cancelButton": "Cancel"
+      }
+    },
+    "errorDialog": {
+      "title": "An Error Occurred",
+      "content": "Error: {}",
+      "closeButton": "Close"
+    },
+    "joinLoadingDialog": {
+      "title": "Joining Game",
+      "error": "An error occurred while joining the game"
+    },
+    "hostInfoDialog": {
+      "title": "Host Information",
+      "hostAddress": "Host Address: {}",
+      "hostPort": "Host Port: {}",
+      "closeButton": "Close"
+    }
+  },
+  "widget": {
+    "saveListTile": {
+      "lastPlayed": "Last Played: "
+    },
+    "deviceNameInput": {
+      "title": "Enter Device Name",
+      "hint": "Enter name"
+    }
+  },
+  "game": {
+    "undo": "Undo",
+    "redo": "Redo",
+    "restart": "Restart",
+    "chessTurn": {
+      "yourTurn": "Your Turn",
+      "opponentTurn": "Opponent's Turn",
+      "black": "Black Turn",
+      "white": "White Turn",
+      "blackKingCheck": "King Under Attack",
+      "whiteKingCheck": "King Under Attack",
+      "blackKingCheckmate": "White is the Winner",
+      "whiteKingCheckmate": "Black is the Winner",
+      "draw": "Draw",
+      "stalemate": "Stalemate"
+    }
+  }
+}

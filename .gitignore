@@ -48,3 +48,8 @@ app.*.map.json
 
 # jks properties
 /android/key.properties
+
+# auto generated files
+libisar_macos.dylib
+*.isar
+*.isar.lock
