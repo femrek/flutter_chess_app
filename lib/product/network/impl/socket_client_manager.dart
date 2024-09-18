@@ -16,6 +16,29 @@ class SocketClientManager implements ISocketClientManager {
     if (onDataListeners != null) _onDataListeners.addAll(onDataListeners);
   }
 
+  /// Tries to connect to the [address] and returns a [Future] of
+  /// [SocketClientManager] if the connection is successful. if there is no host
+  /// at the [address], the [SocketException] will be thrown.
+  static Future<SocketClientManager> scanRequest({
+    required AddressOnNetwork address,
+    required SocketClientOnConnectedListener onConnectedListener,
+    Duration timeout = const Duration(seconds: 5),
+  }) async {
+    final socket = await Socket.connect(
+      address.address,
+      address.port,
+      timeout: timeout,
+    );
+    final i = SocketClientManager._internal(
+      socket: socket,
+      onConnectedListener: onConnectedListener,
+    );
+
+    await _initScanRequest(i);
+
+    return i;
+  }
+
   /// Connects to the server. Returns a [Future] of [SocketClientManager].
   /// Use this method to create a new instance of [SocketClientManager] by
   /// connecting to the server.
@@ -38,35 +61,6 @@ class SocketClientManager implements ISocketClientManager {
     await _init(i);
 
     return i;
-  }
-
-  static Future<void> _init(SocketClientManager i) async {
-    i._onData.listen((data) {
-      // trigger the introduce listener to establish the connection.
-      if (data is IntroduceNetworkModel) {
-        _onConnectionIntroduceListener(
-          manager: i,
-          data: data,
-        );
-        return;
-      }
-
-      // trigger connection done listener when the connection is closed by the
-      // client
-      if (data is DisconnectNetworkModel) {
-        _onKickedListener(
-          manager: i,
-          data: data,
-        );
-        return;
-      }
-
-      for (final listener in i.onDataListeners) {
-        listener(data);
-      }
-    });
-
-    i._introduce(i.socket);
   }
 
   // private instance fields
@@ -170,5 +164,54 @@ class SocketClientManager implements ISocketClientManager {
     manager.onKickedListener?.call();
 
     manager.socket.destroy();
+  }
+
+  static Future<void> _initScanRequest(SocketClientManager i) async {
+    i._onData.listen((data) {
+      if (data is IntroduceNetworkModel) {
+        _onConnectionIntroduceListener(
+          manager: i,
+          data: data,
+        );
+        return;
+      }
+
+      if (data is DisconnectNetworkModel) {
+        _onKickedListener(
+          manager: i,
+          data: data,
+        );
+        return;
+      }
+    });
+  }
+
+  static Future<void> _init(SocketClientManager i) async {
+    i._onData.listen((data) {
+      // trigger the introduce listener to establish the connection.
+      if (data is IntroduceNetworkModel) {
+        _onConnectionIntroduceListener(
+          manager: i,
+          data: data,
+        );
+        return;
+      }
+
+      // trigger connection done listener when the connection is closed by the
+      // client
+      if (data is DisconnectNetworkModel) {
+        _onKickedListener(
+          manager: i,
+          data: data,
+        );
+        return;
+      }
+
+      for (final listener in i.onDataListeners) {
+        listener(data);
+      }
+    });
+
+    i._introduce(i.socket);
   }
 }

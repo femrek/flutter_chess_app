@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:localchess/product/cache/app_cache.dart';
 import 'package:localchess/product/cache/i_app_cache.dart';
@@ -15,6 +16,8 @@ import 'test_implementation/test_cache_operator.dart';
 
 abstract final class TestInit {
   static Future<void> initWithTestCacheImpl() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+
     final logger = Logger();
     final cache = TestCache(
       gameSaveOperator: TestCacheOperator<GameSaveCacheModel>(),
@@ -27,6 +30,7 @@ abstract final class TestInit {
     GetIt.I.registerSingleton<IAppCache>(cache);
     GetIt.I.registerSingleton<ISocketConfiguration>(AppSocketConfiguration());
     GetIt.I.registerSingleton<IDeviceProperties>(AppDeviceProperties());
+    GetIt.I.registerSingleton<INetworkInfoProvider>(NetworkInfoProvider());
 
     // Initialize the cache
     await initHiveTests();
@@ -35,6 +39,8 @@ abstract final class TestInit {
   }
 
   static Future<void> initWithHiveImpl() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+
     // Setup GetIt dependencies
     await GetIt.I.reset();
     GetIt.I.registerSingleton<Logger>(Logger(
@@ -49,6 +55,7 @@ abstract final class TestInit {
     ));
     GetIt.I.registerSingleton<ISocketConfiguration>(AppSocketConfiguration());
     GetIt.I.registerSingleton<IDeviceProperties>(AppDeviceProperties());
+    GetIt.I.registerSingleton<INetworkInfoProvider>(NetworkInfoProvider());
 
     // Initialize the cache
     await initHiveTests();

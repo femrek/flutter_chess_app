@@ -33,6 +33,17 @@ abstract class  LocaleKeys {
   static const screen_setupJoin_enterHostAddress_hintPort = 'screen.setupJoin.enterHostAddress.hintPort';
   static const screen_setupJoin_enterHostAddress_joinButton = 'screen.setupJoin.enterHostAddress.joinButton';
   static const screen_setupJoin_enterHostAddress = 'screen.setupJoin.enterHostAddress';
+  static const screen_setupJoin_scanNetwork_title = 'screen.setupJoin.scanNetwork.title';
+  static const screen_setupJoin_scanNetwork_scanButton = 'screen.setupJoin.scanNetwork.scanButton';
+  static const screen_setupJoin_scanNetwork_noGameFound = 'screen.setupJoin.scanNetwork.noGameFound';
+  static const screen_setupJoin_scanNetwork_initialState = 'screen.setupJoin.scanNetwork.initialState';
+  static const screen_setupJoin_scanNetwork_scanningState = 'screen.setupJoin.scanNetwork.scanningState';
+  static const screen_setupJoin_scanNetwork_noNetworkError = 'screen.setupJoin.scanNetwork.noNetworkError';
+  static const screen_setupJoin_scanNetwork_unknownError = 'screen.setupJoin.scanNetwork.unknownError';
+  static const screen_setupJoin_scanNetwork_foundGame_title = 'screen.setupJoin.scanNetwork.foundGame.title';
+  static const screen_setupJoin_scanNetwork_foundGame_description = 'screen.setupJoin.scanNetwork.foundGame.description';
+  static const screen_setupJoin_scanNetwork_foundGame = 'screen.setupJoin.scanNetwork.foundGame';
+  static const screen_setupJoin_scanNetwork = 'screen.setupJoin.scanNetwork';
   static const screen_setupJoin = 'screen.setupJoin';
   static const screen_hostGame_guestEntry_label = 'screen.hostGame.guestEntry.label';
   static const screen_hostGame_guestEntry_currentlyPlaying = 'screen.hostGame.guestEntry.currentlyPlaying';

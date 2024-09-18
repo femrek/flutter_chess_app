@@ -11,6 +11,8 @@ import 'package:localchess/product/cache/i_app_cache.dart';
 import 'package:localchess/product/device_properties/app_device_properties.dart';
 import 'package:localchess/product/navigation/app_route.dart';
 import 'package:localchess/product/network/impl/app_socket_configuration.dart';
+import 'package:localchess/product/service/core/i_network_game_scanner_service.dart';
+import 'package:localchess/product/service/impl/network_game_scanner_service.dart';
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
 import 'package:localchess/product/theme/app_dark_theme.dart';
 import 'package:localchess/product/theme/app_light_theme.dart';
@@ -42,6 +44,8 @@ abstract final class AppGetItConfigurer {
       // network
       ..registerLazySingleton<ISocketConfiguration>(AppSocketConfiguration.new)
       ..registerLazySingleton<INetworkInfoProvider>(NetworkInfoProvider.new)
+      ..registerLazySingleton<INetworkGameScannerService>(
+          NetworkGameScannerService.new)
 
       // configuration
       ..registerLazySingleton<IDeviceProperties>(AppDeviceProperties.new)

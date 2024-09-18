@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:localchess/feature/setup_join/view/setup_join_screen.dart';
 import 'package:localchess/feature/setup_join/view_model/setup_join_view_model.dart';
 import 'package:localchess/product/constant/host_constant.dart';
+import 'package:localchess/product/data/network_scan_result.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/navigation/app_route.gr.dart';
 import 'package:localchess/product/state/base/base_state.dart';
@@ -50,5 +51,17 @@ mixin SetupJoinStateMixin on BaseState<SetupJoinScreen> {
         port: port,
       ),
     ));
+  }
+
+  Future<void> onScanPressed() async {
+    G.logger.t('SetupJoinStateMixin.onScanPressed: start');
+    await viewModel.scanNetwork();
+    G.logger.t('SetupJoinStateMixin.onScanPressed: end');
+  }
+
+  void onJoinPressed(NetworkScanResult result) {
+    G.logger.t('SetupJoinStateMixin.onJoinPressed: $result');
+    context.router.push(GuestGameRoute(hostAddress: result.address));
+    G.logger.t('SetupJoinStateMixin.onJoinPressed: end');
   }
 }

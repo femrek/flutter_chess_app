@@ -12,4 +12,9 @@ class NetworkInfoProvider implements INetworkInfoProvider {
   Future<String?> get inetAddress async {
     return _networkInfo.getWifiIP();
   }
+
+  @override
+  Future<String?> get submask async {
+    return _networkInfo.getWifiSubmask();
+  }
 }

@@ -42,6 +42,19 @@
         "hintHost": "Host IP Address",
         "hintPort": "Host Port",
         "joinButton": "Join"
+      },
+      "scanNetwork": {
+        "title": "Scan Network",
+        "scanButton": "Scan",
+        "noGameFound": "No game found in the network",
+        "initialState": "Press the 'Scan' button to find games",
+        "scanningState": "Scanning... {}/{}",
+        "noNetworkError": "Network properties could not be found. Are you connected to a network?",
+        "unknownError": "An unknown error occurred",
+        "foundGame": {
+          "title": "{}'s Game",
+          "description": "Tab to Join"
+        }
       }
     },
     "hostGame": {

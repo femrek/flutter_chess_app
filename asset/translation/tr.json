@@ -42,6 +42,19 @@
         "hintHost": "Sunucu IP Adresi",
         "hintPort": "Sunucu Portu",
         "joinButton": "Katıl"
+      },
+      "scanNetwork": {
+        "title": "Ağı Tara",
+        "scanButton": "Tara",
+        "noGameFound": "Ağda oyun bulunamadı",
+        "initialState": "Oyunları bulmak için 'Tara' düğmesine basın",
+        "scanningState": "Taranıyor... {}/{}",
+        "noNetworkError": "Ağ özellikleri bulunamadı. Bir ağa bağlı mısınız?",
+        "unknownError": "Bilinmeyen bir hata oluştu",
+        "foundGame": {
+          "title": "{} Oyunu",
+          "description": "Katılmak için Tıklayın"
+        }
       }
     },
     "hostGame": {
