@@ -1,27 +1,31 @@
-An usual chess game. <br>
-This application allows playing on a device or two device in the same local network. <br>
-Only runs on android. <br>
+# Local Chess
+An usual chess game.
 
+This application allows playing on a device or two device in the same local network.
 
-<a href="https://play.google.com/store/apps/details?id=dev.faruke.chess.localchess">Download application for android</a>
+[Download application for android](https://play.google.com/store/apps/details?id=dev.faruke.chess.localchess)
 
-<table>
-  <tr>
-    <td>
-      <img src="https://user-images.githubusercontent.com/29581978/113786687-5256fb80-9742-11eb-8229-5540987620b5.png" width="240" height="400" />
-    </td >
-    <td width="50"></td>
-    <td>
-     <img src="https://user-images.githubusercontent.com/29581978/113786906-be396400-9742-11eb-895a-fde214915580.png" width="240"   height="400" />
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <img src="https://user-images.githubusercontent.com/29581978/113787586-f7260880-9743-11eb-85c7-f58cca079db8.png" width="240" height="400" />
-    </td >
-    <td width="50"></td>
-    <td>
-     <img src="https://user-images.githubusercontent.com/29581978/113787776-4f5d0a80-9744-11eb-994f-9b4811671094.png" width="240"   height="400" />
-    </td> 
-  </tr>
-</table>
+## Features
+- Play with a friend on the same device
+- Play with a friend on two devices in the same local network
+- Scan the network for available games, or connect to a specific IP address
+
+## Used Technologies
+- Framework: Flutter
+- Chess calculation: chess.dart (modified chess.js port)
+- Network: dart:io (dart core library)
+- Network information: network_info_plus
+- Local storage: Hive-Isar
+- State management: Bloc
+- Dependency injection: GetIt
+- Logging: logger
+- Testing: flutter_test
+
+Check the `pubspec.yaml` files for the dependencies used in the project and modules.
+
+## Chess Piece Images
+The chess piece images used in the project are available in the following link.
+[Download pieces in svg format](https://opengameart.org/content/chess-pieces-in-svg-format)
+
+## Thanks
+The architecture of the project is inspired by the [VB10/architecture_template_v2](https://github.com/VB10/architecture_template_v2)
