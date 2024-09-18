@@ -18,10 +18,15 @@ This application allows playing on a device or two device in the same local netw
 - Local storage: Hive-Isar
 - State management: Bloc
 - Dependency injection: GetIt
+- Localization: easy_localization
 - Logging: logger
 - Testing: flutter_test
 
 Check the `pubspec.yaml` files for the dependencies used in the project and modules.
+
+## Localized Languages
+- English
+- Turkish
 
 ## Chess Piece Images
 The chess piece images used in the project are available in the following link.
