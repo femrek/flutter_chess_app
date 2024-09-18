@@ -68,6 +68,7 @@ class _CardLocal extends StatelessWidget {
           children: [
             const Text(
               LocaleKeys.screen_home_playTwoPlayer_title,
+              textAlign: TextAlign.center,
             ).tr(),
             const Spacer(),
             AppButton(
@@ -104,6 +105,7 @@ class _CardNetwork extends StatelessWidget {
             // title
             const Text(
               LocaleKeys.screen_home_playOverNetwork_title,
+              textAlign: TextAlign.center,
             ).tr(),
 
             const Spacer(),
@@ -111,6 +113,7 @@ class _CardNetwork extends StatelessWidget {
             // create game
             Text(
               LocaleKeys.screen_home_playOverNetwork_createGame_description,
+              textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelMedium,
             ).tr(),
             const SizedBox(height: 8),
@@ -127,6 +130,7 @@ class _CardNetwork extends StatelessWidget {
             // join game
             Text(
               LocaleKeys.screen_home_playOverNetwork_joinGame_description,
+              textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelMedium,
             ).tr(),
             const SizedBox(height: 8),
