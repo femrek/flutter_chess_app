@@ -195,7 +195,7 @@ class SocketHostManager implements ISocketHostManager {
     }
 
     _send(client, const DisconnectNetworkModel());
-
+    client.destroy();
     _clients.remove(senderInformation);
   }
 
@@ -248,6 +248,7 @@ class SocketHostManager implements ISocketHostManager {
 
     if (manager._clients[data.senderInformation] != null) {
       G.logger.w('Client already connected: ${data.senderInformation}');
+      manager.kick(data.senderInformation);
     }
 
     // add the client to the clients
