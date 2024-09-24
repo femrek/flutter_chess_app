@@ -40,14 +40,7 @@ mixin SetupHostStateMixin on BaseState<SetupHostScreen> {
     EnterGameNameDialog.show(context: context).then((name) async {
       if (name == null) return;
       if (name.isEmpty) return;
-      final save = await viewModel.createGame(name);
-
-      if (mounted) {
-        await context.router.push(HostGameRoute(
-          save: save,
-          chosenColor: PlayerColor.white,
-        ));
-      }
+      await viewModel.createGame(name);
     });
   }
 

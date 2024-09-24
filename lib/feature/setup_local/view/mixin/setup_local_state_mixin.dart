@@ -28,9 +28,7 @@ mixin SetupLocalStateMixin on BaseState<SetupLocalScreen> {
     EnterGameNameDialog.show(context: context).then((name) async {
       if (name == null) return;
       if (name.isEmpty) return;
-      final save = await viewModel.createGame(name);
-
-      if (mounted) await context.router.push(LocalGameRoute(save: save));
+      await viewModel.createGame(name);
     });
   }
 
