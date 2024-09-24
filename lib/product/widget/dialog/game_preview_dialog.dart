@@ -132,15 +132,19 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
             const SizedBox(height: 4),
             const AppPadding.card(vertical: 0).toWidget(
               child: Text(
-                '${LocaleKeys.dialog_gamePreviewDialog_created.tr()}'
-                '${widget.save.metaData?.createAt.toVisualFormat}',
+                LocaleKeys.dialog_gamePreviewDialog_created.tr(namedArgs: {
+                  'dateTime':
+                      widget.save.metaData?.createAt.toVisualFormat ?? '',
+                }),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
             const AppPadding.card(vertical: 0).toWidget(
               child: Text(
-                '${LocaleKeys.dialog_gamePreviewDialog_lastPlayed.tr()}'
-                '${widget.save.metaData?.updateAt.toVisualFormat}',
+                LocaleKeys.dialog_gamePreviewDialog_lastPlayed.tr(namedArgs: {
+                  'dateTime':
+                      widget.save.metaData?.updateAt.toVisualFormat ?? '',
+                }),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),

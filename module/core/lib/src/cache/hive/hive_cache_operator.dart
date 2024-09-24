@@ -94,9 +94,10 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
     }
 
     // Save the item
+    final saveTime = DateTime.now();
     final metaData = CacheModelMetaData(
-      createAt: DateTime.now(),
-      updateAt: DateTime.now(),
+      createAt: saveTime,
+      updateAt: saveTime,
     );
     log.d('Saving item with id ${item.id} and metadata $metaData');
     _box.put(
@@ -120,9 +121,10 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
       if (validItems.containsKey(item.id)) {
         throw ElementIdDuplicatedError('The id ${item.id} is duplicated.');
       }
+      final saveTime = DateTime.now();
       final metaData = CacheModelMetaData(
-        createAt: DateTime.now(),
-        updateAt: DateTime.now(),
+        createAt: saveTime,
+        updateAt: saveTime,
       );
       log.d('Saving item with id ${item.id} and metadata $metaData');
       validItems[item.id] = item..metaData = metaData;
@@ -156,9 +158,10 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
       log.w('The item with id ${item.id} had not had metadata.');
     }
 
+    final updateTime = DateTime.now();
     final metaData = CacheModelMetaData(
-      createAt: savedItem.metaData?.createAt ?? DateTime.now(),
-      updateAt: DateTime.now(),
+      createAt: savedItem.metaData?.createAt ?? updateTime,
+      updateAt: updateTime,
     );
     log.d('Updating item with id ${item.id} and metadata $metaData');
     _box.put(
@@ -196,9 +199,10 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
         throw ElementIdDuplicatedError('The id ${item.id} is duplicated.');
       }
 
+      final updateTime = DateTime.now();
       final metaData = CacheModelMetaData(
-        createAt: savedItem.metaData?.createAt ?? DateTime.now(),
-        updateAt: DateTime.now(),
+        createAt: savedItem.metaData?.createAt ?? updateTime,
+        updateAt: updateTime,
       );
       log.d('Updating item with id ${item.id} and metadata $metaData');
       validItems[item.id] = item..metaData = metaData;

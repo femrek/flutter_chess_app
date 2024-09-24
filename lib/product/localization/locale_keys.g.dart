@@ -94,6 +94,8 @@ abstract class  LocaleKeys {
   static const dialog_hostInfoDialog_closeButton = 'dialog.hostInfoDialog.closeButton';
   static const dialog_hostInfoDialog = 'dialog.hostInfoDialog';
   static const dialog = 'dialog';
+  static const widget_saveListTile_lastPlayed_created = 'widget.saveListTile.lastPlayed.created';
+  static const widget_saveListTile_lastPlayed_lastPlayed = 'widget.saveListTile.lastPlayed.lastPlayed';
   static const widget_saveListTile_lastPlayed = 'widget.saveListTile.lastPlayed';
   static const widget_saveListTile = 'widget.saveListTile';
   static const widget_deviceNameInput_title = 'widget.deviceNameInput.title';

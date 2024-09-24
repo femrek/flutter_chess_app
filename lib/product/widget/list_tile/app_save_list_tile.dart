@@ -62,8 +62,14 @@ class AppSaveListTile extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        LocaleKeys.widget_saveListTile_lastPlayed.tr() +
-            (data.metaData?.updateAt.toVisualFormat ?? ''),
+        data.metaData?.updateAt == data.metaData?.createAt
+            ? LocaleKeys.widget_saveListTile_lastPlayed_created.tr(namedArgs: {
+                'dateTime': data.metaData?.createAt.toVisualFormat ?? '',
+              })
+            : LocaleKeys.widget_saveListTile_lastPlayed_lastPlayed
+                .tr(namedArgs: {
+                'dateTime': data.metaData?.updateAt.toVisualFormat ?? '',
+              }),
       ),
       trailing: IconButton(
         icon: Icon(

@@ -83,8 +83,8 @@
     "gamePreviewDialog": {
       "playAsWhite": "Play as White",
       "playAsBlack": "Play as Black",
-      "lastPlayed": "Last Played: ",
-      "created": "Started: ",
+      "lastPlayed": "Last Played: {dateTime}",
+      "created": "Started: {dateTime}",
       "play": "Play",
       "delete": "Delete"
     },
@@ -120,7 +120,10 @@
   },
   "widget": {
     "saveListTile": {
-      "lastPlayed": "Last Played: "
+      "lastPlayed": {
+        "created": "Started: {dateTime}",
+        "lastPlayed": "Last Played: {dateTime}"
+      }
     },
     "deviceNameInput": {
       "title": "Enter Device Name",
