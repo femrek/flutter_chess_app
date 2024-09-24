@@ -2,7 +2,7 @@ name: localchess
 description: A new Flutter project.
 
 publish_to: 'none'
-version: 0.3.0+14
+version: 1.0.0+15
 
 environment:
   sdk: '>=3.4.4 <4.0.0'
