@@ -165,8 +165,8 @@ class _CoordinatorLine extends StatelessWidget {
             width: unitSize * side.cellSizeMultiplier.width,
             height: unitSize * side.cellSizeMultiplier.height,
             alignment: Alignment.center,
-            child: Transform.rotate(
-              angle: side.angel,
+            child: RotatedBox(
+              quarterTurns: side.angel,
               child: Text(
                 getCharByIndex(i),
                 textScaler: TextScaler.noScaling,
@@ -257,28 +257,28 @@ enum _CoordinateLineSide {
     cellSizeMultiplier: Size(0.5, 1),
     isNumeric: false,
     isVertical: true,
-    angel: 90 * 3.1415926535 / 180,
+    angel: 1,
     reverse: false,
   ),
   rightL(
     cellSizeMultiplier: Size(0.5, 1),
     isNumeric: false,
     isVertical: true,
-    angel: -90 * 3.1415926535 / 180,
+    angel: -1,
     reverse: false,
   ),
   topL(
     cellSizeMultiplier: Size(1, 0.5),
     isNumeric: true,
     isVertical: false,
-    angel: 90 * 3.1415926535 / 180,
+    angel: 1,
     reverse: false,
   ),
   bottomL(
     cellSizeMultiplier: Size(1, 0.5),
     isNumeric: true,
     isVertical: false,
-    angel: -90 * 3.1415926535 / 180,
+    angel: -1,
     reverse: false,
   ),
   ;
@@ -294,6 +294,6 @@ enum _CoordinateLineSide {
   final Size cellSizeMultiplier;
   final bool isNumeric;
   final bool isVertical;
-  final double angel;
+  final int angel;
   final bool reverse;
 }
