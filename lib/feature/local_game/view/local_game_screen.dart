@@ -301,7 +301,11 @@ class _Board extends StatelessWidget {
     );
   }
 
-  Widget squareBuilder(BuildContext context, SquareCoordinate coordinate) {
+  Widget squareBuilder(
+    BuildContext context,
+    SquareCoordinate coordinate,
+    double unitSize,
+  ) {
     return InkWell(
       onTap: () {
         final state = context.read<LocalGameViewModel>().state;
@@ -333,6 +337,7 @@ class _Board extends StatelessWidget {
               },
               builder: (context, state) {
                 return BoardSquareContent(
+                  unitSize: unitSize,
                   data: state,
                   onDragStarted: () => onFocusTried(coordinate),
                   orientation: BoardOrientationEnum.landscapeLeftBased,

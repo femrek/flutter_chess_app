@@ -108,10 +108,12 @@ class _GamePreviewDialogState extends State<GamePreviewDialog> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // The board
-            _ChessBoard(
-              chessService: _chessService,
-              onPlayPressed: () => widget.onPlayPressed(_chosenColor.value),
-              size: size,
+            Center(
+              child: _ChessBoard(
+                chessService: _chessService,
+                onPlayPressed: () => widget.onPlayPressed(_chosenColor.value),
+                size: size,
+              ),
             ),
 
             // color chosen
@@ -280,11 +282,14 @@ class _ChessBoardState extends State<_ChessBoard> {
         },
         child: GameBoardWithFrame.portrait(
           size: widget.size,
-          squareBuilder: (context, coordinate) {
-            return widget.chessService.getPieceAt(coordinate)?.asImage(
-                      orientation: BoardOrientationEnum.portrait,
-                    ) ??
-                const SizedBox.shrink();
+          squareBuilder: (context, coordinate, unitSize) {
+            return SizedBox(
+              width: unitSize,
+              height: unitSize,
+              child: widget.chessService.getPieceAt(coordinate)?.asImage(
+                    orientation: BoardOrientationEnum.portrait,
+                  ),
+            );
           },
         ),
       ),

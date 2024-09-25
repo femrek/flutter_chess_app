@@ -18,7 +18,7 @@ void main() async {
       await tester.pumpWidget(MaterialApp(
         home: GameBoardWithFrame.portrait(
           size: 100,
-          squareBuilder: (context, coordinate) {
+          squareBuilder: (context, coordinate, unitSize) {
             return const SizedBox.shrink(key: ValueKey('square'));
           },
         ),
@@ -55,6 +55,7 @@ void main() async {
     testWidgets('create an empty square', (tester) async {
       await tester.pumpWidget(const MaterialApp(
         home: BoardSquareContent(
+          unitSize: 100,
           data: SquareData.withDefaultValues(),
         ),
       ));
@@ -68,6 +69,7 @@ void main() async {
     testWidgets('create a square with a piece', (tester) async {
       await tester.pumpWidget(const MaterialApp(
         home: BoardSquareContent(
+          unitSize: 100,
           data: SquareData(
             canMove: true,
             isThisCheck: true,

@@ -6,6 +6,7 @@ import 'package:localchess/product/theme/app_color_scheme.dart';
 typedef BoardSquareBuilder = Widget Function(
   BuildContext context,
   SquareCoordinate coordinate,
+  double unitSize,
 );
 
 /// The widget that shows a square on the game board
@@ -34,7 +35,7 @@ class BoardSquare extends StatelessWidget {
           ? AppColorScheme.darkTileColor
           : AppColorScheme.lightTileColor,
       alignment: Alignment.center,
-      child: builder(context, coordinate),
+      child: builder(context, coordinate, unitSize),
     );
   }
 }
