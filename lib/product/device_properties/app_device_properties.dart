@@ -61,10 +61,11 @@ class AppDeviceProperties implements IDeviceProperties {
 
   @override
   set deviceName(String name) {
+    final trimmedName = name.trim();
     G.appCache.senderInformationOperator.update(
       _cacheModel = _cacheModel.copyWith(
         senderInformation: _cacheModel.senderInformation.copyWith(
-          deviceName: name,
+          deviceName: trimmedName,
         ),
       ),
     );
