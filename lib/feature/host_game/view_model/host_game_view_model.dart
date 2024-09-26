@@ -336,12 +336,20 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
   void _emitNetwork() {
     G.logger.t('HostGameViewModel._emitNetwork');
 
+    final playingClient = _playingClient;
+
     emit((state as HostGameLoadedState).copyWith(
       networkState: HostGameNetworkState(
         isServerRunning: _hostManager.isAlive,
         connectedClients: _getHostGameClientStates(),
         runningHost: _inet,
         runningPort: _hostManager.server.port,
+        allowedClient: playingClient != null
+            ? HostGameClientState(
+                clientInformation: playingClient,
+                isAllowed: true,
+              )
+            : null,
       ),
     ));
 

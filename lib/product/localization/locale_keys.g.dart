@@ -45,13 +45,14 @@ abstract class  LocaleKeys {
   static const screen_setupJoin_scanNetwork_foundGame = 'screen.setupJoin.scanNetwork.foundGame';
   static const screen_setupJoin_scanNetwork = 'screen.setupJoin.scanNetwork';
   static const screen_setupJoin = 'screen.setupJoin';
-  static const screen_hostGame_guestEntry_label = 'screen.hostGame.guestEntry.label';
   static const screen_hostGame_guestEntry_currentlyPlaying = 'screen.hostGame.guestEntry.currentlyPlaying';
   static const screen_hostGame_guestEntry_allowButton = 'screen.hostGame.guestEntry.allowButton';
   static const screen_hostGame_guestEntry_makeSpecButton = 'screen.hostGame.guestEntry.makeSpecButton';
   static const screen_hostGame_guestEntry_kickButton = 'screen.hostGame.guestEntry.kickButton';
   static const screen_hostGame_guestEntry = 'screen.hostGame.guestEntry';
   static const screen_hostGame_noGuest = 'screen.hostGame.noGuest';
+  static const screen_hostGame_tooltipHostInfo = 'screen.hostGame.tooltipHostInfo';
+  static const screen_hostGame_tooltipConnectedGuests = 'screen.hostGame.tooltipConnectedGuests';
   static const screen_hostGame = 'screen.hostGame';
   static const screen_guestGame_youAreNotAllowed = 'screen.guestGame.youAreNotAllowed';
   static const screen_guestGame_noHostError = 'screen.guestGame.noHostError';

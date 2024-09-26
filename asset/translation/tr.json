@@ -59,13 +59,14 @@
     },
     "hostGame": {
       "guestEntry": {
-        "label": "Konuk: {}",
         "currentlyPlaying": "Şu anda oynuyor",
         "allowButton": "Oyuna Al",
         "makeSpecButton": "İzleyici Yap",
         "kickButton": "At"
       },
-      "noGuest": "Bağlı oyuncu yok"
+      "noGuest": "Bağlı oyuncu yok",
+      "tooltipHostInfo": "Sunucu Bilgileri",
+      "tooltipConnectedGuests": "Tüm Oyuncular"
     },
     "guestGame": {
       "youAreNotAllowed": "Oynamanıza izin verilmiyor. Sunucu cihazında izin ver düğmesine basın.",

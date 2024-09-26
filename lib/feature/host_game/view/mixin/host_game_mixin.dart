@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:localchess/feature/host_game/view/host_game_screen.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_state.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_view_model.dart';
@@ -173,7 +174,7 @@ mixin HostGameStateMixin on BaseState<HostGameScreen> {
     G.logger.t('HostGameStateMixin.onKickGuestPressed: Kicked guest');
   }
 
-  void onNetworkPropertiesPressed() {
+  Future<void> onNetworkPropertiesPressed() async {
     G.logger.t('HostGameStateMixin.onNetworkRestartPressed');
 
     final state = viewModel.state;
@@ -182,12 +183,32 @@ mixin HostGameStateMixin on BaseState<HostGameScreen> {
       return;
     }
 
-    HostInfoDialog.show(
+    await HostInfoDialog.show(
       context: context,
       inet: state.networkState.runningHost,
       port: state.networkState.runningPort,
     );
 
     G.logger.t('HostGameStateMixin.onNetworkRestartPressed: Restarted network');
+  }
+
+  Future<void> onConnectedClientsMorePressed(
+    WidgetBuilder bottomSheetBuilder,
+  ) async {
+    G.logger.t('HostGameStateMixin.onConnectedClientsMorePressed');
+
+    final state = viewModel.state;
+    if (state is! HostGameLoadedState) {
+      G.logger.w('Invalid state');
+      return;
+    }
+
+    await showModalBottomSheet<bool>(
+      context: context,
+      builder: bottomSheetBuilder,
+    );
+
+    G.logger.t('HostGameStateMixin.onConnectedClientsMorePressed: '
+        'Showed connected clients');
   }
 }

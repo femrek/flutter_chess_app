@@ -59,13 +59,14 @@
     },
     "hostGame": {
       "guestEntry": {
-        "label": "Guest: {}",
         "currentlyPlaying": "Currently playing",
         "allowButton": "Play",
         "makeSpecButton": "Make Spectator",
         "kickButton": "Kick"
       },
-      "noGuest": "No guest is connected"
+      "noGuest": "No guest is connected",
+      "tooltipHostInfo": "Host Information",
+      "tooltipConnectedGuests": "All Guests"
     },
     "guestGame": {
       "youAreNotAllowed": "You are not allowed to play. Hit the allow button in the host device.",

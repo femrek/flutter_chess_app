@@ -27,6 +27,12 @@ class TurnIndicator extends StatelessWidget {
   /// is `transparent`)
   final Color textColor;
 
+  /// The height of the widget
+  static const double height = _turnHeight + _spacerHeight + _statusHeight;
+  static const double _turnHeight = 48;
+  static const double _spacerHeight = 8;
+  static const double _statusHeight = 48;
+
   @override
   Widget build(BuildContext context) {
     final turnColor = status.turn;
@@ -37,17 +43,17 @@ class TurnIndicator extends StatelessWidget {
         children: [
           // Show the player's turn
           _PlayersTurn(
-            height: 48,
+            height: _turnHeight,
             textColor: textColor,
             turnColor: turnColor,
             side: side,
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: _spacerHeight),
 
           // Show the game status
           _GameStatus(
-            height: 48,
+            height: _statusHeight,
             textColor: textColor,
             status: status,
             turn: turnColor == side || turnColor == null,

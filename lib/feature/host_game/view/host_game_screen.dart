@@ -16,6 +16,7 @@ import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/data/square_data.dart';
+import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
@@ -49,6 +50,9 @@ class _HostGameScreenState extends BaseState<HostGameScreen>
     with HostGameStateMixin {
   @override
   Widget build(BuildContext context) {
+    final verticalPadding = MediaQuery.of(context).padding.top +
+        MediaQuery.of(context).padding.bottom;
+
     return BlocProvider.value(
       value: viewModel,
       child: Scaffold(
@@ -87,6 +91,7 @@ class _HostGameScreenState extends BaseState<HostGameScreen>
                         onFocusTried: onFocusTried,
                         onMoveTried: onMoveTried,
                         thePlayerColorOfThisDevice: widget.chosenColor,
+                        verticalPadding: verticalPadding,
                       ),
                     ],
                   ),
@@ -108,6 +113,7 @@ class _HostGameScreenState extends BaseState<HostGameScreen>
                   onMakeSpecPressed: onMakeSpecPressed,
                   onKickPressed: onKickGuestPressed,
                   onNetworkPropertiesPressed: onNetworkPropertiesPressed,
+                  onConnectedClientsMorePressed: onConnectedClientsMorePressed,
                 ),
               ),
             ],
@@ -124,12 +130,14 @@ class _NetworkManagementSection extends StatelessWidget {
     required this.onMakeSpecPressed,
     required this.onKickPressed,
     required this.onNetworkPropertiesPressed,
+    required this.onConnectedClientsMorePressed,
   });
 
   final void Function(HostGameClientState) onAllowPressed;
   final void Function() onMakeSpecPressed;
   final void Function(HostGameClientState) onKickPressed;
   final VoidCallback onNetworkPropertiesPressed;
+  final void Function(WidgetBuilder) onConnectedClientsMorePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -141,27 +149,33 @@ class _NetworkManagementSection extends StatelessWidget {
         return const HostGameNetworkState.initial();
       },
       builder: (context, networkState) {
+        // get the previewing client bottom of the screen. If there is no
+        // previewing client, it means no guest is connected.
+        final previewingClient = networkState.allowedClient ??
+            networkState.connectedClients.firstOrNull;
+
         return Row(
           children: [
             const SizedBox(width: AppPaddingConstant.screenHorizontal),
+
+            // icon button for show server address
             IconButton(
               onPressed: onNetworkPropertiesPressed,
+              tooltip: LocaleKeys.screen_hostGame_tooltipHostInfo.tr(),
               icon: const Icon(Icons.settings_ethernet),
             ),
-            if (networkState.connectedClients.isNotEmpty)
+
+            // current player preview or no guest text
+            if (previewingClient != null)
               Expanded(
-                child: ListView.builder(
-                  padding: const AppPadding.scrollable(vertical: 0),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: networkState.connectedClients.length,
-                  itemBuilder: (context, index) {
-                    final client = networkState.connectedClients[index];
-                    return HostGameGuestEntry(
-                      state: client,
-                      onAllowPressed: () => onAllowPressed(client),
-                      onMakeSpecPressed: onMakeSpecPressed,
-                      onKickPressed: () => onKickPressed(client),
-                    );
+                child: HostGameGuestEntry(
+                  client: previewingClient,
+                  onPlayWithGuestPressed: () {
+                    onAllowPressed(previewingClient);
+                  },
+                  onMakeSpecPressed: onMakeSpecPressed,
+                  onKickGuestPressed: () {
+                    onKickPressed(previewingClient);
                   },
                 ),
               )
@@ -169,9 +183,58 @@ class _NetworkManagementSection extends StatelessWidget {
               const Text(
                 LocaleKeys.screen_hostGame_noGuest,
               ).tr(),
+
+            // icon button for open connected clients bottom sheet
+            if (networkState.connectedClients.isNotEmpty)
+              IconButton(
+                onPressed: () =>
+                    onConnectedClientsMorePressed(_bottomSheetBuilder),
+                tooltip: LocaleKeys.screen_hostGame_tooltipConnectedGuests.tr(),
+                icon: const Icon(Icons.more_horiz),
+              ),
+            const SizedBox(width: AppPaddingConstant.screenHorizontal),
           ],
         );
       },
+    );
+  }
+
+  Widget _bottomSheetBuilder(BuildContext context) {
+    return BlocProvider.value(
+      value: G.hostGameViewModel,
+      child:
+          BlocSelector<HostGameViewModel, HostGameState, HostGameNetworkState>(
+        selector: (state) {
+          if (state is HostGameLoadedState) {
+            return state.networkState;
+          }
+          return const HostGameNetworkState.initial();
+        },
+        builder: (context, state) {
+          return BottomSheet(
+            onClosing: () {},
+            builder: (context) {
+              return Container(
+                constraints: const BoxConstraints(minHeight: 300),
+                child: ListView.builder(
+                  padding: const AppPadding.scrollable(),
+                  shrinkWrap: true,
+                  itemCount: state.connectedClients.length,
+                  itemBuilder: (context, index) {
+                    final client = state.connectedClients[index];
+                    return HostGameGuestEntry(
+                      client: client,
+                      onPlayWithGuestPressed: () => onAllowPressed(client),
+                      onMakeSpecPressed: onMakeSpecPressed,
+                      onKickGuestPressed: () => onKickPressed(client),
+                    );
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
@@ -301,6 +364,7 @@ class _Board extends StatelessWidget {
     required this.onFocusTried,
     required this.onMoveTried,
     required this.thePlayerColorOfThisDevice,
+    required this.verticalPadding,
   });
 
   /// The function to call when the user taps on a square to focus on a piece
@@ -312,16 +376,54 @@ class _Board extends StatelessWidget {
 
   final PlayerColor thePlayerColorOfThisDevice;
 
+  final double verticalPadding;
+
   @override
   Widget build(BuildContext context) {
     return GameBoardWithFrame(
-      size: MediaQuery.of(context).size.width,
+      size: _getBoardSize(context),
       squareBuilder: squareBuilder,
       orientation: thePlayerColorOfThisDevice.when(
         black: BoardOrientationEnum.portraitUpsideDown,
         white: BoardOrientationEnum.portrait,
       ),
     );
+  }
+
+  double _getBoardSize(BuildContext context) {
+    final h = MediaQuery.of(context).size.height;
+    final w = MediaQuery.of(context).size.width;
+    final remainingH = h -
+        // header height
+        kToolbarHeight -
+        // board height (default)
+        w -
+        // device padding
+        verticalPadding;
+    final requiredH = TurnIndicator.height +
+        // captured piece indicator height
+        w / 9 +
+        // spacer height
+        8 +
+        // network management section height (predicted)
+        76;
+    final diff = requiredH - remainingH;
+
+    late double multiplier;
+    {
+      if (diff < 0) {
+        multiplier = 1;
+      } else {
+        multiplier = (w - diff) / w;
+      }
+    }
+
+    G.logger.d('HostGameScreen: _Board: '
+        ' h: $h, w: $w, remainingH: $remainingH, '
+        'requiredH: $requiredH, diff: $diff, '
+        'multiplier: $multiplier');
+
+    return w * multiplier;
   }
 
   Widget squareBuilder(

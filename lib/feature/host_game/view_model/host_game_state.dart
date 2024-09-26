@@ -82,6 +82,7 @@ class HostGameNetworkState {
     required this.connectedClients,
     required this.runningHost,
     required this.runningPort,
+    this.allowedClient,
   });
 
   const HostGameNetworkState.initial()
@@ -96,20 +97,7 @@ class HostGameNetworkState {
   final List<HostGameClientState> connectedClients;
   final String runningHost;
   final int runningPort;
-
-  HostGameNetworkState copyWith({
-    bool? isServerRunning,
-    List<HostGameClientState>? connectedClients,
-    String? runningHost,
-    int? runningPort,
-  }) {
-    return HostGameNetworkState(
-      isServerRunning: isServerRunning ?? this.isServerRunning,
-      connectedClients: connectedClients ?? this.connectedClients,
-      runningHost: runningHost ?? this.runningHost,
-      runningPort: runningPort ?? this.runningPort,
-    );
-  }
+  final HostGameClientState? allowedClient;
 }
 
 @immutable
