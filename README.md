@@ -32,11 +32,11 @@ Check the `pubspec.yaml` files for the dependencies used in the project and modu
 The chess piece images used in the project are available in the following link.
 [Download pieces in svg format](https://opengameart.org/content/chess-pieces-in-svg-format)
 ## Screenshots
-<details>
+<details open>
   <summary> Home </summary> <br>
   <img alt="" src="https://github.com/user-attachments/assets/716a1ee8-fcd0-4d31-90a6-5783e643d23e" width="240" height="520" /> 
 </details>
-<details>
+<details open>
   <summary> Local Game </summary> <br>
   <img alt="" src="https://github.com/user-attachments/assets/3b39fa14-7425-47bc-8f2e-1ebc94ac052a" width="240" height="520" />
   <img alt="" src="https://github.com/user-attachments/assets/6f5b6381-9d71-4974-bd05-756eb9125d9e" width="240" height="520" />
