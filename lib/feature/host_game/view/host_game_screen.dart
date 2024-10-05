@@ -22,6 +22,9 @@ import 'package:localchess/product/state/base/base_state.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
+import 'package:localchess/product/widget/board/square_highlighter/square_highlighter_function_types.dart';
+import 'package:localchess/product/widget/board/square_highlighter/square_highlighter_helper.dart';
+import 'package:localchess/product/widget/board/square_highlighter/square_highlighter_implementor_mixin.dart';
 import 'package:localchess/product/widget/header/game_screens_header.dart';
 import 'package:localchess/product/widget/player_information_section/captured_piece_indicator/captured_piece_indicator.dart';
 import 'package:localchess/product/widget/player_information_section/turn_indicator.dart';
@@ -47,7 +50,7 @@ class HostGameScreen extends StatefulWidget {
 }
 
 class _HostGameScreenState extends BaseState<HostGameScreen>
-    with HostGameStateMixin {
+    with SquareHighlighterImplementorMixin, HostGameStateMixin {
   @override
   Widget build(BuildContext context) {
     final verticalPadding = MediaQuery.of(context).padding.top +
@@ -92,6 +95,8 @@ class _HostGameScreenState extends BaseState<HostGameScreen>
                         onMoveTried: onMoveTried,
                         thePlayerColorOfThisDevice: widget.chosenColor,
                         verticalPadding: verticalPadding,
+                        onDragEnter: onSquareDragEnter,
+                        onDragLeave: onSquareDragLeave,
                       ),
                     ],
                   ),
@@ -365,6 +370,8 @@ class _Board extends StatelessWidget {
     required this.onMoveTried,
     required this.thePlayerColorOfThisDevice,
     required this.verticalPadding,
+    required this.onDragEnter,
+    required this.onDragLeave,
   });
 
   /// The function to call when the user taps on a square to focus on a piece
@@ -373,6 +380,12 @@ class _Board extends StatelessWidget {
 
   /// The function to call when the user tries to move a piece.
   final Future<void> Function(SquareCoordinate) onMoveTried;
+
+  /// The function to call when the user drags a piece over a square.
+  final OnDragEnter onDragEnter;
+
+  /// The function to call when the user drags a piece out of a square.
+  final OnDragLeave onDragLeave;
 
   final PlayerColor thePlayerColorOfThisDevice;
 
@@ -431,7 +444,10 @@ class _Board extends StatelessWidget {
     SquareCoordinate coordinate,
     double unitSize,
   ) {
+    final squareHighlighterHelper = SquareHighlighterHelper(unitSize: unitSize);
+    final squareKey = GlobalKey();
     return InkWell(
+      key: squareKey,
       onTap: () {
         final state = context.read<HostGameViewModel>().state;
         if (state is! HostGameLoadedState) return;
@@ -444,6 +460,18 @@ class _Board extends StatelessWidget {
       child: DragTarget(
         onAcceptWithDetails: (details) {
           onMoveTried(coordinate);
+        },
+        onLeave: (_) {
+          onDragLeave(context, coordinate, squareKey);
+        },
+        onMove: (_) {
+          onDragEnter(
+            context,
+            coordinate,
+            squareHighlighterHelper.overlayBuilder,
+            squareKey,
+            squareHighlighterHelper.offset,
+          );
         },
         builder: (context, a, b) {
           // use filling container with color property to allow the drag

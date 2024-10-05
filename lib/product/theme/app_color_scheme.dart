@@ -64,4 +64,5 @@ abstract final class AppColorScheme {
   static const Color inCheckBackgroundColor = Colors.red;
   static const Color moveFromBackgroundColor = Colors.green;
   static const Color moveDotsColor = Colors.green;
+  static final Color highlighterCrossColor = Colors.grey.shade800;
 }
