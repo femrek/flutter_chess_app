@@ -45,13 +45,21 @@ class BoardSquareContent extends StatelessWidget {
     // show the piece away from the center when dragging. When dragging the
     // piece could be hidden by the finger. So, show it a little bit away from
     // the center.
-    final feedbackOffsetValue = unitSize * 0.8;
+    final feedbackSize = unitSize * 2;
+    final feedbackOffsetDy = -feedbackSize * 0.6;
+    final feedbackOffsetDx = (-feedbackSize + unitSize) / 2;
     final feedbackOffset = orientation.when(
-      portrait: Offset(0, -feedbackOffsetValue),
-      portraitUpsideDown: Offset(0, -feedbackOffsetValue),
+      portrait: Offset(
+        feedbackOffsetDx,
+        feedbackOffsetDy - unitSize,
+      ),
+      portraitUpsideDown: Offset(
+        feedbackOffsetDx,
+        feedbackOffsetDy - unitSize,
+      ),
       landscapeLeftBased: data.piece?.color.when(
-        black: Offset(-feedbackOffsetValue, 0),
-        white: Offset(feedbackOffsetValue, 0),
+        black: Offset(feedbackOffsetDy - unitSize, feedbackOffsetDx),
+        white: Offset(-feedbackOffsetDy, feedbackOffsetDx),
       ),
     );
 
@@ -96,8 +104,8 @@ class BoardSquareContent extends StatelessWidget {
           Transform.translate(
             offset: feedbackOffset ?? Offset.zero,
             child: SizedBox(
-              width: unitSize,
-              height: unitSize,
+              width: feedbackSize,
+              height: feedbackSize,
               child: data.piece?.asImage(
                 orientation: orientation,
                 isAchromatic: data.isSyncInProcess,

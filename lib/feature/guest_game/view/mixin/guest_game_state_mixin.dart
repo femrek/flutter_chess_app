@@ -7,9 +7,11 @@ import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/state/base/base_state.dart';
+import 'package:localchess/product/widget/board/square_highlighter/square_highlighter_implementor_mixin.dart';
 import 'package:localchess/product/widget/dialog/pick_a_promotion_dialog.dart';
 
-mixin GuestGameStateMixin on BaseState<GuestGameScreen> {
+mixin GuestGameStateMixin
+    on BaseState<GuestGameScreen>, SquareHighlighterImplementorMixin {
   @override
   void initState() {
     super.initState();
@@ -25,6 +27,8 @@ mixin GuestGameStateMixin on BaseState<GuestGameScreen> {
     super.dispose();
     G.logger.t('GuestGameScreenStateMixin.dispose');
     viewModel.disconnect();
+    draggingSquareOverlayEntry?.remove();
+    draggingSquareOverlayEntry?.dispose();
   }
 
   GuestGameViewModel get viewModel => G.guestGameViewModel;
@@ -82,6 +86,7 @@ mixin GuestGameStateMixin on BaseState<GuestGameScreen> {
     if (squareState == null) {
       G.logger.d('Invalid move. No square state found for $target');
       viewModel.removeFocus();
+      removeDraggingSquareOverlay();
       G.logger.t('onMoveTried: Removed focus');
       return;
     }
@@ -93,6 +98,7 @@ mixin GuestGameStateMixin on BaseState<GuestGameScreen> {
     if (move == null) {
       G.logger.d('Invalid move. No move found for $target');
       viewModel.removeFocus();
+      removeDraggingSquareOverlay();
       G.logger.t('onMoveTried: Removed focus');
       return;
     }
@@ -120,6 +126,7 @@ mixin GuestGameStateMixin on BaseState<GuestGameScreen> {
       move: move,
       promotion: promotion,
     );
+    removeDraggingSquareOverlay();
 
     G.logger.t('onMoveTried: Moved to $target');
   }
