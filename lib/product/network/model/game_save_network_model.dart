@@ -1,6 +1,7 @@
-import 'package:core/core.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 /// A network model for communicating [GameSaveCacheModel] data.
 class GameSaveNetworkModel implements NetworkModel {

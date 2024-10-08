@@ -1,7 +1,11 @@
 import 'dart:io';
 
-import 'package:core/core.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/i_socket_client_manager.dart';
+import 'package:localchess/product/network/core/i_socket_configuration.dart';
+import 'package:localchess/product/network/core/model/address_on_network.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 import 'package:localchess/product/network/model/disconnect_network_model.dart';
 import 'package:localchess/product/network/model/introduce_network_model.dart';
 

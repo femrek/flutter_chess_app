@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:localchess/product/data/network_scan_result.dart';
+import 'package:localchess/product/network/core/model/address_on_network.dart';
 
 /// Interface for network game scanner service. Provides methods for scanning
 /// the network for available games and checking the host if runs a game.

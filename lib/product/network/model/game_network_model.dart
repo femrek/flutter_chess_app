@@ -1,7 +1,8 @@
-import 'package:core/core.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/data/piece/app_piece_json_extension.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 /// The network model to send the status of the board and other details.
 /// Does non include the whole game save.

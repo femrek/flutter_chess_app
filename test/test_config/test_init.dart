@@ -7,6 +7,8 @@ import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/cache/model/sender_information_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/device_properties/app_device_properties.dart';
+import 'package:localchess/product/device_properties/i_device_properties.dart';
+import 'package:localchess/product/network/core/i_socket_configuration.dart';
 import 'package:localchess/product/network/impl/app_socket_configuration.dart';
 import 'package:logger/logger.dart';
 

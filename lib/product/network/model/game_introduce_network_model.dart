@@ -1,7 +1,8 @@
-import 'package:core/core.dart';
 import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/data/player_color/player_color_json_extension.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 /// A network model for introducing a game to  client by the host.
 class GameIntroduceNetworkModel implements NetworkModel {

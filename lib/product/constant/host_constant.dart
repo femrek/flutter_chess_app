@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:core/core.dart';
+import 'package:localchess/product/network/core/model/address_on_network.dart';
 
 /// The constant for the host configuration.
 abstract final class HostConstant {

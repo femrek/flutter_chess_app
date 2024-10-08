@@ -1,4 +1,3 @@
-import 'package:core/core.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_state.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/host_constant.dart';
@@ -7,6 +6,9 @@ import 'package:localchess/product/data/move/app_chess_move.dart';
 import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/i_socket_host_manager.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 import 'package:localchess/product/network/impl/socket_host_manager.dart';
 import 'package:localchess/product/network/model/allowing_status_network_model.dart';
 import 'package:localchess/product/network/model/game_introduce_network_model.dart';

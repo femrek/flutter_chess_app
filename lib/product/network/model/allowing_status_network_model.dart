@@ -1,5 +1,6 @@
-import 'package:core/core.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 /// A network model for allowing a client to play the game. also can be used to
 /// deny or cancel the allowing status.

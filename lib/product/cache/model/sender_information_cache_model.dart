@@ -1,6 +1,7 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 import 'package:localchess/product/util/theme_mode_json_converter.dart';
 
 /// Cache model for device id

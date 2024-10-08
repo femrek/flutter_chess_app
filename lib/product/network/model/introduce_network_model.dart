@@ -1,5 +1,6 @@
-import 'package:core/core.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 /// A network model for introducing a new client to the server or server to
 /// client. Can not be listened to by the on data listeners.

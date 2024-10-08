@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:core/core.dart';
 import 'package:localchess/product/constant/host_constant.dart';
 import 'package:localchess/product/data/network_scan_result.dart';
+import 'package:localchess/product/network/core/model/address_on_network.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 import 'package:localchess/product/network/impl/socket_client_manager.dart';
 import 'package:localchess/product/service/core/i_network_game_scanner_service.dart';
 

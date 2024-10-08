@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:core/core.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
@@ -8,6 +7,7 @@ import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/data/square_data.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 @immutable
 class GuestGameState {

@@ -1,6 +1,7 @@
-import 'package:core/core.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 /// The network model to send the chess move data. Sent from the guest player
 /// to the host player.

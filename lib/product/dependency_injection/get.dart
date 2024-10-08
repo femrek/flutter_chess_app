@@ -9,7 +9,9 @@ import 'package:localchess/feature/setup_host/view_model/setup_host_view_model.d
 import 'package:localchess/feature/setup_join/view_model/setup_join_view_model.dart';
 import 'package:localchess/feature/setup_local/view_model/setup_local_view_model.dart';
 import 'package:localchess/product/cache/i_app_cache.dart';
+import 'package:localchess/product/device_properties/i_device_properties.dart';
 import 'package:localchess/product/navigation/app_route.dart';
+import 'package:localchess/product/network/core/i_socket_configuration.dart';
 import 'package:localchess/product/service/core/i_network_game_scanner_service.dart';
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
 import 'package:localchess/product/theme/app_dark_theme.dart';

@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 /// Interface for initializing and getting the device properties such as the
 /// device id.

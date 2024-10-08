@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:core/core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:localchess/feature/setup_join/view/setup_join_screen.dart';
 import 'package:localchess/feature/setup_join/view_model/setup_join_view_model.dart';
@@ -12,6 +11,7 @@ import 'package:localchess/product/constant/host_constant.dart';
 import 'package:localchess/product/data/network_scan_result.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/navigation/app_route.gr.dart';
+import 'package:localchess/product/network/core/model/address_on_network.dart';
 import 'package:localchess/product/state/base/base_state.dart';
 
 mixin SetupJoinStateMixin on BaseState<SetupJoinScreen> {

@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:core/src/network/i_socket_configuration.dart';
-import 'package:core/src/network/network_model.dart';
-import 'package:core/src/network/sender_information.dart';
+import 'package:localchess/product/network/core/i_socket_configuration.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 /// The onData event listener for the socket host.
 typedef SocketHostOnDataListener = void Function({

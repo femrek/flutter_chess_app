@@ -1,7 +1,8 @@
-import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:localchess/product/cache/model/sender_information_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/device_properties/i_device_properties.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 import 'package:uuid/uuid.dart';
 
 /// To provide the device id, use this class.

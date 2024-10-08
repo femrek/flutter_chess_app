@@ -3,11 +3,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:core/core.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gen/gen.dart';
 import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
+import 'package:localchess/product/network/core/model/address_on_network.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 import 'package:localchess/product/network/impl/socket_host_manager.dart';
 import 'package:localchess/product/network/model/game_save_network_model.dart';
 import 'package:localchess/product/network/model/introduce_network_model.dart';

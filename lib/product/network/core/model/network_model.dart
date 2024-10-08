@@ -1,4 +1,4 @@
-import 'package:core/src/network/sender_information.dart';
+import 'package:localchess/product/network/core/model/sender_information.dart';
 
 /// Interface for network models. Provides a method to convert a network model
 /// to a json map and a method to convert a json map to a network model.

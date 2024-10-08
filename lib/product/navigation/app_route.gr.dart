@@ -9,7 +9,6 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i8;
-import 'package:core/core.dart' as _i9;
 import 'package:flutter/material.dart' as _i10;
 import 'package:localchess/feature/guest_game/view/guest_game_screen.dart'
     as _i1;
@@ -26,6 +25,8 @@ import 'package:localchess/feature/setup_local/view/setup_local_screen.dart'
 import 'package:localchess/product/cache/model/game_save_cache_model.dart'
     as _i11;
 import 'package:localchess/product/data/player_color/player_color.dart' as _i12;
+import 'package:localchess/product/network/core/model/address_on_network.dart'
+    as _i9;
 
 /// generated route for
 /// [_i1.GuestGameScreen]

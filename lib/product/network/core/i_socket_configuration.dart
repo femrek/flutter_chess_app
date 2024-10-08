@@ -1,4 +1,4 @@
-import 'package:core/src/network/network_model.dart';
+import 'package:localchess/product/network/core/model/network_model.dart';
 
 /// Interface for managing the configuration of a socket. Keeps the types of
 /// network models and provides a method to get a network model from a type id.
