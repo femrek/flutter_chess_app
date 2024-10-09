@@ -5,11 +5,11 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Hive implementation of the cache manager.
-final class HiveCacheManager implements CacheManager {
+final class HiveStorageManager implements StorageManager {
   /// Initializes the cache.
   /// [path] is the path to the cache. 'getApplicationDocumentsDirectory' is
   /// used by default.
-  HiveCacheManager({String? path}) : _path = path;
+  HiveStorageManager({String? path}) : _path = path;
 
   final String? _path;
 
@@ -21,7 +21,7 @@ final class HiveCacheManager implements CacheManager {
   }
 
   @override
-  void registerCacheModel<T extends CacheModel>(T modelSample) {
+  void registerStorageModel<T extends StorageModel>(T modelSample) {
     Hive.registerAdapter<T>(
       modelSample.runtimeType.toString(),
       (json) => modelSample.fromJson(json) as T,

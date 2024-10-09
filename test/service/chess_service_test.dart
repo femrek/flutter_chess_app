@@ -2,12 +2,12 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gen/gen.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/service/impl/chess_service.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:logger/logger.dart';
 
 import '../test_config/test_chess_fen_constants.dart';
@@ -17,10 +17,10 @@ void main() async {
   // set logging level
   Logger.level = Level.info;
 
-  await TestInit.initWithTestCacheImpl();
+  await TestInit.initWithTestStorageImpl();
 
   setUp(() {
-    G.appCache.gameSaveOperator.saveAll([
+    G.appStorage.gameSaveOperator.saveAll([
       _saveNew,
       _savePlayed,
       _saveToGetPromotionMove_fromB7_toB8,
@@ -33,7 +33,7 @@ void main() async {
   });
 
   tearDown(() {
-    G.appCache.gameSaveOperator.removeAll();
+    G.appStorage.gameSaveOperator.removeAll();
   });
 
   group('Create an ChessService instance and validate status', () {
@@ -480,7 +480,7 @@ void main() async {
   });
 }
 
-final _saveNew = GameSaveCacheModel(
+final _saveNew = GameSaveStorageModel(
   id: 'id1',
   gameSave: const GameSave(
     name: 'save new',
@@ -490,7 +490,7 @@ final _saveNew = GameSaveCacheModel(
   ),
 );
 
-final _savePlayed = GameSaveCacheModel(
+final _savePlayed = GameSaveStorageModel(
   id: 'id2',
   gameSave: const GameSave(
     name: 'save played',
@@ -516,7 +516,7 @@ final _savePlayed = GameSaveCacheModel(
   ),
 );
 
-final _saveToGetPromotionMove_fromB7_toB8 = GameSaveCacheModel(
+final _saveToGetPromotionMove_fromB7_toB8 = GameSaveStorageModel(
   id: 'id3',
   gameSave: const GameSave(
     name: 'save to get promotion with move',
@@ -532,7 +532,7 @@ final _saveToGetPromotionMove_fromB7_toB8 = GameSaveCacheModel(
   ),
 );
 
-final _saveToGetPromotionCapture_fromB7_toA8 = GameSaveCacheModel(
+final _saveToGetPromotionCapture_fromB7_toA8 = GameSaveStorageModel(
   id: 'id4',
   gameSave: const GameSave(
     name: 'save to get promotion with capture',
@@ -542,7 +542,7 @@ final _saveToGetPromotionCapture_fromB7_toA8 = GameSaveCacheModel(
   ),
 );
 
-final _saveBlackKingUnderAttack = GameSaveCacheModel(
+final _saveBlackKingUnderAttack = GameSaveStorageModel(
   id: 'id5',
   gameSave: const GameSave(
     name: 'save black king under attack',
@@ -552,7 +552,7 @@ final _saveBlackKingUnderAttack = GameSaveCacheModel(
   ),
 );
 
-final _saveCheckmate_blackLost = GameSaveCacheModel(
+final _saveCheckmate_blackLost = GameSaveStorageModel(
   id: 'id6',
   gameSave: const GameSave(
     name: 'save checkmate black lost',
@@ -562,7 +562,7 @@ final _saveCheckmate_blackLost = GameSaveCacheModel(
   ),
 );
 
-final _saveStalemate = GameSaveCacheModel(
+final _saveStalemate = GameSaveStorageModel(
   id: 'id7',
   gameSave: const GameSave(
     name: 'save stalemate',
@@ -572,7 +572,7 @@ final _saveStalemate = GameSaveCacheModel(
   ),
 );
 
-final _saveDraw = GameSaveCacheModel(
+final _saveDraw = GameSaveStorageModel(
   id: 'id8',
   gameSave: const GameSave(
     name: 'save draw',

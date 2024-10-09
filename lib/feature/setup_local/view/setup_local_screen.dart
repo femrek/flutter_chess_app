@@ -6,9 +6,9 @@ import 'package:localchess/feature/setup_local/view/widget/setup_local_header.da
 import 'package:localchess/feature/setup_local/view/widget/setup_local_save_list.dart';
 import 'package:localchess/feature/setup_local/view_model/setup_local_state.dart';
 import 'package:localchess/feature/setup_local/view_model/setup_local_view_model.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/state/base/base_state.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:localchess/product/widget/list_tile/app_save_list_tile.dart';
 
 /// The screen for setting up the local settings. Game saves are shown here.
@@ -65,7 +65,7 @@ class _SaveList extends StatelessWidget {
         MediaQuery.of(context).padding;
 
     return BlocSelector<SetupLocalViewModel, SetupLocalState,
-        List<GameSaveCacheModel>>(
+        List<GameSaveStorageModel>>(
       selector: (state) => state.saves,
       builder: (context, saveList) {
         return SetupLocalSaveList(

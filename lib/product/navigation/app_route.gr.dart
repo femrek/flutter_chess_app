@@ -22,11 +22,11 @@ import 'package:localchess/feature/setup_join/view/setup_join_screen.dart'
     as _i6;
 import 'package:localchess/feature/setup_local/view/setup_local_screen.dart'
     as _i7;
-import 'package:localchess/product/cache/model/game_save_cache_model.dart'
-    as _i11;
 import 'package:localchess/product/data/player_color/player_color.dart' as _i12;
 import 'package:localchess/product/network/core/model/address_on_network.dart'
     as _i9;
+import 'package:localchess/product/storage/model/game_save_storage_model.dart'
+    as _i11;
 
 /// generated route for
 /// [_i1.GuestGameScreen]
@@ -97,7 +97,7 @@ class HomeRoute extends _i8.PageRouteInfo<void> {
 /// [_i3.HostGameScreen]
 class HostGameRoute extends _i8.PageRouteInfo<HostGameRouteArgs> {
   HostGameRoute({
-    required _i11.GameSaveCacheModel save,
+    required _i11.GameSaveStorageModel save,
     required _i12.PlayerColor chosenColor,
     _i10.Key? key,
     List<_i8.PageRouteInfo>? children,
@@ -133,7 +133,7 @@ class HostGameRouteArgs {
     this.key,
   });
 
-  final _i11.GameSaveCacheModel save;
+  final _i11.GameSaveStorageModel save;
 
   final _i12.PlayerColor chosenColor;
 
@@ -149,7 +149,7 @@ class HostGameRouteArgs {
 /// [_i4.LocalGameScreen]
 class LocalGameRoute extends _i8.PageRouteInfo<LocalGameRouteArgs> {
   LocalGameRoute({
-    required _i11.GameSaveCacheModel save,
+    required _i11.GameSaveStorageModel save,
     _i10.Key? key,
     List<_i8.PageRouteInfo>? children,
   }) : super(
@@ -181,7 +181,7 @@ class LocalGameRouteArgs {
     this.key,
   });
 
-  final _i11.GameSaveCacheModel save;
+  final _i11.GameSaveStorageModel save;
 
   final _i10.Key? key;
 

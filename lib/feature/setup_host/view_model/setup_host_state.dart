@@ -1,16 +1,16 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 
 class SetupHostState {
   const SetupHostState({
     required this.saves,
   });
 
-  final List<GameSaveCacheModel> saves;
+  final List<GameSaveStorageModel> saves;
 
   SetupHostState copyWith({
-    List<GameSaveCacheModel>? saves,
+    List<GameSaveStorageModel>? saves,
   }) {
     return SetupHostState(
       saves: saves ?? this.saves,

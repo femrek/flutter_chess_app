@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
@@ -10,6 +9,7 @@ import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
 import 'package:localchess/product/service/impl/chess_service.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/util/date_extension.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
@@ -31,7 +31,7 @@ class GamePreviewDialog extends StatefulWidget {
   });
 
   /// The local game save to preview.
-  final GameSaveCacheModel save;
+  final GameSaveStorageModel save;
 
   /// The callback when the play button is pressed.
   final OnPreviewPlayPressed onPlayPressed;
@@ -49,7 +49,7 @@ class GamePreviewDialog extends StatefulWidget {
   /// Shows a [GamePreviewDialog] with the given [save] and [onPlayPressed].
   static Future<void> show({
     required BuildContext context,
-    required GameSaveCacheModel save,
+    required GameSaveStorageModel save,
     required OnPreviewPlayPressed onPlayPressed,
     required VoidCallback onRemovePressed,
     PlayerColor defaultColor = PlayerColor.white,

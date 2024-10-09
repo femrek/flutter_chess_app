@@ -1,17 +1,18 @@
-import 'package:core/src/cache/core/cache_model.dart';
-import 'package:core/src/cache/core/cache_model_meta_data.dart';
-import 'package:core/src/cache/core/cache_operator.dart';
-import 'package:core/src/cache/error/element_already_exits_error.dart';
-import 'package:core/src/cache/error/element_does_not_exist_when_update_error.dart';
-import 'package:core/src/cache/error/element_id_duplicated_error.dart';
-import 'package:core/src/cache/sort/get_all_sort_enum.dart';
+import 'package:core/src/storage/core/storage_model.dart';
+import 'package:core/src/storage/core/storage_model_meta_data.dart';
+import 'package:core/src/storage/core/storage_operator.dart';
+import 'package:core/src/storage/error/element_already_exits_error.dart';
+import 'package:core/src/storage/error/element_does_not_exist_when_update_error.dart';
+import 'package:core/src/storage/error/element_id_duplicated_error.dart';
+import 'package:core/src/storage/sort/get_all_sort_enum.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 
-/// [CacheOperator] implementation using Hive
-class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
-  /// Creates a new [HiveCacheOperator] instance.
-  HiveCacheOperator({required Logger logger}) : log = logger {
+/// [StorageOperator] implementation using Hive
+class HiveStorageOperator<T extends StorageModel>
+    implements StorageOperator<T> {
+  /// Creates a new [HiveStorageOperator] instance.
+  HiveStorageOperator({required Logger logger}) : log = logger {
     _box = Hive.box<T>(name: T.toString());
   }
 
@@ -95,7 +96,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
 
     // Save the item
     final saveTime = DateTime.now();
-    final metaData = CacheModelMetaData(
+    final metaData = StorageModelMetaData(
       createAt: saveTime,
       updateAt: saveTime,
     );
@@ -122,7 +123,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
         throw ElementIdDuplicatedError('The id ${item.id} is duplicated.');
       }
       final saveTime = DateTime.now();
-      final metaData = CacheModelMetaData(
+      final metaData = StorageModelMetaData(
         createAt: saveTime,
         updateAt: saveTime,
       );
@@ -159,7 +160,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
     }
 
     final updateTime = DateTime.now();
-    final metaData = CacheModelMetaData(
+    final metaData = StorageModelMetaData(
       createAt: savedItem.metaData?.createAt ?? updateTime,
       updateAt: updateTime,
     );
@@ -200,7 +201,7 @@ class HiveCacheOperator<T extends CacheModel> implements CacheOperator<T> {
       }
 
       final updateTime = DateTime.now();
-      final metaData = CacheModelMetaData(
+      final metaData = StorageModelMetaData(
         createAt: savedItem.metaData?.createAt ?? updateTime,
         updateAt: updateTime,
       );

@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gen/gen.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/network/core/model/address_on_network.dart';
 import 'package:localchess/product/network/core/model/network_model.dart';
@@ -13,15 +12,16 @@ import 'package:localchess/product/network/core/model/sender_information.dart';
 import 'package:localchess/product/network/impl/socket_host_manager.dart';
 import 'package:localchess/product/network/model/game_save_network_model.dart';
 import 'package:localchess/product/network/model/introduce_network_model.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 
 import '../test_config/test_init.dart';
 
 void main() async {
-  // init with test cache implementation.
-  await TestInit.initWithTestCacheImpl();
+  // init with test storage implementation.
+  await TestInit.initWithTestStorageImpl();
 
   // save a sample game save data.
-  G.appCache.gameSaveOperator.save(_gameSaveCacheModel);
+  G.appStorage.gameSaveOperator.save(_gameSaveStorageModel);
 
   group('SocketHostManager run server, receive and send data', () {
     test('SocketHostManager run server, receive and send data', () async {
@@ -46,11 +46,11 @@ void main() async {
             fail('IntroduceNetworkModel data should not trigger onData');
           }
           if (data is GameSaveNetworkModel) {
-            expect(data.gameSaveCacheModel, isNotNull);
-            expect(data.gameSaveCacheModel.id, _gameSaveCacheModel.id);
+            expect(data.gameSaveStorageModel, isNotNull);
+            expect(data.gameSaveStorageModel.id, _gameSaveStorageModel.id);
             expect(
-              data.gameSaveCacheModel.gameSave.name,
-              _gameSaveCacheModel.gameSave.name,
+              data.gameSaveStorageModel.gameSave.name,
+              _gameSaveStorageModel.gameSave.name,
             );
             expectCheck_gameSaveReceived = true;
           }
@@ -106,7 +106,7 @@ void main() async {
       // send game save data
       {
         final gameSaveData = GameSaveNetworkModel(
-          gameSaveCacheModel: _gameSaveCacheModel,
+          gameSaveStorageModel: _gameSaveStorageModel,
         );
         final gameSaveDataJson = jsonEncode(gameSaveData.toJson());
         client.write('$gameSaveDataJson${manager.configuration.delimiter}');
@@ -145,7 +145,7 @@ final _serverAddress = AddressOnNetwork(
   port: 8081,
 );
 
-final _gameSaveCacheModel = GameSaveCacheModel(
+final _gameSaveStorageModel = GameSaveStorageModel(
   id: 'test_game',
   gameSave: const GameSave(
     name: 'Test Game',

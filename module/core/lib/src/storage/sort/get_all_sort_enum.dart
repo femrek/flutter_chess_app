@@ -1,7 +1,7 @@
-import 'package:core/src/cache/core/cache_model.dart';
-import 'package:core/src/cache/sort/extension/date_time_sorting_extension.dart';
+import 'package:core/src/storage/core/storage_model.dart';
+import 'package:core/src/storage/sort/extension/date_time_sorting_extension.dart';
 
-/// The enum for sorting the [CacheModel] list when reading from the cache.
+/// The enum for sorting the [StorageModel] list when reading from the cache.
 enum GetAllSortEnum {
   /// Sort by createAt in ascending order.
   createAtAsc(isAsc: true),
@@ -24,8 +24,8 @@ enum GetAllSortEnum {
   /// Whether the sorting is in ascending order.
   final bool isAsc;
 
-  /// Returns the value of the [CacheModel] based on the sorting type.
-  dynamic valueOf(CacheModel cacheModel) {
+  /// Returns the value of the [StorageModel] based on the sorting type.
+  dynamic valueOf(StorageModel cacheModel) {
     switch (this) {
       // createAt
       case GetAllSortEnum.createAtAsc:
@@ -45,8 +45,8 @@ enum GetAllSortEnum {
 
   /// Returns true if the value should be inserted to the left of the nthModel.
   bool canInsertLeft({
-    required CacheModel checking,
-    required CacheModel? nthModel,
+    required StorageModel checking,
+    required StorageModel? nthModel,
   }) {
     if (this == GetAllSortEnum.none) {
       return true;

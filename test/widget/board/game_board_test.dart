@@ -11,7 +11,7 @@ import '../../test_config/test_init.dart';
 void main() async {
   Logger.level = Level.info;
 
-  await TestInit.initWithTestCacheImpl();
+  await TestInit.initWithTestStorageImpl();
 
   group('load game to the board', () {
     testWidgets('create empty board', (WidgetTester tester) async {

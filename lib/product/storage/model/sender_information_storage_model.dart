@@ -5,22 +5,22 @@ import 'package:localchess/product/network/core/model/sender_information.dart';
 import 'package:localchess/product/util/theme_mode_json_converter.dart';
 
 /// Cache model for device id
-final class DevicePropertiesCacheModel implements CacheModel {
-  /// Creates a new [DevicePropertiesCacheModel]
-  DevicePropertiesCacheModel({
+final class DevicePropertiesStorageModel implements StorageModel {
+  /// Creates a new [DevicePropertiesStorageModel]
+  DevicePropertiesStorageModel({
     required this.senderInformation,
     required this.themeMode,
   });
 
-  DevicePropertiesCacheModel._internal({
+  DevicePropertiesStorageModel._internal({
     required this.senderInformation,
     required this.themeMode,
     this.metaData,
   });
 
-  /// Creates an empty [DevicePropertiesCacheModel]. Use to create a sample
+  /// Creates an empty [DevicePropertiesStorageModel]. Use to create a sample
   /// model.
-  DevicePropertiesCacheModel.empty()
+  DevicePropertiesStorageModel.empty()
       : senderInformation = const SenderInformation.empty(),
         themeMode = ThemeMode.system;
 
@@ -34,34 +34,34 @@ final class DevicePropertiesCacheModel implements CacheModel {
   String get id => senderInformation.deviceId;
 
   @override
-  DevicePropertiesCacheModel fromJson(dynamic json) {
+  DevicePropertiesStorageModel fromJson(dynamic json) {
     // log and return empty if json is not valid.
     if (json == null) {
       G.logger.e('json is null');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
     if (json is! Map) {
       G.logger.e('json is not a Map');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
     if (json is! Map<String, dynamic>) {
       G.logger.e('json is not a Map<String, dynamic>');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
 
     // validate the metaData. log and return empty, if metaData is not valid.
     final metaDataJson = json['metaData'];
     if (metaDataJson == null) {
       G.logger.e('metaData is null');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
     if (metaDataJson is! Map) {
       G.logger.e('metaData is not a Map');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
     if (metaDataJson is! Map<String, dynamic>) {
       G.logger.e('metaData is not a Map<String, dynamic>');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
 
     // validate the senderInformation. log and return empty, if
@@ -69,33 +69,33 @@ final class DevicePropertiesCacheModel implements CacheModel {
     final senderInformation = json['senderInformation'];
     if (senderInformation == null) {
       G.logger.e('senderInformation is null');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
     if (senderInformation is! Map) {
       G.logger.e('senderInformation is not a Map');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
     if (senderInformation is! Map<String, dynamic>) {
       G.logger.e('senderInformation is not a Map<String, dynamic>');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
 
     // validate the themeMode. log and return empty, if themeMode is not valid.
     final themeMode = json['themeMode'];
     if (themeMode is! String?) {
       G.logger.e('themeMode is not a String');
-      return DevicePropertiesCacheModel.empty();
+      return DevicePropertiesStorageModel.empty();
     }
 
-    return DevicePropertiesCacheModel._internal(
+    return DevicePropertiesStorageModel._internal(
       senderInformation: SenderInformation.fromJson(senderInformation),
       themeMode: ThemeModeJsonConverter.fromJson(themeMode),
-      metaData: CacheModelMetaData.fromJson(metaDataJson),
+      metaData: StorageModelMetaData.fromJson(metaDataJson),
     );
   }
 
   @override
-  CacheModelMetaData? metaData;
+  StorageModelMetaData? metaData;
 
   @override
   Map<String, dynamic> toJson() {
@@ -107,12 +107,12 @@ final class DevicePropertiesCacheModel implements CacheModel {
     };
   }
 
-  /// Creates a new [DevicePropertiesCacheModel] with the given parameters.
-  DevicePropertiesCacheModel copyWith({
+  /// Creates a new [DevicePropertiesStorageModel] with the given parameters.
+  DevicePropertiesStorageModel copyWith({
     SenderInformation? senderInformation,
     ThemeMode? themeMode,
   }) {
-    return DevicePropertiesCacheModel._internal(
+    return DevicePropertiesStorageModel._internal(
       senderInformation: senderInformation ?? this.senderInformation,
       themeMode: themeMode ?? this.themeMode,
       metaData: metaData,

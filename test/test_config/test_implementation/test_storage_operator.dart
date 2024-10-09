@@ -1,8 +1,8 @@
 import 'package:core/core.dart';
 
-/// A test implementation of [CacheOperator]. Keeps the items in a dart list.
-final class TestCacheOperator<T extends CacheModel>
-    implements CacheOperator<T> {
+/// A test implementation of [StorageOperator]. Keeps the items in a dart list.
+final class TestStorageOperator<T extends StorageModel>
+    implements StorageOperator<T> {
   final List<T> _items = [];
 
   @override
@@ -32,7 +32,7 @@ final class TestCacheOperator<T extends CacheModel>
   T save(T item) {
     _items.add(item);
     return item
-      ..metaData = CacheModelMetaData(
+      ..metaData = StorageModelMetaData(
         createAt: DateTime.now(),
         updateAt: DateTime.now(),
       );
@@ -43,7 +43,7 @@ final class TestCacheOperator<T extends CacheModel>
     _items.addAll(
       items
         ..forEach((e) => e
-          ..metaData = CacheModelMetaData(
+          ..metaData = StorageModelMetaData(
             createAt: DateTime.now(),
             updateAt: DateTime.now(),
           )),
@@ -61,7 +61,7 @@ final class TestCacheOperator<T extends CacheModel>
       ..remove(oldItem)
       ..add(item);
     return item
-      ..metaData = CacheModelMetaData(
+      ..metaData = StorageModelMetaData(
         createAt: oldItem.metaData?.createAt ?? DateTime.now(),
         updateAt: DateTime.now(),
       );
@@ -87,7 +87,7 @@ final class TestCacheOperator<T extends CacheModel>
         ..remove(oldItem)
         ..add(item);
       updatedItems.add(item
-        ..metaData = CacheModelMetaData(
+        ..metaData = StorageModelMetaData(
           createAt: oldItem.metaData?.createAt ?? DateTime.now(),
           updateAt: DateTime.now(),
         ));

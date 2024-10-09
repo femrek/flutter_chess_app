@@ -1,12 +1,12 @@
 import 'package:chess/chess.dart' as ch;
 import 'package:gen/gen.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
 import 'package:localchess/product/data/piece/app_piece.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 
 /// The service for performing chess operations. [IChessService] implementation
 /// with [ch.Chess] as the chess engine.
@@ -14,7 +14,7 @@ class ChessService implements IChessService {
   /// Creates the chess service. [save] is the local game save for the current
   /// game. The service performs operations on this save.
   ChessService({
-    required GameSaveCacheModel save,
+    required GameSaveStorageModel save,
     this.keepSaveUpdated = true,
   }) : _save = save {
     try {
@@ -30,7 +30,7 @@ class ChessService implements IChessService {
   /// will be updated after each move, reset, undo, etc. operation.
   final bool keepSaveUpdated;
 
-  GameSaveCacheModel _save;
+  GameSaveStorageModel _save;
 
   late ch.Chess _chess;
 
@@ -49,8 +49,8 @@ class ChessService implements IChessService {
     }
 
     // update the save in the cache.
-    _save = G.appCache.gameSaveOperator.update(
-      GameSaveCacheModel(
+    _save = G.appStorage.gameSaveOperator.update(
+      GameSaveStorageModel(
         id: _save.id,
         gameSave: newSaveResult,
       ),

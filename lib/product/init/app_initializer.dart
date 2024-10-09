@@ -26,7 +26,7 @@ abstract final class AppInitializer {
     await EasyLocalization.ensureInitialized();
 
     // cache
-    await G.appCache.init();
+    await G.appStorage.init();
 
     // device id
     G.deviceProperties.init();

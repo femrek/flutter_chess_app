@@ -4,11 +4,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:localchess/feature/setup_host/view/setup_host_screen.dart';
 import 'package:localchess/feature/setup_host/view_model/setup_host_view_model.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/navigation/app_route.gr.dart';
 import 'package:localchess/product/state/base/base_state.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:localchess/product/widget/dialog/confirmation_dialog.dart';
 import 'package:localchess/product/widget/dialog/enter_game_name_dialog.dart';
 
@@ -44,7 +44,8 @@ mixin SetupHostStateMixin on BaseState<SetupHostScreen> {
     });
   }
 
-  Future<void> onPlayPressed(GameSaveCacheModel save, PlayerColor color) async {
+  Future<void> onPlayPressed(
+      GameSaveStorageModel save, PlayerColor color) async {
     if (mounted) {
       await context.router.push(HostGameRoute(
         save: save,
@@ -53,7 +54,7 @@ mixin SetupHostStateMixin on BaseState<SetupHostScreen> {
     }
   }
 
-  Future<void> onRemovePressed(GameSaveCacheModel save) async {
+  Future<void> onRemovePressed(GameSaveStorageModel save) async {
     final removeConfirmed = await ConfirmationDialog.showRemoveConfirmation(
       context: context,
       gameName: save.gameSave.name,

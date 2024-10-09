@@ -1,27 +1,27 @@
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/network/core/model/network_model.dart';
 import 'package:localchess/product/network/core/model/sender_information.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 
-/// A network model for communicating [GameSaveCacheModel] data.
+/// A network model for communicating [GameSaveStorageModel] data.
 class GameSaveNetworkModel implements NetworkModel {
   /// Creates a new [GameSaveNetworkModel]
   GameSaveNetworkModel({
-    required this.gameSaveCacheModel,
+    required this.gameSaveStorageModel,
   }) : _senderInformation = null;
 
   GameSaveNetworkModel._internal({
-    required this.gameSaveCacheModel,
+    required this.gameSaveStorageModel,
     required SenderInformation senderInformation,
   }) : _senderInformation = senderInformation;
 
   /// Creates an empty [GameSaveNetworkModel]
   GameSaveNetworkModel.empty()
-      : gameSaveCacheModel = GameSaveCacheModel.empty(),
+      : gameSaveStorageModel = GameSaveStorageModel.empty(),
         _senderInformation = null;
 
-  /// The [GameSaveCacheModel] data.
-  final GameSaveCacheModel gameSaveCacheModel;
+  /// The [GameSaveStorageModel] data.
+  final GameSaveStorageModel gameSaveStorageModel;
 
   final SenderInformation? _senderInformation;
 
@@ -74,7 +74,8 @@ class GameSaveNetworkModel implements NetworkModel {
     }
 
     return GameSaveNetworkModel._internal(
-      gameSaveCacheModel: GameSaveCacheModel.fromJson(gameSaveCacheModelJson),
+      gameSaveStorageModel:
+          GameSaveStorageModel.fromJson(gameSaveCacheModelJson),
       senderInformation: senderInformation,
     );
   }
@@ -84,7 +85,7 @@ class GameSaveNetworkModel implements NetworkModel {
     return {
       'senderInformation': senderInformation,
       'typeId': typeId,
-      'gameSaveCacheModel': gameSaveCacheModel.toJson(),
+      'gameSaveCacheModel': gameSaveStorageModel.toJson(),
     };
   }
 }

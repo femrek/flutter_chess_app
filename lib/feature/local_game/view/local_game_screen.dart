@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localchess/feature/local_game/view/mixin/local_game_state_mixin.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
 import 'package:localchess/feature/local_game/view_model/local_game_view_model.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
 import 'package:localchess/product/data/chess_turn/app_chess_turn_status.dart';
 import 'package:localchess/product/data/coordinate/board_orientation_enum.dart';
@@ -16,6 +15,7 @@ import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/state/base/base_state.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
@@ -37,7 +37,7 @@ class LocalGameScreen extends StatefulWidget {
   });
 
   /// The selected save to play
-  final GameSaveCacheModel save;
+  final GameSaveStorageModel save;
 
   @override
   State<LocalGameScreen> createState() => _LocalGameScreenState();

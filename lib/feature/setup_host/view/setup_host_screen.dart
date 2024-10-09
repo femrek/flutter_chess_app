@@ -6,10 +6,10 @@ import 'package:localchess/feature/setup_host/view/widget/setup_host_header.dart
 import 'package:localchess/feature/setup_host/view/widget/setup_host_save_list.dart';
 import 'package:localchess/feature/setup_host/view_model/setup_host_state.dart';
 import 'package:localchess/feature/setup_host/view_model/setup_host_view_model.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
 import 'package:localchess/product/state/base/base_state.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:localchess/product/widget/device_name_input/device_name_input.dart';
 import 'package:localchess/product/widget/list_tile/app_save_list_tile.dart';
 
@@ -79,7 +79,7 @@ class _SaveList extends StatelessWidget {
         MediaQuery.of(context).padding;
 
     return BlocSelector<SetupHostViewModel, SetupHostState,
-        List<GameSaveCacheModel>>(
+        List<GameSaveStorageModel>>(
       selector: (state) {
         return state.saves;
       },

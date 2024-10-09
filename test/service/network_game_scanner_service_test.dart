@@ -4,7 +4,7 @@ import 'package:localchess/product/service/impl/network_game_scanner_service.dar
 import '../test_config/test_init.dart';
 
 void main() async {
-  await TestInit.initWithTestCacheImpl();
+  await TestInit.initWithTestStorageImpl();
 
   late NetworkGameScannerService service;
 

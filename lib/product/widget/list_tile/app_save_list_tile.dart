@@ -1,18 +1,18 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:localchess/product/util/date_extension.dart';
 import 'package:localchess/product/widget/dialog/game_preview_dialog.dart';
 
 /// The function definition to trigger when the save list item selected.
-typedef OnPressedWithGameSave = void Function(GameSaveCacheModel save);
+typedef OnPressedWithGameSave = void Function(GameSaveStorageModel save);
 
 /// The function definition to trigger when the play button pressed.
 typedef OnPressedPlaySave = void Function(
-  GameSaveCacheModel save,
+  GameSaveStorageModel save,
   PlayerColor color,
 );
 
@@ -29,7 +29,7 @@ class AppSaveListTile extends StatelessWidget {
   });
 
   /// The data to present in this tile.
-  final GameSaveCacheModel data;
+  final GameSaveStorageModel data;
 
   /// Called when the user tap the save. Gives the save data as parameter.
   final OnPressedPlaySave onPlayPressed;

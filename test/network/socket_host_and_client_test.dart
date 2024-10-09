@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gen/gen.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/network/core/model/address_on_network.dart';
 import 'package:localchess/product/network/core/model/network_model.dart';
@@ -13,20 +12,21 @@ import 'package:localchess/product/network/impl/socket_client_manager.dart';
 import 'package:localchess/product/network/impl/socket_host_manager.dart';
 import 'package:localchess/product/network/model/game_save_network_model.dart';
 import 'package:localchess/product/network/model/introduce_network_model.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:logger/logger.dart';
 
 import '../test_config/test_init.dart';
 
 void main() async {
-  await TestInit.initWithTestCacheImpl();
+  await TestInit.initWithTestStorageImpl();
 
   Logger.level = Level.debug;
 
-  late final GameSaveCacheModel gameSaveCacheModel_serverToClient;
-  late final GameSaveCacheModel gameSaveCacheModel_clientToServer;
+  late final GameSaveStorageModel gameSaveCacheModel_serverToClient;
+  late final GameSaveStorageModel gameSaveCacheModel_clientToServer;
 
   {
-    final gameSaveCacheModel_serverToClient_raw = GameSaveCacheModel(
+    final gameSaveCacheModel_serverToClient_raw = GameSaveStorageModel(
       id: 'test_game',
       gameSave: const GameSave(
         name: 'Test Game',
@@ -36,7 +36,7 @@ void main() async {
       ),
     );
 
-    final gameSaveCacheModel_clientToServer_raw = GameSaveCacheModel(
+    final gameSaveCacheModel_clientToServer_raw = GameSaveStorageModel(
       id: 'test_game',
       gameSave: const GameSave(
         name: 'Test Game',
@@ -52,10 +52,10 @@ void main() async {
       ),
     );
 
-    G.appCache.gameSaveOperator.save(gameSaveCacheModel_serverToClient_raw);
+    G.appStorage.gameSaveOperator.save(gameSaveCacheModel_serverToClient_raw);
     gameSaveCacheModel_serverToClient = gameSaveCacheModel_serverToClient_raw;
 
-    G.appCache.gameSaveOperator.save(gameSaveCacheModel_clientToServer_raw);
+    G.appStorage.gameSaveOperator.save(gameSaveCacheModel_clientToServer_raw);
     gameSaveCacheModel_clientToServer = gameSaveCacheModel_clientToServer_raw;
   }
 
@@ -83,11 +83,11 @@ void main() async {
           G.logger.d('Server: Received data: $data');
 
           if (data is GameSaveNetworkModel) {
-            expect(data.gameSaveCacheModel, isNotNull);
-            expect(data.gameSaveCacheModel.id,
+            expect(data.gameSaveStorageModel, isNotNull);
+            expect(data.gameSaveStorageModel.id,
                 gameSaveCacheModel_clientToServer.id);
             expect(
-              data.gameSaveCacheModel.gameSave.name,
+              data.gameSaveStorageModel.gameSave.name,
               gameSaveCacheModel_clientToServer.gameSave.name,
             );
             expectCheck_gameSaveReceived_server = true;
@@ -133,11 +133,11 @@ void main() async {
         // define the onData listener
         void onData(NetworkModel data) {
           if (data is GameSaveNetworkModel) {
-            expect(data.gameSaveCacheModel, isNotNull);
-            expect(data.gameSaveCacheModel.id,
+            expect(data.gameSaveStorageModel, isNotNull);
+            expect(data.gameSaveStorageModel.id,
                 gameSaveCacheModel_serverToClient.id);
             expect(
-              data.gameSaveCacheModel.gameSave.name,
+              data.gameSaveStorageModel.gameSave.name,
               gameSaveCacheModel_serverToClient.gameSave.name,
             );
             expectCheck_gameSaveReceived_client = true;
@@ -183,7 +183,7 @@ void main() async {
 
         // send
         final gameSaveData = GameSaveNetworkModel(
-          gameSaveCacheModel: gameSaveCacheModel_serverToClient,
+          gameSaveStorageModel: gameSaveCacheModel_serverToClient,
         );
         serverManager.send(
           clientInformation: clientInfo,
@@ -194,7 +194,7 @@ void main() async {
       // send game data from client to server
       {
         final gameSaveData = GameSaveNetworkModel(
-          gameSaveCacheModel: gameSaveCacheModel_clientToServer,
+          gameSaveStorageModel: gameSaveCacheModel_clientToServer,
         );
         clientManager.send(data: gameSaveData);
       }

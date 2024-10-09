@@ -1,5 +1,4 @@
 import 'package:localchess/feature/local_game/view_model/local_game_state.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
 import 'package:localchess/product/data/square_data.dart';
@@ -7,6 +6,7 @@ import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
 import 'package:localchess/product/service/impl/chess_service.dart';
 import 'package:localchess/product/state/base/base_cubit.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 
 /// The view model for the local game screen
 class LocalGameViewModel extends BaseCubit<LocalGameState> {
@@ -102,7 +102,7 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
   }
 
   /// Initializes the view model
-  Future<void> init(GameSaveCacheModel save) async {
+  Future<void> init(GameSaveStorageModel save) async {
     G.logger.t('LocalGameViewModel.init: $save');
 
     _chessService = ChessService(save: save);

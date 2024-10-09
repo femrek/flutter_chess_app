@@ -1,6 +1,6 @@
 import 'package:core/core.dart';
 
-final class TestCacheManager implements CacheManager {
+final class TestStorageManager implements StorageManager {
   @override
   Future<void> init() async {
     // Do nothing
@@ -15,7 +15,7 @@ final class TestCacheManager implements CacheManager {
   String? get path => '';
 
   @override
-  void registerCacheModel<T extends CacheModel>(T model) {
+  void registerStorageModel<T extends StorageModel>(T model) {
     // Do nothing
   }
 }

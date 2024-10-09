@@ -6,7 +6,6 @@ import 'package:localchess/feature/host_game/view/mixin/host_game_mixin.dart';
 import 'package:localchess/feature/host_game/view/widget/host_game_guest_entry.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_state.dart';
 import 'package:localchess/feature/host_game/view_model/host_game_view_model.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/constant/padding/app_padding_constant.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
@@ -19,6 +18,7 @@ import 'package:localchess/product/data/square_data.dart';
 import 'package:localchess/product/dependency_injection/get.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
 import 'package:localchess/product/state/base/base_state.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:localchess/product/theme/app_color_scheme.dart';
 import 'package:localchess/product/widget/board/board_square_content.dart';
 import 'package:localchess/product/widget/board/game_board_with_frame.dart';
@@ -40,7 +40,7 @@ class HostGameScreen extends StatefulWidget {
   });
 
   /// The save data to play.
-  final GameSaveCacheModel save;
+  final GameSaveStorageModel save;
 
   /// The color chosen by the host player.
   final PlayerColor chosenColor;

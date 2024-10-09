@@ -1,5 +1,4 @@
 import 'package:localchess/feature/host_game/view_model/host_game_state.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
 import 'package:localchess/product/constant/host_constant.dart';
 import 'package:localchess/product/data/coordinate/square_coordinate.dart';
 import 'package:localchess/product/data/move/app_chess_move.dart';
@@ -17,6 +16,7 @@ import 'package:localchess/product/network/model/move_network_model.dart';
 import 'package:localchess/product/service/core/i_chess_service.dart';
 import 'package:localchess/product/service/impl/host_chess_service.dart';
 import 'package:localchess/product/state/base/base_cubit.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 
 /// The view model for the host game screen
 class HostGameViewModel extends BaseCubit<HostGameState> {
@@ -36,7 +36,7 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
   late GameIntroduceNetworkModel _gameIntroduceNetworkModel;
 
   /// Load the game state with the given [save] and [color]
-  Future<void> init(GameSaveCacheModel save, PlayerColor color) async {
+  Future<void> init(GameSaveStorageModel save, PlayerColor color) async {
     _chessService = HostChessService(save: save, hostColor: color);
     _emitNormal(sendNetwork: false);
 

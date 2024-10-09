@@ -1,8 +1,8 @@
-import 'package:core/src/cache/core/cache_model.dart';
-import 'package:core/src/cache/sort/get_all_sort_enum.dart';
+import 'package:core/src/storage/core/storage_model.dart';
+import 'package:core/src/storage/sort/get_all_sort_enum.dart';
 
 /// Cache operation interface
-abstract interface class CacheOperator<T extends CacheModel> {
+abstract interface class StorageOperator<T extends StorageModel> {
   /// Get the cache
   T? get(String id);
 

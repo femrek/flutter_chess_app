@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:localchess/product/cache/model/game_save_cache_model.dart';
+import 'package:localchess/product/storage/model/game_save_storage_model.dart';
 import 'package:localchess/product/widget/list_tile/app_save_list_tile.dart';
 
 /// The widget that displays the list of local game saves.
@@ -14,7 +14,7 @@ class SetupLocalSaveList extends StatelessWidget {
   });
 
   /// The list of local game saves.
-  final List<GameSaveCacheModel> saveList;
+  final List<GameSaveStorageModel> saveList;
 
   /// The padding around the list.
   final EdgeInsets padding;
