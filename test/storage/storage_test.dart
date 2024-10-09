@@ -100,7 +100,7 @@ void main() async {
     });
   });
 
-  group('test if metadata is stores correctly', () {
+  group('test if metadata is stored correctly', () {
     test('keep createdAt field correctly', () async {
       final beforeSave = DateTime.now().microsecondsSinceEpoch;
       final model = GameSaveStorageModel(
