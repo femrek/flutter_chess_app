@@ -6,6 +6,7 @@ import 'package:localchess/product/data/chess_turn/app_chess_winner.dart';
 import 'package:localchess/product/data/chess_turn/chess_turn_localization.dart';
 import 'package:localchess/product/data/player_color/player_color.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
+import 'package:localchess/test/test_widget_keys/widget/player_information_section_widget_keys.dart';
 
 /// A widget that displays the current turn status.
 class TurnIndicator extends StatelessWidget {
@@ -87,6 +88,7 @@ class _PlayersTurn extends StatelessWidget {
       return Tooltip(
         message: text,
         child: Container(
+          key: PlayerInformationSectionWidgetKeys.playerTurn.key,
           height: height,
           width: double.infinity,
           alignment: Alignment.center,
@@ -142,6 +144,7 @@ class _GameStatus extends StatelessWidget {
       return Tooltip(
         message: status.localized,
         child: Container(
+          key: PlayerInformationSectionWidgetKeys.gameStatus.key,
           height: height,
           width: double.infinity,
           alignment: Alignment.center,
