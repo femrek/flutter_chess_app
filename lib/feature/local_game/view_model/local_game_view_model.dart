@@ -97,6 +97,31 @@ class LocalGameViewModel extends BaseCubit<LocalGameState> {
       canRedo: _chessService.canRedo(),
     ));
 
+    // after first build set canMove to false for all squares to prevent to
+    // start a drag from a square that is not rendered at first build.
+    Future.microtask(() {
+      G.logger.t('LocalGameViewModel._emitFocus.microTask: Setting canMove to '
+          'false for all squares');
+
+      for (final e in _squareStates.entries) {
+        if (e.value.canMove == false) continue;
+
+        _squareStates[e.key] = e.value.copyWith(canMove: false);
+      }
+
+      emit(LocalGameLoadedState(
+        squareStates: _squareStates,
+        isFocused: true,
+        turnStatus: turnStatus,
+        capturedPieces: (state as LocalGameLoadedState).capturedPieces,
+        canUndo: _chessService.canUndo(),
+        canRedo: _chessService.canRedo(),
+      ));
+
+      G.logger.t('LocalGameViewModel._emitFocus.microTask:'
+          ' Set canMove to false for all squares');
+    });
+
     G.logger.t('LocalGameViewModel._emitStateWhenFocus:'
         ' Focused on $focusedCoordinate');
   }
