@@ -332,6 +332,33 @@ class HostGameViewModel extends BaseCubit<HostGameState> {
       ),
     ));
 
+    // after first build set canMove to false for all squares to prevent to
+    // start a drag from a square that is not rendered at first build.
+    Future.microtask(() {
+      G.logger.t('HostGameViewModel._emitFocus.microTask:'
+          ' Setting canMove to false');
+
+      for (final e in _squareStates.entries) {
+        if (e.value.canMove == false) continue;
+
+        _squareStates[e.key] = e.value.copyWith(canMove: false);
+      }
+
+      final state = this.state;
+      emit((state as HostGameLoadedState).copyWith(
+        gameState: state.gameState.copyWith(
+          squareStates: _squareStates,
+          isFocused: true,
+          turnStatus: turnStatus,
+          canUndo: _chessService.canUndo(),
+          canRedo: _chessService.canRedo(),
+        ),
+      ));
+
+      G.logger.t('HostGameViewModel._emitFocus.microTask:'
+          ' Completely emitted');
+    });
+
     G.logger.t('HostGameViewModel._emitFocus: Focused on $focusedCoordinate');
   }
 

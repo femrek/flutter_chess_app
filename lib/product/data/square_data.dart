@@ -69,6 +69,32 @@ class SquareData extends Equatable {
   /// Whether the piece can be captured in this square.
   bool get canCaptured => captureToThis != null;
 
+  /// Creates a copy of this object with the given fields replaced by the new
+  /// values.
+  SquareData copyWith({
+    AppPiece? piece,
+    bool? canMove,
+    bool? isThisCheck,
+    bool? isLastMoveFromThis,
+    bool? isLastMoveToThis,
+    bool? isFocusedOnThis,
+    bool? isSyncInProcess,
+    AppChessMove? moveToThis,
+    AppChessMove? captureToThis,
+  }) {
+    return SquareData(
+      piece: piece ?? this.piece,
+      canMove: canMove ?? this.canMove,
+      isThisCheck: isThisCheck ?? this.isThisCheck,
+      isLastMoveFromThis: isLastMoveFromThis ?? this.isLastMoveFromThis,
+      isLastMoveToThis: isLastMoveToThis ?? this.isLastMoveToThis,
+      isFocusedOnThis: isFocusedOnThis ?? this.isFocusedOnThis,
+      isSyncInProcess: isSyncInProcess ?? this.isSyncInProcess,
+      moveToThis: moveToThis ?? this.moveToThis,
+      captureToThis: captureToThis ?? this.captureToThis,
+    );
+  }
+
   @override
   List<Object?> get props => [
         piece,
