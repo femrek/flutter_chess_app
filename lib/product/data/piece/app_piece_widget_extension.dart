@@ -20,7 +20,7 @@ extension AppPieceWidgetExtension on AppPiece {
         child: image.svg(
           package: 'gen',
           colorFilter: ColorFilter.mode(
-            isAchromatic ? pieceColor.withOpacity(0.3) : pieceColor,
+            isAchromatic ? pieceColor.withValues(alpha: 0x4D) : pieceColor,
             BlendMode.srcIn,
           ),
         ),

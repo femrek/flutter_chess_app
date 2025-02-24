@@ -6,11 +6,11 @@ abstract interface class AppTheme {
   ThemeData get theme;
 
   /// The card theme have to be specified.
-  CardTheme get cardTheme;
+  CardThemeData get cardTheme;
 
   /// The app bar theme have to be specified.
   AppBarTheme get appBarTheme;
 
   /// The dialog theme have to be specified.
-  DialogTheme get dialogTheme;
+  DialogThemeData get dialogTheme;
 }

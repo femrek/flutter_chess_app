@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:hive/src/impl/frame.dart';
+// ignore: depend_on_referenced_packages
 import 'package:isar/isar.dart';
 
 const _releases = 'https://github.com/isar/isar/releases/download/';
@@ -33,12 +34,12 @@ Future<void> initHiveTests() async {
 Future<Box<E>> openTestBox<E>({String? name}) async {
   await initHiveTests();
   name ??= Random().nextInt(999999).toString();
-  final box = Hive.box<E>(name: name);
-  box.verify();
+  final box = Hive.box<E>(name: name)..verify();
   addTearDown(() async {
     if (box.isOpen) {
-      box.verify();
-      box.deleteFromDisk();
+      box
+        ..verify()
+        ..deleteFromDisk();
     }
   });
 

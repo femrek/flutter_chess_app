@@ -268,7 +268,7 @@ class _UndoButtonBuilder extends StatelessWidget {
           onPressed: onPressed,
           icon: Icon(
             Icons.undo,
-            color: frontColor.withOpacity(canUndo ? 1 : 0.5),
+            color: frontColor.withValues(alpha: canUndo ? 255 : 128),
           ),
         );
       },
@@ -300,7 +300,7 @@ class _RedoButtonBuilder extends StatelessWidget {
           onPressed: canRedo ? onPressed : null,
           icon: Icon(
             Icons.redo,
-            color: frontColor.withOpacity(canRedo ? 1 : 0.5),
+            color: frontColor.withValues(alpha: canRedo ? 255 : 128),
           ),
         );
       },

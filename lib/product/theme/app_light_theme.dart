@@ -19,7 +19,7 @@ final class AppLightTheme implements AppTheme {
       );
 
   @override
-  CardTheme get cardTheme => _theme.cardTheme.copyWith(
+  CardThemeData get cardTheme => _theme.cardTheme.copyWith(
         color: Colors.teal.shade200,
       );
 
@@ -30,7 +30,7 @@ final class AppLightTheme implements AppTheme {
       );
 
   @override
-  DialogTheme get dialogTheme => _theme.dialogTheme.copyWith(
+  DialogThemeData get dialogTheme => _theme.dialogTheme.copyWith(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
             AppRadiusConstant.dialogCornerRadius,

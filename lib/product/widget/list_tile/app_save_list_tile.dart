@@ -52,7 +52,7 @@ class AppSaveListTile extends StatelessWidget {
         vertical: 4,
       ),
       tileColor: data.gameSave.isGameOver
-          ? Theme.of(context).colorScheme.onSurface.withOpacity(0.1)
+          ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 25)
           : null,
       title: Text(
         data.gameSave.name,

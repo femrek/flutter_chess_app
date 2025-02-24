@@ -93,8 +93,8 @@ class BoardSquareContent extends StatelessWidget {
                 gradient: RadialGradient(
                   colors: [
                     fingerPointerColor,
-                    fingerPointerColor.withOpacity(0.5),
-                    fingerPointerColor.withOpacity(0.2),
+                    fingerPointerColor.withValues(alpha: 128),
+                    fingerPointerColor.withValues(alpha: 51),
                   ],
                   tileMode: TileMode.decal,
                 ),
