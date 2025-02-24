@@ -32,7 +32,10 @@ class GameSave {
   /// The state history of the game in FEN format.
   final List<BoardStatusAndLastMove> history;
 
-  /// The last move made in the game.
+  /// The initial position of the save in FEN format.
+  ///
+  /// By default in an initial game save the [history] must be empty.
+  /// [currentStateFen] returns this value if the [history] is empty.
   final String defaultPosition;
 
   /// Whether the game is over.
