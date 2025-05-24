@@ -1,26 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:localchess/product/constant/radius/app_radius_constant.dart';
-import 'package:localchess/product/theme/app_color_scheme.dart';
-import 'package:localchess/product/theme/app_theme.dart';
+part of 'app_theme.dart';
 
 /// The light theme configuration for the application.
-final class AppLightTheme implements AppTheme {
-  final ThemeData _theme = ThemeData(
-    useMaterial3: true,
-    colorScheme: AppColorScheme.lightColorScheme,
-  );
+final class AppLightTheme extends AppTheme {
+  @override
+  ColorScheme get colorScheme => AppColorScheme.lightColorScheme;
 
   @override
-  ThemeData get theme => _theme.copyWith(
-        scaffoldBackgroundColor: AppColorScheme.lightScaffoldBackgroundColor,
-        cardTheme: cardTheme,
-        appBarTheme: appBarTheme,
-        dialogTheme: dialogTheme,
-      );
+  Color get scaffoldBackgroundColor =>
+      AppColorScheme.lightScaffoldBackgroundColor;
 
   @override
   CardThemeData get cardTheme => _theme.cardTheme.copyWith(
-        color: Colors.teal.shade200,
+        color: _theme.colorScheme.surface,
       );
 
   @override
@@ -35,6 +26,14 @@ final class AppLightTheme implements AppTheme {
           borderRadius: BorderRadius.circular(
             AppRadiusConstant.dialogCornerRadius,
           ),
+        ),
+      );
+
+  @override
+  ElevatedButtonThemeData get elevatedButtonTheme => ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _theme.colorScheme.secondary,
+          foregroundColor: _theme.colorScheme.onSecondary,
         ),
       );
 }

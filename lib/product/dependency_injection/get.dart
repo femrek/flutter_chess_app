@@ -14,8 +14,7 @@ import 'package:localchess/product/network/core/i_socket_configuration.dart';
 import 'package:localchess/product/service/core/i_network_game_scanner_service.dart';
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
 import 'package:localchess/product/storage/i_app_storage.dart';
-import 'package:localchess/product/theme/app_dark_theme.dart';
-import 'package:localchess/product/theme/app_light_theme.dart';
+import 'package:localchess/product/theme/app_theme.dart';
 import 'package:logger/logger.dart';
 
 /// [G] is the static class to access instances from [GetIt].

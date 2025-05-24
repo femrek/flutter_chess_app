@@ -16,8 +16,7 @@ import 'package:localchess/product/service/impl/network_game_scanner_service.dar
 import 'package:localchess/product/state/app_view_model/app_view_model.dart';
 import 'package:localchess/product/storage/app_storage.dart';
 import 'package:localchess/product/storage/i_app_storage.dart';
-import 'package:localchess/product/theme/app_dark_theme.dart';
-import 'package:localchess/product/theme/app_light_theme.dart';
+import 'package:localchess/product/theme/app_theme.dart';
 import 'package:logger/logger.dart';
 
 /// [AppGetItConfigurer] is the configuration class to setup instances with

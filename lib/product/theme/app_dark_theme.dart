@@ -1,22 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:localchess/product/constant/radius/app_radius_constant.dart';
-import 'package:localchess/product/theme/app_color_scheme.dart';
-import 'package:localchess/product/theme/app_theme.dart';
+part of 'app_theme.dart';
 
 /// The dark theme configuration for the application.
-final class AppDarkTheme implements AppTheme {
-  final ThemeData _theme = ThemeData(
-    useMaterial3: true,
-    colorScheme: AppColorScheme.darkColorScheme,
-  );
+final class AppDarkTheme extends AppTheme {
+  @override
+  ColorScheme get colorScheme => AppColorScheme.darkColorScheme;
 
   @override
-  ThemeData get theme => _theme.copyWith(
-        scaffoldBackgroundColor: AppColorScheme.darkScaffoldBackgroundColor,
-        cardTheme: cardTheme,
-        appBarTheme: appBarTheme,
-        dialogTheme: dialogTheme,
-      );
+  Color get scaffoldBackgroundColor =>
+      AppColorScheme.darkScaffoldBackgroundColor;
 
   @override
   CardThemeData get cardTheme => _theme.cardTheme.copyWith();
@@ -31,5 +22,10 @@ final class AppDarkTheme implements AppTheme {
             AppRadiusConstant.dialogCornerRadius,
           ),
         ),
+      );
+
+  @override
+  ElevatedButtonThemeData get elevatedButtonTheme => ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(),
       );
 }
