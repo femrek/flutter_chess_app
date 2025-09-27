@@ -15,7 +15,7 @@ final class AppLightTheme extends AppTheme {
       );
 
   @override
-  AppBarTheme get appBarTheme => _theme.appBarTheme.copyWith(
+  AppBarThemeData get appBarTheme => _theme.appBarTheme.copyWith(
         backgroundColor: _theme.primaryColor,
         foregroundColor: _theme.colorScheme.onPrimary,
       );

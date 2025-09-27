@@ -31,7 +31,7 @@ sealed class AppTheme {
   CardThemeData get cardTheme;
 
   /// The app bar theme have to be specified.
-  AppBarTheme get appBarTheme;
+  AppBarThemeData get appBarTheme;
 
   /// The dialog theme have to be specified.
   DialogThemeData get dialogTheme;

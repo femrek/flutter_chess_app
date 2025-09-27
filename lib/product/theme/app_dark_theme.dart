@@ -13,7 +13,7 @@ final class AppDarkTheme extends AppTheme {
   CardThemeData get cardTheme => _theme.cardTheme.copyWith();
 
   @override
-  AppBarTheme get appBarTheme => _theme.appBarTheme.copyWith();
+  AppBarThemeData get appBarTheme => _theme.appBarTheme.copyWith();
 
   @override
   DialogThemeData get dialogTheme => _theme.dialogTheme.copyWith(
