@@ -10,7 +10,4 @@ abstract interface class StorageManager {
 
   /// Remove the stored cache
   void remove();
-
-  /// Get the path to the cache
-  String? get path;
 }

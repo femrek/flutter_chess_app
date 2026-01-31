@@ -15,7 +15,7 @@ void main() async {
   Logger.level = Level.info;
 
   // init
-  await TestInit.initWithHiveImpl();
+  await TestInit.initWithSharedPreferencesImpl();
 
   tearDown(() async {
     G.appStorage.gameSaveOperator.removeAll();

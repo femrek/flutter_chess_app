@@ -30,10 +30,11 @@ class AppStorage implements IAppStorage {
 
   @override
   late final StorageOperator<GameSaveStorageModel> gameSaveOperator =
-      HiveStorageOperator<GameSaveStorageModel>(logger: _logger);
+      SharedPreferencesStorageOperator<GameSaveStorageModel>(logger: _logger);
 
   @override
   late final StorageOperator<DevicePropertiesStorageModel>
       senderInformationOperator =
-      HiveStorageOperator<DevicePropertiesStorageModel>(logger: _logger);
+      SharedPreferencesStorageOperator<DevicePropertiesStorageModel>(
+          logger: _logger);
 }

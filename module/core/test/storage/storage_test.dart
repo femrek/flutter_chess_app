@@ -1,20 +1,21 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:core/core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'test_config/hive_common.dart';
 import 'test_config/sample_model.dart';
 import 'test_config/sample_storage_model.dart';
 
 void main() async {
-  // Make it able to use hive in desktop
-  await initHiveTests();
-
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences.setMockInitialValues({});
   final logger = Logger();
-  final manager = HiveStorageManager(path: 'test/storage/hive');
-  final operator = HiveStorageOperator<SampleStorageModel>(logger: logger);
+  const manager = SharedPreferencesStorageManager();
+  final operator =
+      SharedPreferencesStorageOperator<SampleStorageModel>(logger: logger);
 
   await manager.init();
   manager.registerStorageModel<SampleStorageModel>(SampleStorageModel.empty());

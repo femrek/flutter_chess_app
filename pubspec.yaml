@@ -45,6 +45,9 @@ dev_dependencies:
   auto_route_generator: ^9.0.0
   bloc_test: ^9.1.7
 
+  # for testing
+  shared_preferences: any
+
 flutter:
   uses-material-design: true
 

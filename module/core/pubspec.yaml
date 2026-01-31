@@ -15,8 +15,7 @@ dependencies:
   logger: ^2.4.0
 
   # database
-  hive: ^4.0.0-dev.2
-  isar_flutter_libs: ^4.0.0-dev.13
+  shared_preferences: ^2.5.4
   path_provider: ^2.1.0
 
   # network

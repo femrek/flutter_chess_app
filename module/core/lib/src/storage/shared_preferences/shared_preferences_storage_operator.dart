@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:core/src/storage/core/storage_model.dart';
 import 'package:core/src/storage/core/storage_model_meta_data.dart';
 import 'package:core/src/storage/core/storage_operator.dart';
@@ -5,26 +7,91 @@ import 'package:core/src/storage/error/element_already_exits_error.dart';
 import 'package:core/src/storage/error/element_does_not_exist_when_update_error.dart';
 import 'package:core/src/storage/error/element_id_duplicated_error.dart';
 import 'package:core/src/storage/sort/get_all_sort_enum.dart';
-import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-/// [StorageOperator] implementation using Hive
-class HiveStorageOperator<T extends StorageModel>
+/// [StorageOperator] implementation using [SharedPreferences]
+class SharedPreferencesStorageOperator<T extends StorageModel>
     implements StorageOperator<T> {
-  /// Creates a new [HiveStorageOperator] instance.
-  HiveStorageOperator({required Logger logger}) : log = logger {
-    _box = Hive.box<T>(name: T.toString());
-  }
+  /// Creates a new [SharedPreferencesStorageOperator] instance.
+  SharedPreferencesStorageOperator({required Logger logger}) : log = logger;
 
-  late final Box<T> _box;
+  /// The box for storing the items
+  static late final SharedPreferences sp;
+
+  /// The mapping of type to sample storage model
+  static final Map<Type, StorageModel> typeKeyMap = {};
 
   /// The logger
   final Logger log;
 
+  List<T>? _elementsCache;
+
+  List<T> get _cache {
+    _initCache();
+    return _elementsCache!;
+  }
+
+  void _initCache() {
+    if (_elementsCache != null) return;
+
+    final sampleModel = typeKeyMap[T];
+    if (sampleModel == null) {
+      throw Exception(
+          'Type $T is not registered in SharedPreferencesStorageOperator.');
+    } else if (sampleModel is! T) {
+      throw Exception(
+          'Type $T is registered in SharedPreferencesStorageOperator, '
+          'but the sample model is not of type $T.');
+    }
+
+    final jsonStrings = sp.getStringList(T.toString());
+    if (jsonStrings != null) {
+      _elementsCache = jsonStrings.map<T>((s) {
+        final json = jsonEncode(s);
+        final model = sampleModel.fromJson(json);
+        if (model is! T) {
+          throw Exception('Decoded model is not of type $T. '
+              'Actual type: ${model.runtimeType}');
+        }
+        return model;
+      }).toList();
+    } else {
+      _elementsCache = [];
+    }
+  }
+
+  void _postPersistCache() {
+    if (_elementsCache == null) {
+      throw Exception(
+          'Cache for type $T is not initialized afeter persisting.');
+    }
+
+    final sampleModel = typeKeyMap[T];
+    if (sampleModel == null) {
+      throw Exception(
+          'Type $T is not registered in SharedPreferencesStorageOperator.');
+    } else if (sampleModel is! T) {
+      throw Exception(
+          'Type $T is registered in SharedPreferencesStorageOperator, '
+          'but the sample model is not of type $T.');
+    }
+
+    final jsonStrings = _elementsCache!.map((s) {
+      final json = s.toJson();
+      return jsonEncode(json);
+    }).toList();
+
+    sp.setStringList(T.toString(), jsonStrings);
+  }
+
   @override
   T? get(String id) {
     log.t('Getting item <$T> with id $id');
-    final item = _box.get(id);
+    final results = _cache.where(
+      (element) => element.id == id,
+    );
+    final item = results.isNotEmpty ? results.first : null;
     if (item == null) {
       log.w('Item with id $id does not exist.');
     } else {
@@ -39,12 +106,10 @@ class HiveStorageOperator<T extends StorageModel>
 
     var result = <T>[];
     if (sort == GetAllSortEnum.none) {
-      result =
-          _box.getAll(_box.keys).where((e) => e != null).cast<T>().toList();
+      result = List<T>.from(_cache);
     } else {
       outer:
-      for (final key in _box.keys) {
-        final item = _box.get(key)!;
+      for (final item in _cache) {
         for (var i = 0; i < result.length; i++) {
           final nth = result[i];
           if (sort.canInsertLeft(checking: item, nthModel: nth)) {
@@ -64,21 +129,30 @@ class HiveStorageOperator<T extends StorageModel>
   bool remove(String id) {
     log.t('Removing item <$T> with id $id');
 
-    final result = _box.delete(id);
+    final beforeCount = _cache.length;
+    _cache.removeWhere(
+      (element) => element.id == id,
+    );
+    final afterCount = _cache.length;
+    final removed = beforeCount > afterCount;
 
-    if (result) {
+    _postPersistCache();
+
+    if (removed) {
       log.t('Item with id $id removed.');
     } else {
       log.w('Item with id $id does not exist.');
     }
-    return result;
+    return removed;
   }
 
   @override
   void removeAll() {
     log.t('Removing all items <$T>');
 
-    _box.deleteAll(_box.keys);
+    _cache.clear();
+
+    _postPersistCache();
 
     log.t('All items <$T> removed.');
   }
@@ -88,7 +162,7 @@ class HiveStorageOperator<T extends StorageModel>
     log.t('Saving item <$T> with id ${item.id}');
 
     // Check if the item already exists
-    if (_box.containsKey(item.id)) {
+    if (_cache.where((e) => e.id == item.id).isNotEmpty) {
       log.e('The item with id ${item.id} already exists in the cache.');
       throw ElementAlreadyExitsError(
           'The item with id ${item.id} already exists in the cache.');
@@ -101,13 +175,11 @@ class HiveStorageOperator<T extends StorageModel>
       updateAt: saveTime,
     );
     log.d('Saving item with id ${item.id} and metadata $metaData');
-    _box.put(
-      item.id,
-      item..metaData = metaData,
-    );
+    _cache.add(item..metaData = metaData);
+
+    _postPersistCache();
 
     log.t('Item with id ${item.id} saved.');
-
     return item;
   }
 
@@ -131,14 +203,16 @@ class HiveStorageOperator<T extends StorageModel>
       validItems[item.id] = item..metaData = metaData;
 
       // Check if the item already exists
-      if (_box.containsKey(item.id)) {
+      if (_cache.where((e) => e.id == item.id).isNotEmpty) {
         throw ElementAlreadyExitsError(
             'The item with id ${item.id} already exists in the cache.');
       }
     }
 
     // Save the items
-    _box.putAll(validItems);
+    _cache.addAll(validItems.values);
+
+    _postPersistCache();
 
     log.t('${validItems.length} items <$T> saved.');
 
@@ -149,7 +223,8 @@ class HiveStorageOperator<T extends StorageModel>
   T update(T item) {
     log.t('Updating item <$T> with id ${item.id}');
 
-    final savedItem = _box.get(item.id);
+    final results = _cache.where((element) => element.id == item.id);
+    final savedItem = results.isNotEmpty ? results.first : null;
     if (savedItem == null) {
       log.e('The item with id ${item.id} does not exist in the cache.');
       throw ElementDoesNotExistWhenUpdateError(
@@ -165,10 +240,10 @@ class HiveStorageOperator<T extends StorageModel>
       updateAt: updateTime,
     );
     log.d('Updating item with id ${item.id} and metadata $metaData');
-    _box.put(
-      item.id,
-      item..metaData = metaData,
-    );
+    final index = _cache.indexOf(savedItem..metaData = metaData);
+    _cache[index] = item..metaData = metaData;
+
+    _postPersistCache();
 
     log.t('Item with id ${item.id} updated.');
 
@@ -180,9 +255,10 @@ class HiveStorageOperator<T extends StorageModel>
     log.t('Updating ${items.length} items <$T>');
 
     // validate the items
-    final validItems = <String, T>{};
+    final validItems = <T>[];
     for (final item in items) {
-      final savedItem = _box.get(item.id);
+      final results = _cache.where((element) => element.id == item.id);
+      final savedItem = results.isNotEmpty ? results.first : null;
 
       // Check if the item already exists
       if (savedItem == null) {
@@ -195,7 +271,7 @@ class HiveStorageOperator<T extends StorageModel>
       }
 
       // Check if the id is duplicated
-      if (validItems.containsKey(item.id)) {
+      if (validItems.where((e) => e.id == item.id).isNotEmpty) {
         log.e('The id ${item.id} is duplicated.');
         throw ElementIdDuplicatedError('The id ${item.id} is duplicated.');
       }
@@ -206,14 +282,22 @@ class HiveStorageOperator<T extends StorageModel>
         updateAt: updateTime,
       );
       log.d('Updating item with id ${item.id} and metadata $metaData');
-      validItems[item.id] = item..metaData = metaData;
+      validItems.add(item..metaData = metaData);
     }
 
     // Save the items
-    _box.putAll(validItems);
+    for (final item in validItems) {
+      final results = _cache.where((element) => element.id == item.id);
+      final savedItem = results.isNotEmpty ? results.first : null;
+      if (savedItem != null) {
+        final index = _cache.indexOf(savedItem);
+        _cache[index] = item;
+      }
+    }
+
+    _postPersistCache();
 
     log.t('${validItems.length} items <$T> updated.');
-
-    return validItems.values.toList();
+    return validItems;
   }
 }

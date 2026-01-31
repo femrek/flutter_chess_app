@@ -36,7 +36,8 @@ abstract final class AppGetItConfigurer {
       ..registerLazySingleton<AppLightTheme>(AppLightTheme.new)
 
       // cache
-      ..registerLazySingleton<StorageManager>(HiveStorageManager.new)
+      ..registerLazySingleton<StorageManager>(
+          SharedPreferencesStorageManager.new)
       ..registerLazySingleton<IAppStorage>(() => AppStorage(
             storageManager: GetIt.I<StorageManager>(),
             logger: GetIt.I<Logger>(),
