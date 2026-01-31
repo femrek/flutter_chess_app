@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'board_status_and_last_move.g.dart';
 
 /// Keeps the board status in FEN format and the last move made.
 @JsonSerializable()
-@immutable
 class BoardStatusAndLastMove {
   /// Creates a new object of [BoardStatusAndLastMove].
   const BoardStatusAndLastMove({
