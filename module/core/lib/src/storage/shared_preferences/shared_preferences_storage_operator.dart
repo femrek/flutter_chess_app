@@ -48,8 +48,9 @@ class SharedPreferencesStorageOperator<T extends StorageModel>
     final jsonStrings = sp.getStringList(T.toString());
     if (jsonStrings != null) {
       _elementsCache = jsonStrings.map<T>((s) {
-        final json = jsonEncode(s);
-        final model = sampleModel.fromJson(json);
+        log.d('Decoding JSON string: $s');
+        final map = jsonDecode(s);
+        final model = sampleModel.fromJson(map);
         if (model is! T) {
           throw Exception('Decoded model is not of type $T. '
               'Actual type: ${model.runtimeType}');
@@ -64,7 +65,7 @@ class SharedPreferencesStorageOperator<T extends StorageModel>
   void _postPersistCache() {
     if (_elementsCache == null) {
       throw Exception(
-          'Cache for type $T is not initialized afeter persisting.');
+          'Cache for type $T is not initialized after persisting.');
     }
 
     final sampleModel = typeKeyMap[T];
