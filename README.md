@@ -15,7 +15,7 @@ This application allows playing on a device or two device in the same local netw
 - Chess calculation: chess.dart (modified chess.js port)
 - Network: dart:io (dart core library)
 - Network information: network_info_plus
-- Local storage: Hive-Isar
+- Local storage: shared_preferences
 - State management: Bloc
 - Dependency injection: GetIt
 - Localization: easy_localization
