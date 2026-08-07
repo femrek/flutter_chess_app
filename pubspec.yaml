@@ -1,5 +1,5 @@
 name: localchess
-description: A new Flutter project.
+description: A Flutter chess application for playing locally on a single device or across two devices over a local network.
 
 publish_to: 'none'
 version: 2.0.1+20
@@ -11,23 +11,23 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Modules
+  # Local Modules
   core:
     path: module/core
-  widget:
-    path: module/widget
   gen:
     path: module/gen
+  widget:
+    path: module/widget
 
-  # Util
+  # Utilities & Helpers
+  async: ^2.11.0
   chess: ^0.8.0
-  equatable: ^2.0.5
-  url_launcher: ^6.3.2
   easy_localization: ^3.0.7
+  equatable: ^2.0.5
   get_it: ^9.2.1
   logger: ^2.7.0
+  url_launcher: ^6.3.2
   uuid: ^4.4.2
-  async: ^2.11.0
 
   # State Management
   flutter_bloc: ^8.1.6
@@ -35,16 +35,19 @@ dependencies:
   # Navigation
   auto_route: ^11.1.0
 
-  # UI
+  # UI & Icons
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^10.3.0
+
+  # Code Analysis & Generators
   auto_route_generator: ^10.5.0
   bloc_test: ^9.1.7
-  # for testing
+  very_good_analysis: ^10.3.0
+
+  # Testing
   shared_preferences: any
 
 flutter:
