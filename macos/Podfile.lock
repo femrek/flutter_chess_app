@@ -1,0 +1,22 @@
+PODS:
+  - FlutterMacOS (1.0.0)
+  - network_info_plus (0.0.1):
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - FlutterMacOS (from `Flutter/ephemeral`)
+  - network_info_plus (from `Flutter/ephemeral/.symlinks/plugins/network_info_plus/macos`)
+
+EXTERNAL SOURCES:
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+  network_info_plus:
+    :path: Flutter/ephemeral/.symlinks/plugins/network_info_plus/macos
+
+SPEC CHECKSUMS:
+  FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
+  network_info_plus: f52abf61c7a311ecf3ac1b482be8a28908b4604d
+
+PODFILE CHECKSUM: 0d3963a09fc94f580682bd88480486da345dc3f0
+
+COCOAPODS: 1.16.2
