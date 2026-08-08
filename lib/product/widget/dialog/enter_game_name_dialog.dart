@@ -4,6 +4,7 @@ import 'package:localchess/product/constant/padding/app_padding.dart';
 import 'package:localchess/product/constant/padding/padding_widget_extension.dart';
 import 'package:localchess/product/constant/radius/app_radius_constant.dart';
 import 'package:localchess/product/localization/locale_keys.g.dart';
+import 'package:localchess/product/util/date_extension.dart';
 
 /// Dialog for entering a name. The dialog returns the entered text when pop.
 class EnterGameNameDialog extends StatefulWidget {
@@ -36,16 +37,19 @@ class EnterGameNameDialog extends StatefulWidget {
     String? confirmText,
     String? cancelText,
   }) async {
+    final defaultHint = DateTime.now().toVisualFormat;
     final result = await showDialog<String>(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return EnterGameNameDialog(
           title: title ?? LocaleKeys.dialog_createGameDialog_title.tr(),
-          hintText: hintText ?? LocaleKeys.dialog_createGameDialog_hint.tr(),
-          confirmText: confirmText ??
+          hintText: hintText ?? defaultHint,
+          confirmText:
+              confirmText ??
               LocaleKeys.dialog_createGameDialog_createButton.tr(),
-          cancelText: cancelText ??
+          cancelText:
+              cancelText ??
               LocaleKeys.dialog_createGameDialog_cancelButton.tr(),
         );
       },
@@ -80,6 +84,11 @@ class _EnterGameNameDialogState extends State<EnterGameNameDialog> {
               controller: _nameController,
               decoration: InputDecoration(
                 hintText: widget.hintText,
+                hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.4),
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(
                     AppRadiusConstant.inputFieldCornerRadius,
@@ -97,9 +106,11 @@ class _EnterGameNameDialogState extends State<EnterGameNameDialog> {
                 ),
                 TextButton(
                   onPressed: () {
-                    final enteredText = _nameController.text;
-                    if (enteredText.isEmpty) return;
-                    Navigator.of(context).pop(enteredText);
+                    final enteredText = _nameController.text.trim();
+                    final resultText = enteredText.isEmpty
+                        ? widget.hintText
+                        : enteredText;
+                    Navigator.of(context).pop(resultText);
                   },
                   child: Text(widget.confirmText),
                 ),

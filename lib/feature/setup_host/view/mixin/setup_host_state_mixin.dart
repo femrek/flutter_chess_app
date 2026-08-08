@@ -39,8 +39,9 @@ mixin SetupHostStateMixin on BaseState<SetupHostScreen> {
   void onPressedNewGame() {
     EnterGameNameDialog.show(context: context).then((name) async {
       if (name == null) return;
-      if (name.isEmpty) return;
-      await viewModel.createGame(name);
+      final gameName = name.trim();
+      if (gameName.isEmpty) return;
+      await viewModel.createGame(gameName);
     });
   }
 
